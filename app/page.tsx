@@ -1,6 +1,6 @@
 import {
   getHero, getProjects, getServices, getAbout,
-  getStats, getTeam, getClients, getResearch, getContact,
+  getStats, getTeam, getClients, getResearch, getContact, getSettings,
 } from '@/lib/getData';
 import Header      from '@/components/Header';
 import Hero        from '@/components/Hero';
@@ -17,19 +17,20 @@ import Footer      from '@/components/Footer';
 export const dynamic = 'force-dynamic'; // always re-reads JSON files
 
 export default function Home() {
-  const hero    = getHero();
-  const projects= getProjects();
-  const services= getServices();
-  const about   = getAbout();
-  const stats   = getStats();
-  const team    = getTeam();
-  const clients = getClients();
-  const research= getResearch();
-  const contact = getContact();
+  const hero     = getHero();
+  const projects = getProjects();
+  const services = getServices();
+  const about    = getAbout();
+  const stats    = getStats();
+  const team     = getTeam();
+  const clients  = getClients();
+  const research = getResearch();
+  const contact  = getContact();
+  const settings = getSettings();
 
   return (
     <main>
-      <Header />
+      <Header settings={settings} />
       <Hero        slides={hero.slides} />
       <Projects    projects={projects.projects} />
       <About       data={about} />
@@ -39,7 +40,7 @@ export default function Home() {
       <Team        members={team.members} />
       <Clients     clients={clients.clients} testimonials={clients.testimonials} />
       <ContactCTA  contact={contact} />
-      <Footer />
+      <Footer settings={settings} />
     </main>
   );
 }

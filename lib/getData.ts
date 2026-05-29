@@ -8,7 +8,8 @@ export const getStats   = () => readData<{ stats: Stat[] }>('stats');
 export const getTeam    = () => readData<{ members: TeamMember[] }>('team');
 export const getClients = () => readData<{ clients: Client[]; testimonials: Testimonial[] }>('clients');
 export const getResearch= () => readData<{ publications: Publication[] }>('research');
-export const getContact = () => readData<ContactData>('contact');
+export const getContact  = () => readData<ContactData>('contact');
+export const getSettings = () => readData<SiteSettings>('settings');
 
 // ── Types ────────────────────────────────────────────────────────────────
 export interface HeroSlide {
@@ -51,4 +52,12 @@ export interface Publication {
 export interface ContactData {
   address: string; phone: string; email: string; mapLabel: string;
   ctaTitle: string; ctaDesc: string; formTitle: string; formDesc: string; subjects: string[];
+}
+export interface SiteSettings {
+  companyName: string;
+  tagline: string;
+  logo: string;
+  favicon: string;
+  footerText: string;
+  copyrightName: string;
 }

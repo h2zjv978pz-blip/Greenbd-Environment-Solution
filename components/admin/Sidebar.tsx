@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard, Presentation, FolderOpen, Wrench,
-  Info, Users, Building2, BookOpen, Phone, BarChart3, LogOut, Leaf,
+  Info, Users, Building2, BookOpen, Phone, BarChart3, Settings, LogOut, Leaf,
 } from 'lucide-react';
 
 const nav = [
@@ -17,6 +17,7 @@ const nav = [
   { href: '/admin/clients',    label: 'Clients',      icon: Building2       },
   { href: '/admin/research',   label: 'Research',     icon: BookOpen        },
   { href: '/admin/contact',    label: 'Contact Info', icon: Phone           },
+  { href: '/admin/settings',   label: 'Site Settings',icon: Settings        },
 ];
 
 export default function Sidebar() {

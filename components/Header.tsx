@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Menu, X, Leaf } from 'lucide-react';
+import type { SiteSettings } from '@/lib/getData';
 
 const navLinks = [
   { label: 'Home', href: '#home' },
@@ -14,7 +15,10 @@ const navLinks = [
   { label: 'Contact', href: '#contact' },
 ];
 
-export default function Header() {
+export default function Header({ settings }: { settings?: SiteSettings }) {
+  const name   = settings?.companyName || 'Green BD';
+  const sub    = settings?.tagline     || 'Environmental Solutions';
+  const logo   = settings?.logo        || '';
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeLink, setActiveLink] = useState('#home');
@@ -41,23 +45,17 @@ export default function Header() {
       <div className="container mx-auto px-4 lg:px-8 flex items-center justify-between">
         {/* Logo */}
         <button onClick={() => handleNav('#home')} className="flex items-center gap-2 group">
-          <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-md group-hover:bg-primary-700 transition-colors">
-            <Leaf className="w-6 h-6 text-white" />
+          <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-md group-hover:bg-primary-700 transition-colors overflow-hidden flex-shrink-0">
+            {logo
+              ? <img src={logo} alt={name} className="w-full h-full object-cover" />
+              : <Leaf className="w-6 h-6 text-white" />}
           </div>
           <div className="text-left">
-            <span
-              className={`block font-heading font-bold text-base leading-tight transition-colors ${
-                scrolled ? 'text-primary-700' : 'text-white drop-shadow'
-              }`}
-            >
-              Green BD
+            <span className={`block font-heading font-bold text-base leading-tight transition-colors ${scrolled ? 'text-primary-700' : 'text-white drop-shadow'}`}>
+              {name}
             </span>
-            <span
-              className={`block text-[10px] font-medium tracking-wide leading-tight transition-colors ${
-                scrolled ? 'text-gray-500' : 'text-green-200'
-              }`}
-            >
-              Environmental Solutions
+            <span className={`block text-[10px] font-medium tracking-wide leading-tight transition-colors ${scrolled ? 'text-gray-500' : 'text-green-200'}`}>
+              {sub}
             </span>
           </div>
         </button>

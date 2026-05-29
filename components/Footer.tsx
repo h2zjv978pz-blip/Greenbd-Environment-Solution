@@ -1,6 +1,7 @@
 'use client';
 
 import { Leaf, Facebook, Twitter, Linkedin, Youtube, ArrowUp } from 'lucide-react';
+import type { SiteSettings } from '@/lib/getData';
 
 const footerLinks = {
   Services: [
@@ -22,7 +23,12 @@ const socials = [
   { icon: Youtube, href: '#', label: 'YouTube' },
 ];
 
-export default function Footer() {
+export default function Footer({ settings }: { settings?: SiteSettings }) {
+  const name      = settings?.companyName  || 'Green BD';
+  const sub       = settings?.tagline      || 'Environmental Solutions';
+  const logo      = settings?.logo         || '';
+  const footerTxt = settings?.footerText   || 'Building climate resilience, advancing environmental research, and empowering communities across Bangladesh through science-led solutions since 2009.';
+  const copyright = settings?.copyrightName|| 'Green BD Environmental Solutions';
   return (
     <footer className="bg-gray-950 text-gray-300">
       <div className="container mx-auto px-4 lg:px-8 pt-16 pb-8">
@@ -30,17 +36,17 @@ export default function Footer() {
           {/* Brand column */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center">
-                <Leaf className="w-6 h-6 text-white" />
+              <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center overflow-hidden">
+                {logo
+                  ? <img src={logo} alt={name} className="w-full h-full object-cover" />
+                  : <Leaf className="w-6 h-6 text-white" />}
               </div>
               <div>
-                <span className="block text-white font-bold font-heading leading-tight">Green BD</span>
-                <span className="block text-green-400 text-[10px] font-medium tracking-wide">Environmental Solutions</span>
+                <span className="block text-white font-bold font-heading leading-tight">{name}</span>
+                <span className="block text-green-400 text-[10px] font-medium tracking-wide">{sub}</span>
               </div>
             </div>
-            <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-xs">
-              Building climate resilience, advancing environmental research, and empowering communities across Bangladesh through science-led solutions since 2009.
-            </p>
+            <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-xs">{footerTxt}</p>
             <div className="flex gap-3">
               {socials.map(({ icon: Icon, href, label }) => (
                 <a
@@ -96,7 +102,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-gray-800 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-gray-500 text-xs text-center md:text-left">
-            © {new Date().getFullYear()} Green BD Environmental Solutions. All rights reserved. | Registered in Bangladesh.
+            © {new Date().getFullYear()} {copyright}. All rights reserved. | Registered in Bangladesh.
           </p>
           <div className="flex gap-4 text-xs text-gray-500">
             <a href="#" className="hover:text-gray-300 transition-colors">Privacy Policy</a>
