@@ -15,7 +15,16 @@ export interface HeroSlide {
   id: number; image: string; title: string; subtitle: string; desc: string;
 }
 export interface Project {
-  id: number; title: string; category: string; image: string; location: string;
+  id: number;
+  title: string;
+  category: string;
+  clientName: string;
+  location: string;
+  projectTime: string;
+  description: string;
+  image: string;
+  galleryImages: string[];
+  additionalImages: string[];
 }
 export interface Service {
   id: number; icon: string; title: string; desc: string; color: string;
