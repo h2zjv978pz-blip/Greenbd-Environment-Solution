@@ -6,7 +6,8 @@
       "journal": "Climate Risk Management",
       "year": "2024",
       "tags": ["Climate", "Coastal", "Livelihoods"],
-      "abstract": "This study employs ensemble climate models to project sea-level rise scenarios and their cascading impacts on fishing communities across 12 coastal upazilas."
+      "abstract": "This study employs ensemble climate models to project sea-level rise scenarios and their cascading impacts on fishing communities across 12 coastal upazilas.",
+      "pdfFile": ""
     },
     {
       "id": 2,
@@ -14,7 +15,8 @@
       "journal": "Urban Climate",
       "year": "2023",
       "tags": ["GIS/RS", "Urban", "Heat Island"],
-      "abstract": "Multi-temporal analysis of surface temperature anomalies across Dhaka's expanding urban fabric reveals critical green infrastructure deficits."
+      "abstract": "Multi-temporal analysis of surface temperature anomalies across Dhaka's expanding urban fabric reveals critical green infrastructure deficits.",
+      "pdfFile": ""
     },
     {
       "id": 3,
@@ -22,7 +24,8 @@
       "journal": "International Journal of DRR",
       "year": "2023",
       "tags": ["DRR", "Community", "Wetlands"],
-      "abstract": "Community-based participatory mapping integrated with satellite-derived flood extent data enables hyperlocal early warning systems in remote wetland areas."
+      "abstract": "Community-based participatory mapping integrated with satellite-derived flood extent data enables hyperlocal early warning systems in remote wetland areas.",
+      "pdfFile": ""
     },
     {
       "id": 4,
@@ -30,7 +33,8 @@
       "journal": "Remote Sensing of Environment",
       "year": "2022",
       "tags": ["Remote Sensing", "Mangrove", "Carbon"],
-      "abstract": "A novel fusion methodology combining Sentinel-1 SAR with Sentinel-2 multispectral data achieves 94% accuracy in above-ground biomass estimation."
+      "abstract": "A novel fusion methodology combining Sentinel-1 SAR with Sentinel-2 multispectral data achieves 94% accuracy in above-ground biomass estimation.",
+      "pdfFile": ""
     }
   ]
 }

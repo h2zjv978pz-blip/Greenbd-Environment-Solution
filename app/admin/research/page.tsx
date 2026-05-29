@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Plus, Pencil, Trash2, X } from 'lucide-react';
+import { Plus, Pencil, Trash2, X, FileText } from 'lucide-react';
 import Modal from '@/components/admin/Modal';
+import PdfUpload from '@/components/admin/PdfUpload';
 
-interface Publication { id: number; title: string; journal: string; year: string; tags: string[]; abstract: string; }
-const EMPTY: Omit<Publication, 'id'> = { title: '', journal: '', year: '', tags: [], abstract: '' };
+interface Publication { id: number; title: string; journal: string; year: string; tags: string[]; abstract: string; pdfFile: string; }
+const EMPTY: Omit<Publication, 'id'> = { title: '', journal: '', year: '', tags: [], abstract: '', pdfFile: '' };
 
 export default function ResearchAdmin() {
   const [items,    setItems]    = useState<Publication[]>([]);
@@ -60,7 +61,7 @@ export default function ResearchAdmin() {
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-100">
-              {['#', 'Title', 'Journal', 'Year', 'Tags', 'Actions'].map(h => (
+              {['#', 'Title', 'Journal', 'Year', 'Tags', 'PDF', 'Actions'].map(h => (
                 <th key={h} className="text-left px-6 py-3 text-xs uppercase text-gray-400 font-semibold tracking-wider whitespace-nowrap">{h}</th>
               ))}
             </tr>
@@ -82,6 +83,20 @@ export default function ResearchAdmin() {
                     {p.tags.length > 2 && <span className="text-[10px] px-2 py-0.5 bg-gray-100 text-gray-500 rounded-full">+{p.tags.length - 2}</span>}
                   </div>
                 </td>
+                {/* PDF status */}
+                <td className="px-6 py-3">
+                  {p.pdfFile ? (
+                    <a href={p.pdfFile} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 text-xs font-medium text-red-600 hover:text-red-700 transition-colors">
+                      <div className="w-6 h-6 bg-red-50 rounded-lg flex items-center justify-center">
+                        <FileText className="w-3.5 h-3.5" />
+                      </div>
+                      View PDF
+                    </a>
+                  ) : (
+                    <span className="text-xs text-gray-300">No PDF</span>
+                  )}
+                </td>
                 <td className="px-6 py-3">
                   <div className="flex items-center gap-2">
                     <button onClick={() => { setCurrent(p); setTagInput(''); setModal('edit'); }}
@@ -100,34 +115,61 @@ export default function ResearchAdmin() {
         </table>
       </div>
 
+      {/* Add/Edit Modal */}
       {modal && (
         <Modal title={modal === 'add' ? 'Create Publication' : 'Edit Publication'} onClose={() => setModal(null)} size="lg">
           <div className="space-y-4">
-            {tf('title', 'Paper Title', 'Full title of the paper')}
+            {tf('title', 'Paper Title *', 'Full title of the paper')}
             <div className="grid grid-cols-2 gap-4">
               {tf('journal', 'Journal / Conference')}
               {tf('year', 'Year', '2024')}
             </div>
-            {tf('abstract', 'Abstract', 'Short description of the research', 4)}
+            {tf('abstract', 'Abstract', 'Short description of the research', 3)}
+
+            {/* Tags */}
             <div>
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Tags</label>
               <div className="flex gap-2 mb-2">
                 <input value={tagInput} onChange={e => setTagInput(e.target.value)}
                   onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addTag(); } }}
-                  placeholder="Add tag, press Enter" className="flex-1 border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:border-blue-400" />
-                <button onClick={addTag} className="text-white text-sm px-4 py-2 rounded-lg font-semibold" style={{ backgroundColor: '#2c7be5' }}>Add</button>
+                  placeholder="Add tag, press Enter"
+                  className="flex-1 border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-50" />
+                <button type="button" onClick={addTag}
+                  className="text-white text-sm px-4 py-2 rounded-lg font-semibold" style={{ backgroundColor: '#2c7be5' }}>Add</button>
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {current.tags?.map(t => (
                   <span key={t} className="flex items-center gap-1 bg-blue-50 text-blue-700 text-xs font-medium px-2.5 py-1 rounded-full">
-                    {t}<button onClick={() => setCurrent({ ...current, tags: current.tags?.filter(x => x !== t) })}><X className="w-3 h-3 ml-0.5" /></button>
+                    {t}
+                    <button onClick={() => setCurrent({ ...current, tags: current.tags?.filter(x => x !== t) })}>
+                      <X className="w-3 h-3 ml-0.5" />
+                    </button>
                   </span>
                 ))}
               </div>
             </div>
+
+            {/* PDF File — matches reference screenshot */}
+            <div className="border-t border-gray-100 pt-4">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-800">PDF File</h3>
+                  <p className="text-xs text-gray-400 mt-0.5">Upload the full paper as PDF. Max 20 MB.</p>
+                </div>
+                {current.pdfFile && (
+                  <span className="text-[10px] text-white px-2 py-0.5 rounded font-medium bg-red-500">PDF Attached</span>
+                )}
+              </div>
+              <PdfUpload
+                value={current.pdfFile ?? ''}
+                onChange={url => setCurrent({ ...current, pdfFile: url })}
+              />
+            </div>
+
             <div className="flex gap-3 pt-2 border-t border-gray-100">
               <button onClick={() => setModal(null)} className="flex-1 border border-gray-200 text-gray-600 text-sm font-semibold py-2.5 rounded-lg">Cancel</button>
-              <button onClick={save} disabled={saving} className="flex-1 text-white text-sm font-semibold py-2.5 rounded-lg disabled:opacity-60" style={{ backgroundColor: '#2c7be5' }}>
+              <button onClick={save} disabled={saving}
+                className="flex-1 text-white text-sm font-semibold py-2.5 rounded-lg disabled:opacity-60" style={{ backgroundColor: '#2c7be5' }}>
                 {saving ? 'Saving…' : 'Save Publication'}
               </button>
             </div>
