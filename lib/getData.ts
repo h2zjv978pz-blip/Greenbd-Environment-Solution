@@ -60,4 +60,10 @@ export interface SiteSettings {
   favicon: string;
   footerText: string;
   copyrightName: string;
+  nameFont: string;
+  nameSizePx: string;
+  nameBold: boolean;
+  taglineFont: string;
+  taglineSizePx: string;
+  logoSizePx: string;
 }

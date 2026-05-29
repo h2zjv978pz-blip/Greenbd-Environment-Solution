@@ -16,9 +16,15 @@ const navLinks = [
 ];
 
 export default function Header({ settings }: { settings?: SiteSettings }) {
-  const name   = settings?.companyName || 'Green BD';
-  const sub    = settings?.tagline     || 'Environmental Solutions';
-  const logo   = settings?.logo        || '';
+  const name     = settings?.companyName   || 'Green BD';
+  const sub      = settings?.tagline       || 'Environmental Solutions';
+  const logo     = settings?.logo          || '';
+  const logoSz   = Number(settings?.logoSizePx)   || 40;
+  const nameSz   = Number(settings?.nameSizePx)   || 16;
+  const nameFont = settings?.nameFont             || 'Poppins';
+  const nameBold = settings?.nameBold !== false;
+  const tagSz    = Number(settings?.taglineSizePx)|| 10;
+  const tagFont  = settings?.taglineFont          || 'Inter';
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeLink, setActiveLink] = useState('#home');
@@ -45,16 +51,25 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
       <div className="container mx-auto px-4 lg:px-8 flex items-center justify-between">
         {/* Logo */}
         <button onClick={() => handleNav('#home')} className="flex items-center gap-2 group">
-          <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-md group-hover:bg-primary-700 transition-colors overflow-hidden flex-shrink-0">
+          <div
+            className="bg-primary-600 rounded-xl flex items-center justify-center shadow-md group-hover:bg-primary-700 transition-colors overflow-hidden flex-shrink-0"
+            style={{ width: logoSz, height: logoSz, minWidth: logoSz }}
+          >
             {logo
               ? <img src={logo} alt={name} className="w-full h-full object-cover" />
-              : <Leaf className="w-6 h-6 text-white" />}
+              : <Leaf className="text-white" style={{ width: logoSz * 0.5, height: logoSz * 0.5 }} />}
           </div>
           <div className="text-left">
-            <span className={`block font-heading font-bold text-base leading-tight transition-colors ${scrolled ? 'text-primary-700' : 'text-white drop-shadow'}`}>
+            <span
+              className={`block leading-tight transition-colors ${scrolled ? 'text-primary-700' : 'text-white drop-shadow'}`}
+              style={{ fontFamily: nameFont, fontSize: nameSz, fontWeight: nameBold ? 700 : 400 }}
+            >
               {name}
             </span>
-            <span className={`block text-[10px] font-medium tracking-wide leading-tight transition-colors ${scrolled ? 'text-gray-500' : 'text-green-200'}`}>
+            <span
+              className={`block tracking-wide leading-tight transition-colors ${scrolled ? 'text-gray-500' : 'text-green-200'}`}
+              style={{ fontFamily: tagFont, fontSize: tagSz }}
+            >
               {sub}
             </span>
           </div>
