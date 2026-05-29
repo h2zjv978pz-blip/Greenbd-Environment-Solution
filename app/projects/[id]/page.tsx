@@ -3,6 +3,7 @@ import type { Project } from '@/lib/getData';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, MapPin, Calendar, User, Tag } from 'lucide-react';
+import { GalleryGrid } from '@/components/Lightbox';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(
@@ -22,12 +23,12 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
   const project = projects.find(p => p.id === Number(id));
   if (!project) notFound();
 
-  const gallery = (project.galleryImages ?? []).filter(Boolean);
+  const gallery    = (project.galleryImages    ?? []).filter(Boolean);
   const additional = (project.additionalImages ?? []).filter(Boolean);
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero */}
+      {/* ── Hero ──────────────────────────────────────────────────── */}
       <div className="relative h-[55vh] min-h-[380px] bg-gray-900 overflow-hidden">
         {project.image && (
           <img
@@ -36,20 +37,20 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             className="absolute inset-0 w-full h-full object-cover opacity-70"
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/85 via-gray-900/30 to-transparent" />
 
-        {/* Back link */}
-        <div className="absolute top-6 left-6">
+        {/* Back button */}
+        <div className="absolute top-6 left-6 z-10">
           <Link
             href="/#projects"
-            className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur text-white text-sm font-medium px-4 py-2 rounded-full transition-colors border border-white/20"
+            className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/25 backdrop-blur text-white text-sm font-medium px-4 py-2 rounded-full transition-colors border border-white/20"
           >
             <ArrowLeft className="w-4 h-4" /> Back to Projects
           </Link>
         </div>
 
-        {/* Title overlay */}
-        <div className="absolute bottom-0 left-0 right-0 px-6 pb-10 md:px-16">
+        {/* Title */}
+        <div className="absolute bottom-0 left-0 right-0 px-6 pb-10 md:px-16 z-10">
           <span className="inline-block bg-primary-600 text-white text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
             {project.category}
           </span>
@@ -59,11 +60,11 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
         </div>
       </div>
 
-      {/* Content */}
+      {/* ── Body ──────────────────────────────────────────────────── */}
       <div className="max-w-5xl mx-auto px-6 md:px-8 py-14">
         <div className="grid lg:grid-cols-3 gap-12">
 
-          {/* Left — main content */}
+          {/* Left — description + galleries */}
           <div className="lg:col-span-2">
             {project.description && (
               <div>
@@ -75,41 +76,18 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
               </div>
             )}
 
-            {/* Gallery */}
-            {gallery.length > 0 && (
-              <div className="mt-12">
-                <h2 className="text-xl font-bold text-gray-900 font-heading mb-5">Gallery</h2>
-                <div className="grid grid-cols-2 gap-3">
-                  {gallery.map((img, i) => (
-                    <div key={i} className="aspect-video rounded-xl overflow-hidden bg-gray-100">
-                      <img src={img} alt={`Gallery ${i + 1}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Additional images */}
-            {additional.length > 0 && (
-              <div className="mt-12">
-                <h2 className="text-xl font-bold text-gray-900 font-heading mb-5">Field Images</h2>
-                <div className="grid grid-cols-2 gap-3">
-                  {additional.map((img, i) => (
-                    <div key={i} className="aspect-video rounded-xl overflow-hidden bg-gray-100">
-                      <img src={img} alt={`Field ${i + 1}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            {/* Clickable galleries */}
+            <GalleryGrid images={gallery}    title="Gallery" />
+            <GalleryGrid images={additional} title="Field Images" />
           </div>
 
-          {/* Right — sidebar info card */}
+          {/* Right — sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 sticky top-8">
               <h3 className="font-bold text-gray-900 font-heading text-lg mb-5 pb-4 border-b border-gray-200">
                 Project Details
               </h3>
+
               <ul className="space-y-4">
                 {project.clientName && (
                   <li className="flex items-start gap-3">
@@ -167,6 +145,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>
