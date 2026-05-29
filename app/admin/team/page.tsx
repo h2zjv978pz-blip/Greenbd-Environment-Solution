@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Plus, Pencil, Trash2, ImageIcon } from 'lucide-react';
 import Modal from '@/components/admin/Modal';
 import PageHeader from '@/components/admin/PageHeader';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 interface Member { id: number; name: string; role: string; expertise: string; image: string; }
 const EMPTY: Omit<Member,'id'> = { name: '', role: '', expertise: '', image: '' };
@@ -84,8 +85,11 @@ export default function TeamAdmin() {
             {tf('name', 'Full Name', 'Dr. Jane Doe')}
             {tf('role', 'Role / Title', 'Senior Climate Scientist')}
             {tf('expertise', 'Expertise Areas', 'Climate Modeling, IPCC Research')}
-            {tf('image', 'Photo URL', 'https://images.unsplash.com/...')}
-            {current.image && <img src={String(current.image)} alt="preview" className="w-full h-40 object-cover object-top rounded-xl border border-gray-100" />}
+            <ImageUpload
+              value={String(current.image ?? '')}
+              onChange={(url) => setCurrent({ ...current, image: url })}
+              label="Profile Photo"
+            />
             <div className="flex gap-3 pt-2">
               <button onClick={() => setModal(null)} className="flex-1 border border-gray-200 text-gray-600 text-sm font-semibold py-2.5 rounded-xl">Cancel</button>
               <button onClick={save} disabled={saving} className="flex-1 bg-primary-600 text-white text-sm font-semibold py-2.5 rounded-xl disabled:opacity-60">{saving ? 'Saving…' : 'Save Member'}</button>

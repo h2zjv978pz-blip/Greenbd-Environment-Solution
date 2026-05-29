@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Save } from 'lucide-react';
 import PageHeader from '@/components/admin/PageHeader';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 interface AboutData {
   heading: string; para1: string; para2: string; image: string;
@@ -80,8 +81,11 @@ export default function AboutAdmin() {
         <div className="space-y-5">
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
             <h3 className="font-semibold text-gray-800 text-sm">About Image</h3>
-            {tf('image', 'Image URL')}
-            {data.image && <img src={data.image} alt="preview" className="w-full h-48 object-cover rounded-xl border border-gray-100" />}
+            <ImageUpload
+              value={data.image}
+              onChange={(url) => setData({ ...data, image: url })}
+              label="Section Photo"
+            />
           </div>
 
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">

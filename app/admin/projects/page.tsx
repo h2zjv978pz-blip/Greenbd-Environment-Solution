@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Plus, Pencil, Trash2, ImageIcon } from 'lucide-react';
 import Modal from '@/components/admin/Modal';
 import PageHeader from '@/components/admin/PageHeader';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 const CATEGORIES = ['Climate', 'GIS/RS', 'Research', 'Disaster Risk', 'Sustainability', 'Community'];
 
@@ -117,10 +118,11 @@ export default function ProjectsAdmin() {
               </select>
             </div>
             {field('location', 'Location', 'e.g. Dhaka, Bangladesh')}
-            {field('image', 'Image URL', 'https://images.unsplash.com/...')}
-            {current.image && (
-              <img src={String(current.image)} alt="preview" className="w-full h-40 object-cover rounded-xl border border-gray-200" />
-            )}
+            <ImageUpload
+              value={String(current.image ?? '')}
+              onChange={(url) => setCurrent({ ...current, image: url })}
+              label="Project Image"
+            />
             <div className="flex gap-3 pt-2">
               <button onClick={() => setModal(null)} className="flex-1 border border-gray-200 text-gray-600 text-sm font-semibold py-2.5 rounded-xl hover:bg-gray-50 transition-colors">Cancel</button>
               <button onClick={save} disabled={saving} className="flex-1 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors disabled:opacity-60">

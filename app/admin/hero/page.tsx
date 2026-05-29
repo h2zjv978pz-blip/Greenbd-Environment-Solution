@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
 import Modal from '@/components/admin/Modal';
 import PageHeader from '@/components/admin/PageHeader';
+import ImageUpload from '@/components/admin/ImageUpload';
 
 interface Slide { id: number; image: string; title: string; subtitle: string; desc: string; }
 const EMPTY: Omit<Slide, 'id'> = { image: '', title: '', subtitle: '', desc: '' };
@@ -105,8 +106,11 @@ export default function HeroAdmin() {
       {modal === 'edit' && current && (
         <Modal title="Edit Slide" onClose={() => setModal(null)}>
           <div className="space-y-4">
-            {tf('image', 'Background Image URL')}
-            {current.image && <img src={String(current.image)} alt="preview" className="w-full h-36 object-cover rounded-xl border border-gray-100" />}
+            <ImageUpload
+              value={String(current.image ?? '')}
+              onChange={(url) => setCurrent({ ...current, image: url })}
+              label="Background Image"
+            />
             {tf('title', 'Headline (line 1)')}
             {tf('subtitle', 'Headline (line 2 — green accent)')}
             {tf('desc', 'Description', 3)}
