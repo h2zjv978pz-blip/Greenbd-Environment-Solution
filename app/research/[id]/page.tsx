@@ -2,7 +2,7 @@ import { readData } from '@/lib/data';
 import type { Publication } from '@/lib/getData';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, BookOpen, Calendar, Tag, Download, FileText } from 'lucide-react';
+import { ArrowLeft, BookOpen, Calendar, Tag, Download, FileText, Mail } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export async function generateMetadata(
@@ -86,14 +86,22 @@ export default async function ResearchDetailPage({ params }: { params: Promise<{
                 </div>
               </div>
             ) : (
-              <div className="mt-10 p-6 bg-gray-50 border border-gray-100 rounded-2xl">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <FileText className="w-6 h-6 text-gray-400" />
+              <div className="mt-10 p-6 bg-primary-50 border border-primary-100 rounded-2xl">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <FileText className="w-6 h-6 text-primary-500" />
                   </div>
-                  <div>
-                    <p className="font-semibold text-gray-500">Full Paper Not Yet Available</p>
-                    <p className="text-sm text-gray-400 mt-0.5">Contact us to request a copy of this publication.</p>
+                  <div className="flex-1">
+                    <p className="font-semibold text-gray-800">Full Paper Available on Request</p>
+                    <p className="text-sm text-gray-500 mt-1 mb-4">
+                      The full paper is not publicly accessible yet. Contact our research team to request a copy of this publication.
+                    </p>
+                    <Link
+                      href="/#contact"
+                      className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold text-sm px-5 py-3 rounded-xl transition-colors shadow-sm"
+                    >
+                      <Mail className="w-4 h-4" /> Contact Us to Request
+                    </Link>
                   </div>
                 </div>
               </div>
