@@ -64,6 +64,20 @@ export default async function ResearchDetailPage({ params }: { params: Promise<{
             <h2 className="text-xl font-bold text-gray-900 font-heading mb-4">Abstract</h2>
             <p className="text-gray-600 leading-relaxed text-base">{pub.abstract}</p>
 
+            {/* Full content body — if admin has added it */}
+            {pub.content && (
+              <div className="mt-8 pt-8 border-t border-gray-100">
+                <h2 className="text-xl font-bold text-gray-900 font-heading mb-5">Full Paper</h2>
+                <div
+                  className="prose prose-gray max-w-none text-gray-700 leading-relaxed text-base
+                    prose-headings:font-heading prose-headings:text-gray-900
+                    prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline
+                    prose-strong:text-gray-900 prose-li:my-1"
+                  dangerouslySetInnerHTML={{ __html: pub.content }}
+                />
+              </div>
+            )}
+
             {/* PDF download */}
             {pub.pdfFile ? (
               <div className="mt-10 p-6 bg-primary-50 border border-primary-100 rounded-2xl">
@@ -85,7 +99,7 @@ export default async function ResearchDetailPage({ params }: { params: Promise<{
                   </a>
                 </div>
               </div>
-            ) : (
+            ) : !pub.content && (
               <div className="mt-10 p-6 bg-primary-50 border border-primary-100 rounded-2xl">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">

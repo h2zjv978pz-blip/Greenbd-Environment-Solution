@@ -1,12 +1,41 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { Plus, Pencil, Trash2, X, FileText } from 'lucide-react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { Plus, Pencil, Trash2, X, FileText, Bold, Italic, Underline, List, ListOrdered } from 'lucide-react';
 import Modal from '@/components/admin/Modal';
 import PdfUpload from '@/components/admin/PdfUpload';
 
-interface Publication { id: number; title: string; journal: string; year: string; tags: string[]; abstract: string; pdfFile: string; }
-const EMPTY: Omit<Publication, 'id'> = { title: '', journal: '', year: '', tags: [], abstract: '', pdfFile: '' };
+interface Publication { id: number; title: string; journal: string; year: string; tags: string[]; abstract: string; pdfFile: string; content: string; }
+const EMPTY: Omit<Publication, 'id'> = { title: '', journal: '', year: '', tags: [], abstract: '', pdfFile: '', content: '' };
+
+/* ── inline rich-text editor ─────────────────────────────────── */
+function RichEditor({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const cmd = (c: string) => { ref.current?.focus(); document.execCommand(c, false); if (ref.current) onChange(ref.current.innerHTML); };
+  const toolBtn = (icon: React.ReactNode, c: string, title: string) => (
+    <button type="button" title={title} onMouseDown={e => { e.preventDefault(); cmd(c); }}
+      className="w-7 h-7 flex items-center justify-center rounded text-gray-600 hover:bg-gray-200 transition-colors">
+      {icon}
+    </button>
+  );
+  return (
+    <div className="border border-gray-200 rounded-lg overflow-hidden focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-50">
+      <div className="flex items-center gap-0.5 px-2 py-1.5 bg-gray-50 border-b border-gray-200">
+        {toolBtn(<Bold className="w-3.5 h-3.5" />, 'bold', 'Bold')}
+        {toolBtn(<Italic className="w-3.5 h-3.5" />, 'italic', 'Italic')}
+        {toolBtn(<Underline className="w-3.5 h-3.5" />, 'underline', 'Underline')}
+        <div className="w-px h-4 bg-gray-300 mx-1" />
+        {toolBtn(<List className="w-3.5 h-3.5" />, 'insertUnorderedList', 'Bullet list')}
+        {toolBtn(<ListOrdered className="w-3.5 h-3.5" />, 'insertOrderedList', 'Numbered list')}
+      </div>
+      <div ref={ref} contentEditable suppressContentEditableWarning
+        onInput={() => { if (ref.current) onChange(ref.current.innerHTML); }}
+        dangerouslySetInnerHTML={{ __html: value }}
+        className="min-h-[200px] p-3 text-sm text-gray-800 focus:outline-none leading-relaxed"
+      />
+    </div>
+  );
+}
 
 export default function ResearchAdmin() {
   const [items,    setItems]    = useState<Publication[]>([]);
@@ -125,6 +154,14 @@ export default function ResearchAdmin() {
               {tf('year', 'Year', '2024')}
             </div>
             {tf('abstract', 'Abstract', 'Short description of the research', 3)}
+
+            {/* Content Body — full readable paper text */}
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                Content Body <span className="text-gray-300 font-normal normal-case tracking-normal">(full paper text — readable on the detail page)</span>
+              </label>
+              <RichEditor value={current.content ?? ''} onChange={v => setCurrent({ ...current, content: v })} />
+            </div>
 
             {/* Tags */}
             <div>

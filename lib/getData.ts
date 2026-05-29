@@ -47,7 +47,7 @@ export interface Testimonial {
   id: number; name: string; role: string; text: string; rating: number;
 }
 export interface Publication {
-  id: number; title: string; journal: string; year: string; tags: string[]; abstract: string; pdfFile: string;
+  id: number; title: string; journal: string; year: string; tags: string[]; abstract: string; pdfFile: string; content: string;
 }
 export interface ContactData {
   address: string; phone: string; email: string; mapLabel: string;
