@@ -43,15 +43,15 @@ export default function Research({ publications }: { publications: Publication[]
                       </span>
                     ))}
                   </div>
-                  {pub.pdfFile ? (
-                    <a href={pub.pdfFile} target="_blank" rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-primary-600 text-xs font-semibold hover:gap-2 transition-all">
+                  {pub.pdfFile && (
+                    <a
+                      href={pub.pdfFile}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-primary-600 text-xs font-semibold hover:gap-2 transition-all"
+                    >
                       Read Full Paper <ExternalLink className="w-3.5 h-3.5" />
                     </a>
-                  ) : (
-                    <span className="flex items-center gap-1 text-gray-300 text-xs font-semibold cursor-default">
-                      Read Full Paper <ExternalLink className="w-3.5 h-3.5" />
-                    </span>
                   )}
                 </div>
               </div>
