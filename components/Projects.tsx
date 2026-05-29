@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { ExternalLink } from 'lucide-react';
 import type { Project } from '@/lib/getData';
 
@@ -27,7 +28,11 @@ export default function Projects({ projects }: { projects: Project[] }) {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {filtered.map((project) => (
-            <div key={project.id} className="project-card relative overflow-hidden rounded-xl cursor-pointer group aspect-square">
+            <Link
+              key={project.id}
+              href={`/projects/${project.id}`}
+              className="project-card relative overflow-hidden rounded-xl cursor-pointer group aspect-square block"
+            >
               <img src={project.image} alt={project.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500" loading="lazy" />
               <div className="project-overlay absolute inset-0 bg-gradient-to-t from-primary-900/90 via-primary-800/40 to-transparent opacity-0 transition-opacity duration-300 flex flex-col justify-end p-3">
                 <span className="text-green-300 text-[10px] font-semibold uppercase tracking-wider mb-1">{project.category}</span>
@@ -35,7 +40,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
                 <p className="text-white/60 text-[10px]">{project.location}</p>
                 <ExternalLink className="w-3.5 h-3.5 text-green-300 mt-2" />
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
