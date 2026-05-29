@@ -1,0 +1,17 @@
+{
+  "clients": [
+    { "id": 1, "name": "UNDP Bangladesh", "abbr": "UNDP", "color": "bg-blue-600" },
+    { "id": 2, "name": "World Bank",      "abbr": "WB",   "color": "bg-blue-800" },
+    { "id": 3, "name": "BRAC",            "abbr": "BRAC", "color": "bg-red-600"  },
+    { "id": 4, "name": "DoE Bangladesh",  "abbr": "DoE",  "color": "bg-green-700"},
+    { "id": 5, "name": "LGED",            "abbr": "LGED", "color": "bg-orange-600"},
+    { "id": 6, "name": "USAID",           "abbr": "USAID","color": "bg-blue-700" },
+    { "id": 7, "name": "GIZ",             "abbr": "GIZ",  "color": "bg-green-600"},
+    { "id": 8, "name": "ADB",             "abbr": "ADB",  "color": "bg-red-700"  }
+  ],
+  "testimonials": [
+    { "id": 1, "name": "Md. Anwar Hossain", "role": "Director, Department of Environment, Bangladesh", "text": "Green BD's environmental assessment work on the Chattogram coastal zone was exceptional. Their integration of satellite data with field surveys delivered insights we could immediately act on for policy formulation.", "rating": 5 },
+    { "id": 2, "name": "Sarah Mitchell",    "role": "Country Representative, UNDP Bangladesh",          "text": "Working with Green BD on our Climate Vulnerability Index project was transformative. Their team's scientific rigor combined with genuine community engagement produced outputs that truly reflect ground realities.", "rating": 5 },
+    { "id": 3, "name": "Prof. Dr. Kamal Uddin", "role": "Chairman, Bangladesh University of Engineering & Technology", "text": "Green BD's research collaboration with BUET has yielded some of the most robust flood-risk datasets in Bangladesh. Their GIS capabilities are world-class, and their dedication to open science is commendable.", "rating": 5 }
+  ]
+}

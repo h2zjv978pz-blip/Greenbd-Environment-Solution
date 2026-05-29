@@ -1,0 +1,25 @@
+{
+  "slides": [
+    {
+      "id": 1,
+      "image": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&q=80",
+      "title": "Environmental Solutions",
+      "subtitle": "for a Sustainable Bangladesh",
+      "desc": "Driving climate resilience, GIS research, and eco-innovation for communities and ecosystems across Bangladesh."
+    },
+    {
+      "id": 2,
+      "image": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1920&q=80",
+      "title": "Climate Resilience &",
+      "subtitle": "Disaster Risk Reduction",
+      "desc": "Science-based strategies to protect communities, reduce vulnerability, and build adaptive capacity nationwide."
+    },
+    {
+      "id": 3,
+      "image": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80",
+      "title": "GIS & Remote Sensing",
+      "subtitle": "Precision Environmental Mapping",
+      "desc": "Advanced geospatial intelligence and satellite data analysis for informed environmental decision-making."
+    }
+  ]
+}

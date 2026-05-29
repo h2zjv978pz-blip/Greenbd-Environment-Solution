@@ -1,0 +1,19 @@
+{
+  "address": "House 12, Road 5, Dhanmondi, Dhaka 1209, Bangladesh",
+  "phone": "+880-2-9612345",
+  "email": "info@greenbd-env.com",
+  "mapLabel": "Dhanmondi, Dhaka",
+  "ctaTitle": "Contact Us to Imagine More With Your Next Project",
+  "ctaDesc": "Whether you need an EIA, a GIS mapping study, or a climate adaptation plan — our team is ready to deliver results that matter.",
+  "formTitle": "Let's Build a Greener Bangladesh Together",
+  "formDesc": "Our team responds within 24 hours on business days. For urgent environmental assessment requests, please call us directly.",
+  "subjects": [
+    "Environmental Impact Assessment",
+    "GIS & Remote Sensing",
+    "Climate Change Research",
+    "Disaster Risk Reduction",
+    "Environmental Monitoring",
+    "Sustainability Consulting",
+    "Other Inquiry"
+  ]
+}

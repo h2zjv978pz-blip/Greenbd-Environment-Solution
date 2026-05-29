@@ -1,0 +1,8 @@
+{
+  "stats": [
+    { "id": 1, "value": 15,  "suffix": "+", "label": "Years of Experience",    "desc": "Delivering environmental excellence since 2009" },
+    { "id": 2, "value": 200, "suffix": "+", "label": "Projects Completed",     "desc": "Across Bangladesh and South Asia" },
+    { "id": 3, "value": 95,  "suffix": "",  "label": "Client Satisfaction",    "desc": "Based on post-project evaluations" },
+    { "id": 4, "value": 50,  "suffix": "+", "label": "Expert Team Members",    "desc": "Ecologists, GIS analysts & climate scientists" }
+  ]
+}

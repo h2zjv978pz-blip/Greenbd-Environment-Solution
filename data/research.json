@@ -1,0 +1,36 @@
+{
+  "publications": [
+    {
+      "id": 1,
+      "title": "Sea-Level Rise Impacts on Coastal Livelihoods in Southern Bangladesh: A Multi-Scenario Analysis",
+      "journal": "Climate Risk Management",
+      "year": "2024",
+      "tags": ["Climate", "Coastal", "Livelihoods"],
+      "abstract": "This study employs ensemble climate models to project sea-level rise scenarios and their cascading impacts on fishing communities across 12 coastal upazilas."
+    },
+    {
+      "id": 2,
+      "title": "Urban Heat Island Dynamics in Dhaka Metropolitan Area Using Landsat-8 Thermal Imagery",
+      "journal": "Urban Climate",
+      "year": "2023",
+      "tags": ["GIS/RS", "Urban", "Heat Island"],
+      "abstract": "Multi-temporal analysis of surface temperature anomalies across Dhaka's expanding urban fabric reveals critical green infrastructure deficits."
+    },
+    {
+      "id": 3,
+      "title": "Participatory Mapping for Disaster Risk Reduction: Lessons from the Haor Wetlands",
+      "journal": "International Journal of DRR",
+      "year": "2023",
+      "tags": ["DRR", "Community", "Wetlands"],
+      "abstract": "Community-based participatory mapping integrated with satellite-derived flood extent data enables hyperlocal early warning systems in remote wetland areas."
+    },
+    {
+      "id": 4,
+      "title": "Mangrove Biomass Estimation Using SAR and Optical Fusion in the Sundarbans",
+      "journal": "Remote Sensing of Environment",
+      "year": "2022",
+      "tags": ["Remote Sensing", "Mangrove", "Carbon"],
+      "abstract": "A novel fusion methodology combining Sentinel-1 SAR with Sentinel-2 multispectral data achieves 94% accuracy in above-ground biomass estimation."
+    }
+  ]
+}

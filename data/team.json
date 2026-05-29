@@ -1,0 +1,10 @@
+{
+  "members": [
+    { "id": 1, "name": "Dr. Rahman Al-Karim",  "role": "Executive Director & Climate Scientist",  "expertise": "Climate Modeling, IPCC Research",       "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80" },
+    { "id": 2, "name": "Dr. Fatema Khanam",    "role": "Head of GIS & Remote Sensing",            "expertise": "Satellite Analysis, Spatial Planning",   "image": "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&q=80" },
+    { "id": 3, "name": "Md. Shafiqul Islam",   "role": "Disaster Risk Reduction Lead",            "expertise": "Multi-hazard Analysis, Community DRR",   "image": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80" },
+    { "id": 4, "name": "Nusrat Jahan",         "role": "Environmental Research Specialist",       "expertise": "Biodiversity, Ecosystem Services",        "image": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80" },
+    { "id": 5, "name": "Arif Hossain",         "role": "Sustainability Consultant",               "expertise": "ESG, Carbon Accounting, SDGs",            "image": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80" },
+    { "id": 6, "name": "Tania Akter",          "role": "Community Programs Manager",              "expertise": "Participatory Methods, Citizen Science",  "image": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80" }
+  ]
+}

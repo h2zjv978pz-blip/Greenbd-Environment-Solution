@@ -1,0 +1,13 @@
+{
+  "services": [
+    { "id": 1, "icon": "Leaf",     "title": "Environmental Impact Assessment", "desc": "Comprehensive EIA studies for infrastructure, industrial, and development projects following national and international standards.",         "color": "bg-green-50 text-green-600" },
+    { "id": 2, "icon": "Map",      "title": "GIS & Remote Sensing",            "desc": "Satellite imagery analysis, spatial data management, and geospatial mapping for environmental monitoring and planning.",                    "color": "bg-blue-50 text-blue-600" },
+    { "id": 3, "icon": "Cloud",    "title": "Climate Change Research",         "desc": "Scenario modeling, vulnerability assessments, and adaptation planning grounded in IPCC-aligned methodologies.",                          "color": "bg-sky-50 text-sky-600" },
+    { "id": 4, "icon": "Shield",   "title": "Disaster Risk Reduction",         "desc": "Multi-hazard risk profiling, early warning systems design, and community-based DRR strategies for flood, cyclone, and drought.",          "color": "bg-red-50 text-red-600" },
+    { "id": 5, "icon": "BarChart3","title": "Environmental Monitoring",        "desc": "Real-time air, water, and soil quality monitoring networks with data dashboards for informed policy decisions.",                          "color": "bg-purple-50 text-purple-600" },
+    { "id": 6, "icon": "BookOpen", "title": "Environmental Research",          "desc": "Applied and academic research on biodiversity, ecosystem services, land-use change, and environmental governance.",                        "color": "bg-yellow-50 text-yellow-600" },
+    { "id": 7, "icon": "Users",    "title": "Community Engagement",            "desc": "Citizen science programs, participatory mapping, and environmental education for grassroots sustainability action.",                       "color": "bg-orange-50 text-orange-600" },
+    { "id": 8, "icon": "Globe",    "title": "Climate Resilience Planning",     "desc": "City-level and national climate action plans integrating nature-based solutions and adaptive infrastructure.",                             "color": "bg-teal-50 text-teal-600" },
+    { "id": 9, "icon": "Recycle",  "title": "Sustainability Consulting",       "desc": "Corporate sustainability strategies, carbon footprint analysis, green certification support, and ESG reporting.",                          "color": "bg-lime-50 text-lime-600" }
+  ]
+}
