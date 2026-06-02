@@ -33,3 +33,14 @@ Thumbs.db
 playwright-report/
 test-results/
 verify_greenbd.mjs
+
+# TypeScript incremental build cache
+tsconfig.tsbuildinfo
+
+# Claude Code project metadata
+.claude/
+
+# User-uploaded content — keep local only; serve from CDN in production
+# (Re-add specific files if you need them deployed)
+# public/uploads/
+# public/audio/

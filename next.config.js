@@ -1,16 +1,41 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // ── Include data/ in every serverless function bundle ──────────────────────
+  // Without this, Vercel/Netlify strip dynamic fs.readFileSync targets
+  experimental: {
+    outputFileTracingIncludes: {
+      '/**': ['./data/**'],
+    },
+  },
+
+  // ── Image domains ──────────────────────────────────────────────────────────
   images: {
+    unoptimized: true,           // allow <img> tags with uploaded paths
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'upload.wikimedia.org',
-      },
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+      { protocol: 'https', hostname: 'upload.wikimedia.org' },
+      { protocol: 'https', hostname: 'i.ytimg.com' },        // YouTube thumbnails
+      { protocol: 'https', hostname: 'img.youtube.com' },
+      { protocol: 'https', hostname: 'i3.ytimg.com' },
+      { protocol: 'https', hostname: '**.google.com' },       // Google Maps/Earth tiles
+      { protocol: 'https', hostname: '**.googleapis.com' },
+      { protocol: 'https', hostname: '**.openstreetmap.org' },
+      { protocol: 'https', hostname: '**.basemaps.cartocdn.com' },
     ],
+  },
+
+  // ── API CORS headers ───────────────────────────────────────────────────────
+  async headers() {
+    return [
+      {
+        source: '/api/:path*',
+        headers: [
+          { key: 'Access-Control-Allow-Origin',  value: '*' },
+          { key: 'Access-Control-Allow-Methods', value: 'GET,POST,PUT,DELETE,OPTIONS' },
+          { key: 'Access-Control-Allow-Headers', value: 'Content-Type,Authorization' },
+        ],
+      },
+    ];
   },
 };
 
