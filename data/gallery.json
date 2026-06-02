@@ -1,0 +1,52 @@
+{
+  "albums": [
+    {
+      "id": 1,
+      "title": "Sundarbans Conservation Field Work",
+      "category": "Field Work",
+      "coverImage": "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=800&q=80",
+      "description": "Images from our 2024 mangrove monitoring and biodiversity survey in the Sundarbans.",
+      "images": [
+        "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=600&q=80",
+        "https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&q=80",
+        "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&q=80",
+        "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=600&q=80"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Community Engagement Programs",
+      "category": "Community",
+      "coverImage": "https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=800&q=80",
+      "description": "Documenting our community engagement and environmental education programs across Bangladesh.",
+      "images": [
+        "https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=600&q=80",
+        "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80",
+        "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&q=80"
+      ]
+    },
+    {
+      "id": 3,
+      "title": "GIS & Remote Sensing Operations",
+      "category": "Technical",
+      "coverImage": "https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=800&q=80",
+      "description": "Our GIS team conducting satellite data analysis and field ground-truthing operations.",
+      "images": [
+        "https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=600&q=80",
+        "https://images.unsplash.com/photo-1459666644539-a9755287d6b0?w=600&q=80"
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Disaster Risk Assessment",
+      "category": "Field Work",
+      "coverImage": "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80",
+      "description": "Field documentation of flood-prone areas and cyclone shelter assessments across coastal districts.",
+      "images": [
+        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&q=80",
+        "https://images.unsplash.com/photo-1503435824048-a799a3a84bf7?w=600&q=80",
+        "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&q=80"
+      ]
+    }
+  ]
+}

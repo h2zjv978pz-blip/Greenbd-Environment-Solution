@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Save, Leaf, Eye } from 'lucide-react';
 import ImageUpload from '@/components/admin/ImageUpload';
+import RichTextEditor from '@/components/admin/RichTextEditor';
 
 interface SiteSettings {
   companyName: string; tagline: string; logo: string; favicon: string;
@@ -162,8 +163,7 @@ export default function SettingsAdmin() {
             <h6 className="font-semibold text-gray-700 text-sm border-b border-gray-100 pb-3">Footer</h6>
             <div>
               <label className={labelCls}>Footer Description</label>
-              <textarea value={data.footerText} rows={3} onChange={e => s('footerText', e.target.value)}
-                className={`${inputCls} resize-none`} />
+              <RichTextEditor value={data.footerText} onChange={v => s('footerText', v)} minHeight={100} />
             </div>
             <div>
               <label className={labelCls}>Copyright Name</label>

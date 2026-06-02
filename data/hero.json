@@ -10,7 +10,7 @@
     {
       "id": 2,
       "image": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1920&q=80",
-      "title": "Climate Resilience &",
+      "title": "Climate Resilience & Planning",
       "subtitle": "Disaster Risk Reduction",
       "desc": "Science-based strategies to protect communities, reduce vulnerability, and build adaptive capacity nationwide."
     },
@@ -20,6 +20,36 @@
       "title": "GIS & Remote Sensing",
       "subtitle": "Precision Environmental Mapping",
       "desc": "Advanced geospatial intelligence and satellite data analysis for informed environmental decision-making."
+    },
+    {
+      "id": 1780414313732,
+      "image": "/uploads/1780414459624-9fjlrte0vgb.png",
+      "title": "Urban & Regional Planning",
+      "subtitle": "",
+      "desc": "",
+      "title_bn": "নগর ও আঞ্চলিক পরিকল্পনা",
+      "subtitle_bn": "",
+      "desc_bn": ""
+    },
+    {
+      "id": 1780414535189,
+      "image": "/uploads/1780414567995-ljjnzfintio.png",
+      "title": "Environmental Monitoring",
+      "subtitle": "",
+      "desc": "Real-time air, water, and soil quality monitoring networks with data dashboards for informed policy decisions.",
+      "title_bn": "এনভায়রনমেন্টাল মনিটরিং",
+      "subtitle_bn": "",
+      "desc_bn": "অবহিত নীতি সিদ্ধান্তের জন্য ডেটা ড্যাশবোর্ড সহ রিয়েল-টাইম বায়ু, জল এবং মাটির গুণমান পর্যবেক্ষণ নেটওয়ার্ক।"
+    },
+    {
+      "id": 1780414587172,
+      "image": "/uploads/1780414671946-p5m6cvn0orb.png",
+      "title": "Environmental Research",
+      "subtitle": "",
+      "desc": "Applied and academic research on biodiversity, ecosystem services, land-use change, and environmental governance.",
+      "title_bn": "পরিবেশগত গবেষণা",
+      "subtitle_bn": "",
+      "desc_bn": "জীববৈচিত্র্য, ইকোসিস্টেম পরিষেবা, ভূমি-ব্যবহার পরিবর্তন এবং পরিবেশগত শাসনের উপর ফলিত এবং একাডেমিক গবেষণা।"
     }
   ]
 }

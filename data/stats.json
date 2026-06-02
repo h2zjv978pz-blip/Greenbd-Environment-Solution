@@ -1,8 +1,40 @@
 {
   "stats": [
-    { "id": 1, "value": 15,  "suffix": "+", "label": "Years of Experience",    "desc": "Delivering environmental excellence since 2009" },
-    { "id": 2, "value": 200, "suffix": "+", "label": "Projects Completed",     "desc": "Across Bangladesh and South Asia" },
-    { "id": 3, "value": 95,  "suffix": "",  "label": "Client Satisfaction",    "desc": "Based on post-project evaluations" },
-    { "id": 4, "value": 50,  "suffix": "+", "label": "Expert Team Members",    "desc": "Ecologists, GIS analysts & climate scientists" }
+    {
+      "id": 1,
+      "value": 5,
+      "suffix": "+",
+      "label": "Years of Experience",
+      "desc": "Delivering environmental excellence since 2021",
+      "label_bn": "অভিজ্ঞতার বছর",
+      "desc_bn": "2021 সাল থেকে পরিবেশগত শ্রেষ্ঠত্ব প্রদান করা"
+    },
+    {
+      "id": 2,
+      "value": 10,
+      "suffix": "+",
+      "label": "Projects Completed",
+      "desc": "Across Bangladesh",
+      "label_bn": "প্রকল্প সমাপ্ত",
+      "desc_bn": "বাংলাদেশ জুড়ে"
+    },
+    {
+      "id": 3,
+      "value": 90,
+      "suffix": "",
+      "label": "Client Satisfaction",
+      "desc": "Based on post-project evaluations",
+      "label_bn": "ক্লায়েন্ট সন্তুষ্টি",
+      "desc_bn": "পোস্ট-প্রকল্প মূল্যায়ন উপর ভিত্তি করে"
+    },
+    {
+      "id": 4,
+      "value": 10,
+      "suffix": "+",
+      "label": "Expert Team Members",
+      "desc": "Ecologists, GIS analysts & climate scientists",
+      "label_bn": "বিশেষজ্ঞ দলের সদস্য",
+      "desc_bn": "পরিবেশবিদ, জিআইএস বিশ্লেষক এবং জলবায়ু বিজ্ঞানী"
+    }
   ]
 }

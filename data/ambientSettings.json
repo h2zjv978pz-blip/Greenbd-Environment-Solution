@@ -1,0 +1,48 @@
+{
+  "enabled": true,
+  "defaultSound": "rain",
+  "defaultVolume": 0.45,
+  "autoPlay": false,
+  "sounds": [
+    {
+      "id": "rain",
+      "emoji": "🌧",
+      "label": "Rain",
+      "desc": "Gentle rainfall",
+      "enabled": false,
+      "audioFile": ""
+    },
+    {
+      "id": "ocean",
+      "emoji": "🌊",
+      "label": "Ocean",
+      "desc": "Ocean waves",
+      "enabled": true,
+      "audioFile": "/audio/1780420604305-ambinet-soft-ambient-for-inner-peace-315372.mp3"
+    },
+    {
+      "id": "forest",
+      "emoji": "🌿",
+      "label": "Forest",
+      "desc": "Forest ambience",
+      "enabled": true,
+      "audioFile": "/audio/1780420531960-rodrigolcir-peace-within-419056.mp3"
+    },
+    {
+      "id": "wind",
+      "emoji": "🍃",
+      "label": "Wind",
+      "desc": "Gentle breeze",
+      "enabled": true,
+      "audioFile": "/audio/1780420543152-divinelightwithin-inner-peace-222955.mp3"
+    },
+    {
+      "id": "birds",
+      "emoji": "🐦",
+      "label": "Birds",
+      "desc": "Morning birdsong",
+      "enabled": false,
+      "audioFile": ""
+    }
+  ]
+}

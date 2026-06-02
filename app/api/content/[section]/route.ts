@@ -13,6 +13,20 @@ const ARRAY_KEY: Record<string, string> = {
   testimonials: 'testimonials',
   stats:        'stats',
   slides:       'slides',
+  // Resources
+  posts:        'posts',
+  laws:         'laws',
+  downloads:    'downloads',
+  albums:       'albums',
+  videos:       'videos',
+};
+
+// Maps section name → actual JSON file (when they differ)
+const FILE_MAP: Record<string, string> = {
+  publications: 'research',
+  testimonials: 'clients',
+  posts:        'blog',
+  albums:       'gallery',
 };
 
 async function isAuthed(): Promise<boolean> {
@@ -45,10 +59,11 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ sec
   }
 
   // Array sections: add new item
-  const data = readData<Record<string, { id: number }[]>>(section);
+  const file = FILE_MAP[section] || section;
+  const data = readData<Record<string, { id: number }[]>>(file);
   const newItem = { id: getNextId(data[key] || []), ...body };
   data[key] = [...(data[key] || []), newItem];
-  writeData(section, data);
+  writeData(file, data);
   return NextResponse.json(newItem, { status: 201 });
 }
 

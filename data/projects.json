@@ -8,19 +8,12 @@
       "location": "Cox's Bazar, Bangladesh",
       "projectTime": "2023",
       "description": "Comprehensive flood vulnerability mapping of the Cox's Bazar coastline using multi-source satellite data and field surveys.",
-      "image": "/uploads/1780037270422-4m7aenw4ylb.jpeg",
-      "galleryImages": [
-        "/uploads/1780039397374-b30n9teh24.png",
-        "/uploads/1780039460073-o474b3ecfw.jpg",
-        ""
-      ],
-      "additionalImages": [
-        "/uploads/1780039508220-sp4r0b69g2m.png",
-        "/uploads/1780040737150-fqzfwwnun98.png",
-        "/uploads/1780040737189-vem8x6bmjg.png",
-        "/uploads/1780040737227-vyn6lehdhlh.png",
-        "/uploads/1780040737274-6p1mk2xvg3.png"
-      ]
+      "image": "/uploads/1780417889411-tik9bbpddlr.png",
+      "galleryImages": [],
+      "additionalImages": [],
+      "title_bn": "উপকূলীয় বন্যার ঝুঁকির মানচিত্র",
+      "location_bn": "কক্সবাজার, বাংলাদেশ",
+      "description_bn": "মাল্টি সোর্স স্যাটেলাইট ডেটা এবং ফিল্ড সার্ভে ব্যবহার করে কক্সবাজার উপকূলরেখার ব্যাপক বন্যার ঝুঁকির ম্যাপিং।"
     },
     {
       "id": 2,
@@ -30,25 +23,12 @@
       "location": "Dhaka, Bangladesh",
       "projectTime": "2023",
       "description": "Geospatial analysis of urban green spaces in Dhaka Metropolitan Area using Sentinel-2 imagery and NDVI mapping.",
-      "image": "/uploads/1780037325030-2544jrzxndo.png",
+      "image": "/uploads/1780418254158-eswvio2t5y7.png",
       "galleryImages": [],
-      "additionalImages": []
-    },
-    {
-      "id": 3,
-      "title": "Sundarbans Mangrove Monitoring",
-      "category": "Research",
-      "clientName": "World Bank",
-      "location": "Khulna, Bangladesh",
-      "projectTime": "2022",
-      "description": "Long-term mangrove health monitoring using SAR and optical fusion in the Sundarbans UNESCO World Heritage Site.",
-      "image": "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=600&q=80",
-      "galleryImages": [
-        "/uploads/1780040325143-4qrcg01rcea.png",
-        "/uploads/1780040364254-h7u0f5uqkyd.jpg",
-        "/uploads/1780040376000-di72jfz7hdh.png"
-      ],
-      "additionalImages": []
+      "additionalImages": [],
+      "title_bn": "",
+      "location_bn": "",
+      "description_bn": ""
     },
     {
       "id": 4,
@@ -58,21 +38,27 @@
       "location": "Rajshahi, Bangladesh",
       "projectTime": "2023",
       "description": "Assessment of climate-smart agriculture practices and their adoption rates in drought-prone northern Bangladesh.",
-      "image": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&q=80",
+      "image": "/uploads/1780418686531-6yf3he7hs5e.png",
       "galleryImages": [],
-      "additionalImages": []
+      "additionalImages": [],
+      "title_bn": "",
+      "location_bn": "",
+      "description_bn": ""
     },
     {
       "id": 5,
       "title": "River Erosion Hotspot Detection",
       "category": "GIS/RS",
       "clientName": "BWDB",
-      "location": "Jamuna, Bangladesh",
+      "location": "Bandarban, Bangladesh",
       "projectTime": "2022",
-      "description": "Satellite-based change detection to identify active erosion hotspots along the Jamuna River corridor.",
-      "image": "https://images.unsplash.com/photo-1503435824048-a799a3a84bf7?w=600&q=80",
+      "description": "Satellite-based change detection to identify active erosion hotspots along the sanghu River corridor.",
+      "image": "/uploads/1780419781056-rous7a00f8.png",
       "galleryImages": [],
-      "additionalImages": []
+      "additionalImages": [],
+      "title_bn": "নদী ভাঙন হটস্পট সনাক্তকরণ",
+      "location_bn": "বান্দরবান, বাংলাদেশ",
+      "description_bn": "স্যাটেলাইট-ভিত্তিক পরিবর্তন সনাক্তকরণ সাংগু নদী করিডোর বরাবর সক্রিয় ক্ষয়ের হটস্পট চিহ্নিত করতে।"
     },
     {
       "id": 6,
@@ -167,18 +153,6 @@
       "projectTime": "2021",
       "description": "Spatial assessment of groundwater salinity intrusion in coastal aquifers of southwest Bangladesh.",
       "image": "https://images.unsplash.com/photo-1559825481-12a05cc00344?w=600&q=80",
-      "galleryImages": [],
-      "additionalImages": []
-    },
-    {
-      "id": 14,
-      "title": "Clean Cooking Initiative",
-      "category": "Community",
-      "clientName": "SNV Bangladesh",
-      "location": "Rural Bangladesh",
-      "projectTime": "2022",
-      "description": "Baseline assessment and impact monitoring of improved cookstove adoption in 10,000 rural households.",
-      "image": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80",
       "galleryImages": [],
       "additionalImages": []
     },

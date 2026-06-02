@@ -14,6 +14,12 @@ const ARRAY_KEY: Record<string, string> = {
   slides:       'slides',
 };
 
+// Maps section name → actual JSON file (when they differ)
+const FILE_MAP: Record<string, string> = {
+  publications: 'research',
+  testimonials: 'clients',
+};
+
 async function isAuthed(): Promise<boolean> {
   const jar = await cookies();
   const token = jar.get('admin_token')?.value;
@@ -31,12 +37,13 @@ export async function PUT(
   const key = ARRAY_KEY[section];
   if (!key) return NextResponse.json({ error: 'Invalid section' }, { status: 400 });
 
-  const data = readData<Record<string, { id: number }[]>>(section);
+  const file = FILE_MAP[section] || section;
+  const data = readData<Record<string, { id: number }[]>>(file);
   const idx = data[key].findIndex((i) => i.id === Number(id));
   if (idx === -1) return NextResponse.json({ error: 'Not found' }, { status: 404 });
 
   data[key][idx] = { ...data[key][idx], ...body, id: Number(id) };
-  writeData(section, data);
+  writeData(file, data);
   return NextResponse.json(data[key][idx]);
 }
 
@@ -50,8 +57,9 @@ export async function DELETE(
   const key = ARRAY_KEY[section];
   if (!key) return NextResponse.json({ error: 'Invalid section' }, { status: 400 });
 
-  const data = readData<Record<string, { id: number }[]>>(section);
+  const file = FILE_MAP[section] || section;
+  const data = readData<Record<string, { id: number }[]>>(file);
   data[key] = data[key].filter((i) => i.id !== Number(id));
-  writeData(section, data);
+  writeData(file, data);
   return NextResponse.json({ ok: true });
 }

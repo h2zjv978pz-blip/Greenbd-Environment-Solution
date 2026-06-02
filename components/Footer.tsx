@@ -1,38 +1,35 @@
 'use client';
 
-import { Leaf, Facebook, Twitter, Linkedin, Youtube, ArrowUp } from 'lucide-react';
+import { Leaf, Facebook, Twitter, Linkedin, Youtube, ArrowUp, Clock } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import type { SiteSettings } from '@/lib/getData';
-
-const footerLinks = {
-  Services: [
-    'Environmental Impact Assessment',
-    'GIS & Remote Sensing',
-    'Climate Change Research',
-    'Disaster Risk Reduction',
-    'Environmental Monitoring',
-    'Sustainability Consulting',
-  ],
-  Company: ['About Us', 'Our Team', 'Projects', 'Research & Publications', 'News & Events', 'Careers'],
-  Resources: ['Knowledge Hub', 'Open Data', 'Policy Briefs', 'Annual Reports', 'Media Gallery', 'FAQs'],
-};
+import { useLanguage } from '@/lib/i18n/LanguageContext';
+import t from '@/lib/i18n/translations';
 
 const socials = [
   { icon: Facebook, href: '#', label: 'Facebook' },
-  { icon: Twitter, href: '#', label: 'Twitter' },
-  { icon: Linkedin, href: '#', label: 'LinkedIn' },
-  { icon: Youtube, href: '#', label: 'YouTube' },
+  { icon: Twitter,  href: '#', label: 'Twitter'  },
+  { icon: Linkedin, href: '#', label: 'LinkedIn'  },
+  { icon: Youtube,  href: '#', label: 'YouTube'   },
 ];
 
+const COLUMN_KEYS = ['Services', 'Company', 'Resources'] as const;
+
 export default function Footer({ settings }: { settings?: SiteSettings }) {
+  const { lang } = useLanguage();
+  const tr = t[lang].footer;
+  const banglaFont = lang === 'bn' ? { fontFamily: "'Hind Siliguri', sans-serif" } : {};
+
   const name      = settings?.companyName  || 'Green BD';
-  const sub       = settings?.tagline      || 'Environmental Solutions';
+  const sub       = (lang === 'bn' && settings?.tagline_bn) ? settings.tagline_bn : (settings?.tagline || 'Environmental Solutions');
   const logo      = settings?.logo         || '';
-  const footerTxt = settings?.footerText   || 'Building climate resilience, advancing environmental research, and empowering communities across Bangladesh through science-led solutions since 2009.';
-  const copyright = settings?.copyrightName|| 'Green BD Environmental Solutions';
+  const footerTxt = (lang === 'bn' && settings?.footerText_bn) ? settings.footerText_bn : (settings?.footerText || 'Building climate resilience, advancing environmental research, and empowering communities across Bangladesh through science-led solutions since 2009.');
+  const copyright = settings?.copyrightName || 'Green BD Environmental Solutions';
+
   return (
-    <footer className="bg-gray-950 text-gray-300">
+    <footer className="bg-gray-950 text-gray-300" style={banglaFont}>
       <div className="container mx-auto px-4 lg:px-8 pt-16 pb-8">
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8 md:gap-10 mb-10 md:mb-12">
           {/* Brand column */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-4">
@@ -53,7 +50,7 @@ export default function Footer({ settings }: { settings?: SiteSettings }) {
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="w-9 h-9 rounded-lg bg-gray-800 hover:bg-primary-600 flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200"
+                  className="w-11 h-11 rounded-lg bg-gray-800 hover:bg-primary-600 flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200"
                 >
                   <Icon className="w-4 h-4" />
                 </a>
@@ -62,16 +59,13 @@ export default function Footer({ settings }: { settings?: SiteSettings }) {
           </div>
 
           {/* Link columns */}
-          {Object.entries(footerLinks).map(([heading, links]) => (
-            <div key={heading}>
-              <h4 className="text-white font-semibold font-heading text-sm mb-4">{heading}</h4>
+          {COLUMN_KEYS.map((key) => (
+            <div key={key}>
+              <h4 className="text-white font-semibold font-heading text-sm mb-4">{tr.columns[key]}</h4>
               <ul className="space-y-2">
-                {links.map((link) => (
+                {tr.links[key].map((link) => (
                   <li key={link}>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-green-400 text-sm transition-colors duration-200"
-                    >
+                    <a href="#" className="text-gray-400 hover:text-green-400 text-sm transition-colors duration-200">
                       {link}
                     </a>
                   </li>
@@ -84,30 +78,33 @@ export default function Footer({ settings }: { settings?: SiteSettings }) {
         {/* Newsletter */}
         <div className="bg-gray-900 rounded-2xl p-6 mb-10 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
-            <p className="text-white font-semibold font-heading">Stay Updated on Environmental Developments</p>
-            <p className="text-gray-400 text-sm">Subscribe to our newsletter for research updates, project news, and climate insights.</p>
+            <p className="text-white font-semibold font-heading">{tr.newsletterTitle}</p>
+            <p className="text-gray-400 text-sm">{tr.newsletterDesc}</p>
           </div>
           <div className="flex gap-2 w-full md:w-auto">
             <input
               type="email"
-              placeholder="your@email.com"
+              placeholder={tr.emailPlaceholder}
               className="flex-1 md:w-64 bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary-500"
             />
             <button className="bg-primary-600 hover:bg-primary-500 text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition-colors flex-shrink-0">
-              Subscribe
+              {tr.subscribe}
             </button>
           </div>
         </div>
 
+        {/* Live clock strip */}
+        <FooterClock />
+
         {/* Bottom bar */}
         <div className="border-t border-gray-800 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-gray-500 text-xs text-center md:text-left">
-            © {new Date().getFullYear()} {copyright}. All rights reserved. | Registered in Bangladesh.
+            © {new Date().getFullYear()} {copyright}. {tr.allRights}. | {tr.registeredIn}.
           </p>
           <div className="flex gap-4 text-xs text-gray-500">
-            <a href="#" className="hover:text-gray-300 transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">Sitemap</a>
+            <a href="#" className="hover:text-gray-300 transition-colors">{tr.privacyPolicy}</a>
+            <a href="#" className="hover:text-gray-300 transition-colors">{tr.terms}</a>
+            <a href="#" className="hover:text-gray-300 transition-colors">{tr.sitemap}</a>
           </div>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -119,5 +116,46 @@ export default function Footer({ settings }: { settings?: SiteSettings }) {
         </div>
       </div>
     </footer>
+  );
+}
+
+// ── Inline footer clock component ────────────────────────────────────────────
+function FooterClock() {
+  const [time, setTime]  = useState('');
+  const [date, setDate]  = useState('');
+  const [blink, setBlink] = useState(true);
+
+  useEffect(() => {
+    const tick = () => {
+      const now = new Date();
+      setTime(new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Dhaka', hour12: true,
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+      }).format(now));
+      setDate(new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Dhaka', weekday: 'long',
+        month: 'long', day: 'numeric', year: 'numeric',
+      }).format(now));
+      setBlink(b => !b);
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  if (!time) return null;
+
+  return (
+    <div className="border-t border-gray-800 py-4 mb-2 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="flex items-center gap-2 text-gray-500 text-xs">
+        <Clock className="w-3.5 h-3.5 text-primary-500" />
+        <span className="font-medium">Dhaka Office Time</span>
+        <span className="text-primary-500 font-semibold text-[10px] bg-primary-500/10 px-2 py-0.5 rounded-full">BST · UTC+6</span>
+      </div>
+      <div className="flex items-center gap-3">
+        <span className="text-gray-400 text-xs">{date}</span>
+        <span className="font-mono font-bold text-white text-sm tracking-wide tabular-nums">{time}</span>
+      </div>
+    </div>
   );
 }

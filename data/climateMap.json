@@ -1,0 +1,44 @@
+{
+  "defaults": {
+    "year": 2025,
+    "indicator": "rain",
+    "scenario": "rcp45",
+    "filter": "all",
+    "division": "all",
+    "playSpeed": 380
+  },
+  "zoneTempTrends": {
+    "Western":       [0.070, 0.110],
+    "North-Western": [0.065, 0.100],
+    "Northern":      [0.060, 0.095],
+    "Central":       [0.055, 0.085],
+    "South-Central": [0.050, 0.080],
+    "South-Western": [0.048, 0.075],
+    "North-Eastern": [0.045, 0.072],
+    "South-Eastern": [0.042, 0.068]
+  },
+  "zoneRainTrends": {
+    "Western":       -3,
+    "North-Western": -2,
+    "Northern":       2,
+    "Central":        3,
+    "South-Central":  4,
+    "South-Western":  1,
+    "North-Eastern":  8,
+    "South-Eastern": 10
+  },
+  "earthquakes": [
+    { "year": 1869, "mag": 7.5, "lat": 24.8, "lng": 92.6, "name": "Cachar Earthquake",       "impact": "Severe damage across Sylhet; liquefaction reported in river plains" },
+    { "year": 1897, "mag": 8.0, "lat": 26.0, "lng": 91.0, "name": "Great Assam Earthquake",  "impact": "Massive destruction in Sylhet & Mymensingh; thousands of casualties" },
+    { "year": 1918, "mag": 7.6, "lat": 24.5, "lng": 92.4, "name": "Srimangal Earthquake",    "impact": "Heavy structural damage in Sylhet division; railway lines buckled" },
+    { "year": 1930, "mag": 7.1, "lat": 26.1, "lng": 90.0, "name": "Dhubri Earthquake",       "impact": "Wide shaking felt across Rangpur and northern Bangladesh" },
+    { "year": 1943, "mag": 6.1, "lat": 22.7, "lng": 89.1, "name": "Satkhira Earthquake",     "impact": "Minor-moderate damage in SW Bangladesh" },
+    { "year": 1988, "mag": 5.8, "lat": 25.8, "lng": 89.2, "name": "Haripur Earthquake",      "impact": "Cracked buildings in Rangpur; no major casualties" },
+    { "year": 1997, "mag": 6.0, "lat": 22.9, "lng": 92.5, "name": "Bandarban Earthquake",    "impact": "Landslides in CHT; minor structural damage in Chattogram" },
+    { "year": 2003, "mag": 5.0, "lat": 24.9, "lng": 91.7, "name": "Sylhet Earthquake",       "impact": "Slight damage to older structures; widely felt across NE Bangladesh" },
+    { "year": 2017, "mag": 5.9, "lat": 25.7, "lng": 89.5, "name": "Rangpur Earthquake",      "impact": "Visible cracks in buildings; panic in northern districts" },
+    { "year": 2020, "mag": 5.5, "lat": 22.6, "lng": 92.3, "name": "Chattogram Earthquake",   "impact": "Felt strongly in Chattogram & Cox's Bazar; minor damage" },
+    { "year": 2022, "mag": 5.6, "lat": 24.5, "lng": 91.3, "name": "NE Bangladesh Earthquake","impact": "Felt across Sylhet, Mymensingh; cracked walls in old structures" }
+  ],
+  "districtRiskOverrides": {}
+}

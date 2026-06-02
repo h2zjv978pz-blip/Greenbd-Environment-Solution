@@ -1,0 +1,84 @@
+{
+  "laws": [
+    {
+      "id": 1,
+      "title": "Environment Conservation Act 1995 (ECA)",
+      "year": 1995,
+      "category": "Environmental Protection",
+      "status": "Active",
+      "description": "The principal environmental legislation of Bangladesh, establishing the Department of Environment and providing the legal framework for environmental protection, pollution control, and environmental clearance.",
+      "pdfUrl": "",
+      "tags": ["pollution", "clearance", "DOE"]
+    },
+    {
+      "id": 2,
+      "title": "Bangladesh Environment Conservation Rules 1997 (ECR)",
+      "year": 1997,
+      "category": "Environmental Protection",
+      "status": "Active",
+      "description": "Provides detailed rules under the ECA, including standards for air, water, noise, and procedures for Environmental Clearance Certificates (ECC).",
+      "pdfUrl": "",
+      "tags": ["standards", "ECC", "rules"]
+    },
+    {
+      "id": 3,
+      "title": "Water Act 2013",
+      "year": 2013,
+      "category": "Water Resources",
+      "status": "Active",
+      "description": "Governs the use, management, and conservation of surface and groundwater resources. Establishes the Bangladesh Water Development Board regulatory authority.",
+      "pdfUrl": "",
+      "tags": ["water", "river", "groundwater"]
+    },
+    {
+      "id": 4,
+      "title": "Bangladesh Forest Act 1927 (amended 2000)",
+      "year": 1927,
+      "category": "Forest & Biodiversity",
+      "status": "Active",
+      "description": "Regulates the management of reserved and protected forests. Amended provisions address deforestation penalties and community forest management.",
+      "pdfUrl": "",
+      "tags": ["forest", "biodiversity", "reserve"]
+    },
+    {
+      "id": 5,
+      "title": "Wildlife (Preservation and Security) Act 2012",
+      "year": 2012,
+      "category": "Forest & Biodiversity",
+      "status": "Active",
+      "description": "Provides legal protection for wildlife and their habitats, establishes protected areas, and defines penalties for poaching and illegal wildlife trade.",
+      "pdfUrl": "",
+      "tags": ["wildlife", "protected-area", "biodiversity"]
+    },
+    {
+      "id": 6,
+      "title": "Brick Manufacturing and Kiln Establishment (Control) Act 2013",
+      "year": 2013,
+      "category": "Air Quality",
+      "status": "Active",
+      "description": "Regulates brick kiln emissions, mandates cleaner technologies (Zigzag, HHK), and restricts kilns near residential areas and agricultural land.",
+      "pdfUrl": "",
+      "tags": ["brick", "air", "pollution"]
+    },
+    {
+      "id": 7,
+      "title": "Bangladesh Climate Change Strategy and Action Plan (BCCSAP) 2009",
+      "year": 2009,
+      "category": "Climate Policy",
+      "status": "Active",
+      "description": "National framework for climate change mitigation and adaptation, structured around six pillars including food security, disaster management, and infrastructure.",
+      "pdfUrl": "",
+      "tags": ["climate", "policy", "adaptation"]
+    },
+    {
+      "id": 8,
+      "title": "National Biodiversity Strategy and Action Plan (NBSAP) 2016",
+      "year": 2016,
+      "category": "Forest & Biodiversity",
+      "status": "Active",
+      "description": "Strategic framework aligned with CBD Aichi Targets, addressing biodiversity conservation, sustainable use, and benefit-sharing in Bangladesh.",
+      "pdfUrl": "",
+      "tags": ["biodiversity", "CBD", "conservation"]
+    }
+  ]
+}

@@ -3,16 +3,102 @@
 import { useEffect, useState } from 'react';
 import { ChevronDown, Globe, Leaf, Shield } from 'lucide-react';
 import type { HeroSlide } from '@/lib/getData';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
+import t from '@/lib/i18n/translations';
 
-const badges = [
-  { icon: Leaf,   label: 'Sustainability' },
-  { icon: Globe,  label: 'GIS & Remote Sensing' },
-  { icon: Shield, label: 'Climate Resilience' },
-];
+// ── Hero clock + weather widget ───────────────────────────────────────────────
+function HeroClock() {
+  const [time,  setTime]  = useState('');
+  const [secs,  setSecs]  = useState('');
+  const [ampm,  setAmpm]  = useState('');
+  const [date,  setDate]  = useState('');
+  const [blink, setBlink] = useState(true);
+  const [temp,  setTemp]  = useState<number | null>(null);
+  const [wCode, setWCode] = useState(0);
+
+  // Live temperature — Open-Meteo (free, no key) for Dhaka
+  useEffect(() => {
+    const fetchWeather = () =>
+      fetch('https://api.open-meteo.com/v1/forecast?latitude=23.8103&longitude=90.4125&current_weather=true&temperature_unit=celsius')
+        .then(r => r.json())
+        .then(d => { setTemp(d.current_weather?.temperature ?? null); setWCode(d.current_weather?.weathercode ?? 0); })
+        .catch(() => {});
+    fetchWeather();
+    const id = setInterval(fetchWeather, 15 * 60 * 1000); // refresh every 15 min
+    return () => clearInterval(id);
+  }, []);
+
+  // Clock tick
+  useEffect(() => {
+    const tick = () => {
+      const p = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Dhaka', hour12: true,
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+        month: 'short', day: 'numeric', year: 'numeric',
+      }).formatToParts(new Date());
+      const g = (t: string) => p.find(x => x.type === t)?.value ?? '';
+      setTime(`${g('hour')}:${g('minute')}`);
+      setSecs(g('second'));
+      setAmpm(g('dayPeriod'));
+      setDate(`${g('month')} ${g('day')}, ${g('year')}`);
+      setBlink(b => !b);
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  if (!time) return null;
+
+  // Simple weather icon from WMO code
+  const wx = wCode === 0 ? '☀️' : wCode <= 3 ? '⛅' : wCode <= 55 ? '🌦' : wCode <= 67 ? '🌧' : '⛈';
+
+  return (
+    <div className="absolute top-20 sm:top-24 left-3 sm:left-5 md:left-9 z-20 select-none hidden xs:block sm:block">
+      <div className="rounded-xl px-3 py-2.5 border border-white/10 shadow-lg"
+        style={{ background: 'rgba(0,0,0,0.22)', backdropFilter: 'blur(8px)' }}>
+
+        {/* Time + seconds */}
+        <div className="flex items-baseline gap-0.5 leading-none">
+          <span className="font-mono font-bold text-white tabular-nums" style={{ fontSize: 22, letterSpacing: -0.5 }}>
+            {time}
+          </span>
+          <span className="font-mono text-white/40 tabular-nums ml-0.5" style={{ fontSize: 13, opacity: blink ? 0.6 : 0.15, transition: 'opacity 0.12s' }}>
+            {secs}
+          </span>
+          <span className="text-white/50 font-semibold ml-1" style={{ fontSize: 10 }}>{ampm}</span>
+        </div>
+
+        {/* Date + Temperature */}
+        <div className="flex items-center justify-between gap-4 mt-1">
+          <span className="text-white/45 font-medium" style={{ fontSize: 10 }}>{date}</span>
+          {temp !== null && (
+            <span className="text-amber-300/90 font-bold flex items-center gap-0.5" style={{ fontSize: 11 }}>
+              {wx} {temp.toFixed(1)}°C
+            </span>
+          )}
+        </div>
+
+        {/* BST label */}
+        <p className="text-white/25 mt-0.5" style={{ fontSize: 9, letterSpacing: '0.08em' }}>BST · Dhaka</p>
+      </div>
+    </div>
+  );
+}
 
 export default function Hero({ slides }: { slides: HeroSlide[] }) {
+  const { lang } = useLanguage();
+  const tr = t[lang].hero;
+  const banglaFont = lang === 'bn' ? { fontFamily: "'Hind Siliguri', sans-serif" } : {};
+
+  const badges = [
+    { icon: Leaf,   label: tr.badge1 },
+    { icon: Globe,  label: tr.badge2 },
+    { icon: Shield, label: tr.badge3 },
+  ];
+
   const [current, setCurrent] = useState(0);
-  const [fade, setFade] = useState(true);
+  const [fade,    setFade]    = useState(true);
 
   useEffect(() => {
     if (slides.length < 2) return;
@@ -26,10 +112,17 @@ export default function Hero({ slides }: { slides: HeroSlide[] }) {
   const slide = slides[current] ?? slides[0];
   if (!slide) return null;
 
+  const title    = (lang === 'bn' && slide.title_bn)    ? slide.title_bn    : slide.title;
+  const subtitle = (lang === 'bn' && slide.subtitle_bn) ? slide.subtitle_bn : slide.subtitle;
+  const desc     = (lang === 'bn' && slide.desc_bn)     ? slide.desc_bn     : slide.desc;
+
   return (
-    <section id="home" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+    <section id="home" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden" style={banglaFont}>
       <div className="absolute inset-0 bg-cover bg-center transition-opacity duration-700" style={{ backgroundImage: `url('${slide.image}')`, opacity: fade ? 1 : 0 }} />
       <div className="absolute inset-0 bg-gradient-to-br from-primary-950/80 via-primary-900/60 to-primary-800/40" />
+
+      {/* Clock widget — top-left, below the fixed header */}
+      <HeroClock />
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full border border-white/30 animate-ping" style={{ animationDuration: '4s' }} />
         <div className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full border border-white/20 animate-ping" style={{ animationDuration: '6s' }} />
@@ -45,16 +138,15 @@ export default function Hero({ slides }: { slides: HeroSlide[] }) {
         </div>
 
         <h1 className={`font-heading font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-tight mb-4 transition-all duration-500 ${fade ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          {slide.title}<br /><span className="text-green-300">{slide.subtitle}</span>
+          {title}<br /><span className="text-green-300">{subtitle}</span>
         </h1>
 
-        <p className={`text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-10 transition-all duration-500 delay-100 ${fade ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          {slide.desc}
-        </p>
+        <div className={`text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-10 transition-all duration-500 delay-100 ${fade ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+          dangerouslySetInnerHTML={{ __html: desc }} />
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="#projects" onClick={(e) => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' }); }} className="bg-primary-600 hover:bg-primary-500 text-white font-semibold px-8 py-4 rounded-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 text-base">Explore Our Work</a>
-          <a href="#contact"  onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }} className="border-2 border-white/60 hover:border-white text-white hover:bg-white/10 font-semibold px-8 py-4 rounded-xl transition-all duration-300 text-base backdrop-blur">Contact Us</a>
+          <a href="#projects" onClick={(e) => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' }); }} className="bg-primary-600 hover:bg-primary-500 text-white font-semibold px-8 py-4 rounded-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 text-base">{tr.exploreWork}</a>
+          <a href="#contact"  onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }} className="border-2 border-white/60 hover:border-white text-white hover:bg-white/10 font-semibold px-8 py-4 rounded-xl transition-all duration-300 text-base backdrop-blur">{tr.contactUs}</a>
         </div>
 
         <div className="flex justify-center gap-2 mt-12">
@@ -65,7 +157,7 @@ export default function Hero({ slides }: { slides: HeroSlide[] }) {
       </div>
 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/60 animate-bounce">
-        <span className="text-xs tracking-widest uppercase">Scroll</span>
+        <span className="text-xs tracking-widest uppercase">{tr.scroll}</span>
         <ChevronDown className="w-5 h-5" />
       </div>
 

@@ -1,0 +1,59 @@
+{
+  "downloads": [
+    {
+      "id": 1,
+      "title": "Bangladesh Climate Vulnerability Index 2024",
+      "category": "Reports",
+      "fileUrl": "",
+      "fileType": "PDF",
+      "fileSize": "3.2 MB",
+      "description": "Comprehensive district-level vulnerability assessment covering flood, drought, cyclone, and sea-level rise exposure for all 64 districts.",
+      "date": "2024-09-15",
+      "downloadCount": 0
+    },
+    {
+      "id": 2,
+      "title": "Environmental Impact Assessment Guide for Developers",
+      "category": "Guides",
+      "fileUrl": "",
+      "fileType": "PDF",
+      "fileSize": "1.8 MB",
+      "description": "Step-by-step guide for conducting EIA in Bangladesh, aligned with DOE requirements and international best practices.",
+      "date": "2024-07-01",
+      "downloadCount": 0
+    },
+    {
+      "id": 3,
+      "title": "GreenBD GIS Data Collection Manual",
+      "category": "Technical",
+      "fileUrl": "",
+      "fileType": "PDF",
+      "fileSize": "2.1 MB",
+      "description": "Standard operating procedures for field data collection, GPS logging, and satellite imagery analysis used in our GIS projects.",
+      "date": "2024-05-20",
+      "downloadCount": 0
+    },
+    {
+      "id": 4,
+      "title": "Community Disaster Risk Reduction Toolkit",
+      "category": "Guides",
+      "fileUrl": "",
+      "fileType": "ZIP",
+      "fileSize": "5.4 MB",
+      "description": "Practical toolkit including survey forms, risk maps, community training materials, and early warning protocols for local disaster preparedness.",
+      "date": "2024-03-10",
+      "downloadCount": 0
+    },
+    {
+      "id": 5,
+      "title": "Sundarbans Mangrove Ecosystem Report 2023",
+      "category": "Reports",
+      "fileUrl": "",
+      "fileType": "PDF",
+      "fileSize": "4.7 MB",
+      "description": "Annual monitoring report on mangrove health, biodiversity indices, and threat assessment for the Sundarbans ecosystem.",
+      "date": "2023-12-01",
+      "downloadCount": 0
+    }
+  ]
+}

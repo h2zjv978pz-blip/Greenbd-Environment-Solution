@@ -1,8 +1,72 @@
 {
   "publications": [
-    { "id": 1, "title": "Sea-Level Rise Impacts on Coastal Livelihoods in Southern Bangladesh: A Multi-Scenario Analysis", "journal": "Climate Risk Management", "year": "2024", "tags": ["Climate", "Coastal", "Livelihoods"], "abstract": "This study employs ensemble climate models to project sea-level rise scenarios and their cascading impacts on fishing communities across 12 coastal upazilas.", "pdfFile": "", "content": "" },
-    { "id": 2, "title": "Urban Heat Island Dynamics in Dhaka Metropolitan Area Using Landsat-8 Thermal Imagery", "journal": "Urban Climate", "year": "2023", "tags": ["GIS/RS", "Urban", "Heat Island"], "abstract": "Multi-temporal analysis of surface temperature anomalies across Dhaka's expanding urban fabric reveals critical green infrastructure deficits.", "pdfFile": "", "content": "" },
-    { "id": 3, "title": "Participatory Mapping for Disaster Risk Reduction: Lessons from the Haor Wetlands", "journal": "International Journal of DRR", "year": "2023", "tags": ["DRR", "Community", "Wetlands"], "abstract": "Community-based participatory mapping integrated with satellite-derived flood extent data enables hyperlocal early warning systems in remote wetland areas.", "pdfFile": "", "content": "" },
-    { "id": 4, "title": "Mangrove Biomass Estimation Using SAR and Optical Fusion in the Sundarbans", "journal": "Remote Sensing of Environment", "year": "2022", "tags": ["Remote Sensing", "Mangrove", "Carbon"], "abstract": "A novel fusion methodology combining Sentinel-1 SAR with Sentinel-2 multispectral data achieves 94% accuracy in above-ground biomass estimation.", "pdfFile": "", "content": "" }
+    {
+      "id": 1,
+      "title": "Sea-Level Rise Impacts on Coastal Livelihoods in Southern Bangladesh: A Multi-Scenario Analysis",
+      "journal": "Climate Risk Management",
+      "year": "2024",
+      "tags": [
+        "Climate",
+        "Coastal",
+        "Livelihoods"
+      ],
+      "abstract": "This study employs ensemble climate models to project sea-level rise scenarios and their cascading impacts on fishing communities across 12 coastal upazilas.",
+      "pdfFile": "",
+      "content": "",
+      "title_bn": "দক্ষিণ বাংলাদেশের উপকূলীয় জীবিকার উপর সমুদ্রপৃষ্ঠের উচ্চতার প্রভাব: একটি বহু-পরিকল্পনা বিশ্লেষণ",
+      "journal_bn": "জলবায়ু ঝুঁকি ব্যবস্থাপনা",
+      "abstract_bn": "এই সমীক্ষায় 12টি উপকূলীয় উপজেলা জুড়ে সমুদ্রপৃষ্ঠের উচ্চতা বৃদ্ধির পরিস্থিতি এবং মাছ ধরার সম্প্রদায়ের উপর তাদের ক্যাসকেডিং প্রভাবগুলিকে প্রজেক্ট করার জন্য সমন্বিত জলবায়ু মডেল নিয়োগ করা হয়েছে।"
+    },
+    {
+      "id": 2,
+      "title": "Urban Heat Island Dynamics in Dhaka Metropolitan Area Using Landsat-8 Thermal Imagery",
+      "journal": "Urban Climate",
+      "year": "2023",
+      "tags": [
+        "GIS/RS",
+        "Urban",
+        "Heat Island"
+      ],
+      "abstract": "Multi-temporal analysis of surface temperature anomalies across Dhaka's expanding urban fabric reveals critical green infrastructure deficits.",
+      "pdfFile": "",
+      "content": "",
+      "title_bn": "ল্যান্ডস্যাট-৮ তাপীয় চিত্র ব্যবহার করে ঢাকা মেট্রোপলিটন এলাকায় আরবান হিট আইল্যান্ড ডাইনামিকস",
+      "journal_bn": "শহুরে জলবায়ু",
+      "abstract_bn": "ঢাকার সম্প্রসারণশীল শহুরে ফ্যাব্রিক জুড়ে পৃষ্ঠের তাপমাত্রার অসামঞ্জস্যের বহু-সাময়িক বিশ্লেষণ সবুজ অবকাঠামোর গুরুতর ঘাটতি প্রকাশ করে।"
+    },
+    {
+      "id": 3,
+      "title": "Participatory Mapping for Disaster Risk Reduction: Lessons from the Haor Wetlands",
+      "journal": "International Journal of DRR",
+      "year": "2023",
+      "tags": [
+        "DRR",
+        "Community",
+        "Wetlands"
+      ],
+      "abstract": "Community-based participatory mapping integrated with satellite-derived flood extent data enables hyperlocal early warning systems in remote wetland areas.",
+      "pdfFile": "",
+      "content": "",
+      "title_bn": "দুর্যোগ ঝুঁকি হ্রাসের জন্য অংশগ্রহণমূলক ম্যাপিং: হাওর জলাভূমি থেকে পাঠ",
+      "journal_bn": "DRR এর আন্তর্জাতিক জার্নাল",
+      "abstract_bn": "সম্প্রদায়-ভিত্তিক অংশগ্রহণমূলক ম্যাপিং স্যাটেলাইট থেকে প্রাপ্ত বন্যার পরিমাণ ডেটার সাথে একীভূত করে প্রত্যন্ত জলাভূমি এলাকায় হাইপারলোকাল প্রারম্ভিক সতর্কতা ব্যবস্থা সক্ষম করে।"
+    },
+    {
+      "id": 4,
+      "title": "Mangrove Biomass Estimation Using SAR and Optical Fusion in the Sundarbans",
+      "journal": "Remote Sensing of Environment",
+      "year": "2022",
+      "tags": [
+        "Remote Sensing",
+        "Mangrove",
+        "Carbon"
+      ],
+      "abstract": "A novel fusion methodology combining Sentinel-1 SAR with Sentinel-2 multispectral data achieves 94% accuracy in above-ground biomass estimation.",
+      "pdfFile": "",
+      "content": "",
+      "title_bn": "সুন্দরবনে SAR এবং অপটিক্যাল ফিউশন ব্যবহার করে ম্যানগ্রোভ বায়োমাস অনুমান",
+      "journal_bn": "রিমোট সেন্সিং অফ এনভায়রনমেন্ট",
+      "abstract_bn": "সেন্টিনেল-1 এসএআর-এর সাথে সেন্টিনেল-2 মাল্টিস্পেকট্রাল ডেটার সংমিশ্রণে একটি অভিনব ফিউশন পদ্ধতি মাটির উপরে বায়োমাস অনুমানে 94% নির্ভুলতা অর্জন করে।"
+    }
   ]
 }

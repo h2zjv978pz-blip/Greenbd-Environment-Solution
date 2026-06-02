@@ -7,8 +7,9 @@ import Hero        from '@/components/Hero';
 import Projects    from '@/components/Projects';
 import About       from '@/components/About';
 import Services    from '@/components/Services';
-import Stats       from '@/components/Stats';
-import Research    from '@/components/Research';
+import Stats            from '@/components/Stats';
+import ClimateMapSection from '@/components/ClimateMapSection';
+import Research         from '@/components/Research';
 import Team        from '@/components/Team';
 import Clients     from '@/components/Clients';
 import ContactCTA  from '@/components/ContactCTA';
@@ -36,6 +37,7 @@ export default function Home() {
       <About       data={about} />
       <Services    services={services.services} />
       <Stats       stats={stats.stats} />
+      <ClimateMapSection />
       <Research    publications={research.publications} />
       <Team        members={team.members} />
       <Clients     clients={clients.clients} testimonials={clients.testimonials} />

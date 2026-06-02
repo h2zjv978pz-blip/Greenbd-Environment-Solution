@@ -1,0 +1,43 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "Climate Resilience Strategies for Bangladesh in 2025",
+      "slug": "climate-resilience-2025",
+      "category": "Climate",
+      "author": "Dr. Fatema Khanam",
+      "date": "2025-01-10",
+      "excerpt": "Bangladesh faces accelerating climate risks. New national strategies are reshaping how communities adapt to floods, droughts, and rising seas.",
+      "content": "Bangladesh is one of the most climate-vulnerable nations on earth. With over 160 million people living on a low-lying delta, the compounding effects of sea-level rise, intensified monsoons, and increasingly severe cyclones demand urgent, science-based responses. This article examines the latest national adaptation strategies and community-level interventions making a measurable difference.",
+      "image": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80",
+      "tags": ["climate", "bangladesh", "adaptation"],
+      "published": true
+    },
+    {
+      "id": 2,
+      "title": "GIS Mapping Reveals Alarming Deforestation in CHT",
+      "slug": "gis-deforestation-cht",
+      "category": "GIS/RS",
+      "author": "Eng. Sabbir Ahmed",
+      "date": "2024-12-05",
+      "excerpt": "Satellite analysis covering 2015-2024 shows a 23% decline in forest cover across the Chittagong Hill Tracts region.",
+      "content": "Using multi-temporal Landsat and Sentinel-2 imagery, our GIS team has documented significant forest loss across the Chittagong Hill Tracts over the past decade. The analysis reveals that road construction, agricultural expansion, and illegal logging are the primary drivers of deforestation in this biodiversity hotspot.",
+      "image": "https://images.unsplash.com/photo-1448375240586-882707db888b?w=800&q=80",
+      "tags": ["gis", "forest", "chittagong"],
+      "published": true
+    },
+    {
+      "id": 3,
+      "title": "Community-Based Flood Early Warning Systems: Lessons Learned",
+      "slug": "flood-early-warning-community",
+      "category": "Disaster Risk",
+      "author": "Md. Karim Uddin",
+      "date": "2024-11-20",
+      "excerpt": "A three-year study across 12 upazilas demonstrates how community-owned early warning systems reduce flood casualties by up to 60%.",
+      "content": "Community-based early warning systems (CBEWS) represent a cost-effective and locally sustainable approach to reducing flood-related casualties. This study documents the implementation and outcomes of CBEWS programs across 12 flood-prone upazilas in Sylhet, Sunamganj, and Netrokona divisions.",
+      "image": "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80",
+      "tags": ["flood", "community", "early-warning"],
+      "published": true
+    }
+  ]
+}
