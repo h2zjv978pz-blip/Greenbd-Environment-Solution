@@ -5,10 +5,9 @@ const nextConfig = {
   output: 'standalone',
 
   // ── Include data/ in every serverless function bundle ──────────────────────
-  experimental: {
-    outputFileTracingIncludes: {
-      '/**': ['./data/**'],
-    },
+  // Moved from experimental in Next.js 15.5
+  outputFileTracingIncludes: {
+    '/**': ['./data/**'],
   },
 
   // ── Image domains ──────────────────────────────────────────────────────────
