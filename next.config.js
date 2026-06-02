@@ -1,7 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // ── Standalone output — bundles everything needed for any deployment ───────
+  // postbuild.js copies data/ and public/ into .next/standalone/ automatically
+  output: 'standalone',
+
   // ── Include data/ in every serverless function bundle ──────────────────────
-  // Without this, Vercel/Netlify strip dynamic fs.readFileSync targets
   experimental: {
     outputFileTracingIncludes: {
       '/**': ['./data/**'],

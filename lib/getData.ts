@@ -1,14 +1,15 @@
 import { readData } from './data';
 
-export const getHero    = () => readData<{ slides: HeroSlide[] }>('hero');
-export const getProjects= () => readData<{ projects: Project[] }>('projects');
-export const getServices= () => readData<{ services: Service[] }>('services');
-export const getAbout   = () => readData<AboutData>('about');
-export const getStats   = () => readData<{ stats: Stat[] }>('stats');
-export const getTeam    = () => readData<{ members: TeamMember[] }>('team');
-export const getClients = () => readData<{ clients: Client[]; testimonials: Testimonial[] }>('clients');
-export const getResearch= () => readData<{ publications: Publication[] }>('research');
-export const getContact  = () => readData<ContactData>('contact');
+// Safe wrappers — always return valid structure even if data file is missing
+export const getHero     = () => { const d = readData<{ slides: HeroSlide[] }>('hero');           return { slides:        Array.isArray(d.slides)        ? d.slides        : [] }; };
+export const getProjects = () => { const d = readData<{ projects: Project[] }>('projects');       return { projects:      Array.isArray(d.projects)      ? d.projects      : [] }; };
+export const getServices = () => { const d = readData<{ services: Service[] }>('services');       return { services:      Array.isArray(d.services)      ? d.services      : [] }; };
+export const getAbout    = () => readData<AboutData>('about');
+export const getStats    = () => { const d = readData<{ stats: Stat[] }>('stats');                return { stats:         Array.isArray(d.stats)         ? d.stats         : [] }; };
+export const getTeam     = () => { const d = readData<{ members: TeamMember[] }>('team');         return { members:       Array.isArray(d.members)       ? d.members       : [] }; };
+export const getClients  = () => { const d = readData<{ clients: Client[]; testimonials: Testimonial[] }>('clients'); return { clients: Array.isArray(d.clients) ? d.clients : [], testimonials: Array.isArray(d.testimonials) ? d.testimonials : [] }; };
+export const getResearch = () => { const d = readData<{ publications: Publication[] }>('research'); return { publications: Array.isArray(d.publications) ? d.publications : [] }; };
+export const getContact  = () => { const d = readData<ContactData>('contact');                     return { address: d.address ?? '', phone: d.phone ?? '', email: d.email ?? '', mapLabel: d.mapLabel ?? '', ctaTitle: d.ctaTitle ?? 'Get In Touch', ctaDesc: d.ctaDesc ?? '', formTitle: d.formTitle ?? 'Contact Us', formDesc: d.formDesc ?? '', subjects: Array.isArray(d.subjects) ? d.subjects : [] } as ContactData; };
 export const getSettings = () => readData<SiteSettings>('settings');
 
 // ── Types ────────────────────────────────────────────────────────────────

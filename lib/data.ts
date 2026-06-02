@@ -1,7 +1,31 @@
 import fs from 'fs';
 import path from 'path';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
+// Try multiple candidate locations for the data directory.
+// On some platforms process.cwd() is the project root; on others the server
+// binary runs from a different directory. Walking candidates ensures we find
+// the data/ folder wherever the platform puts it.
+function resolveDataDir(): string {
+  const candidates = [
+    path.join(process.cwd(), 'data'),                           // standard: project root
+    path.join(process.cwd(), '..', 'data'),                     // one level up
+    path.join(__dirname, '..', 'data'),                         // relative to compiled file
+    path.join(__dirname, '..', '..', 'data'),
+    path.join(__dirname, '..', '..', '..', 'data'),
+    '/app/data',                                                 // common Docker container path
+  ];
+
+  for (const dir of candidates) {
+    try {
+      if (fs.existsSync(dir) && fs.statSync(dir).isDirectory()) return dir;
+    } catch { /* continue */ }
+  }
+
+  // Fallback — will fail gracefully inside readData
+  return path.join(process.cwd(), 'data');
+}
+
+const DATA_DIR = resolveDataDir();
 
 export function readData<T>(file: string): T {
   const filePath = path.join(DATA_DIR, `${file}.json`);
@@ -9,9 +33,7 @@ export function readData<T>(file: string): T {
     const raw = fs.readFileSync(filePath, 'utf-8');
     return JSON.parse(raw) as T;
   } catch (err) {
-    // On read-only deployments (Vercel/Netlify) the file may not be bundled.
-    // Return a safe empty shell so the page renders instead of crashing.
-    console.warn(`[data] readData("${file}") failed:`, (err as Error).message);
+    console.warn(`[data] readData("${file}") failed (${DATA_DIR}):`, (err as Error).message);
     return {} as T;
   }
 }
@@ -21,8 +43,6 @@ export function writeData(file: string, data: unknown): void {
   try {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
   } catch (err) {
-    // Serverless platforms have read-only filesystems after deployment.
-    // Admin edits won't persist, but the server won't crash.
     console.warn(`[data] writeData("${file}") failed (read-only filesystem?):`, (err as Error).message);
   }
 }
