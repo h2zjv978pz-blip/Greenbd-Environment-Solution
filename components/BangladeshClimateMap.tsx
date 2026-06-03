@@ -72,6 +72,8 @@ export default function BangladeshClimateMap({ compact = false, height = '100vh'
   const [settingsReady,  setSettingsReady]  = useState(false);
   const [markerTick,     setMarkerTick]     = useState(0);
   const [basemap,        setBasemap]        = useState<'street'|'satellite'|'hybrid'>('street');
+  const [isMobile,       setIsMobile]       = useState(false);
+  const [mobileSheet,    setMobileSheet]    = useState<'none'|'controls'|'detail'>('none');
 
   // ── Fetch saved settings ──────────────────────────────────────────────────
   useEffect(() => {
@@ -88,6 +90,14 @@ export default function BangladeshClimateMap({ compact = false, height = '100vh'
       })
       .catch(() => {})
       .finally(() => setSettingsReady(true));
+  }, []);
+
+  // ── Mobile detection ─────────────────────────────────────────────────────
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
   }, []);
 
   // ── Live-sync external settings (admin panel) ────────────────────────────
@@ -139,7 +149,7 @@ export default function BangladeshClimateMap({ compact = false, height = '100vh'
           weight: 1.5, opacity: 1, fillOpacity: 0.85,
         }).addTo(map);
         m.bindTooltip(`<b>${d.name.en}</b><br/>${d.division} · ${d.zone}`, { direction: 'top' });
-        m.on('click', () => { setSelected(d); setTab('climate'); });
+        m.on('click', () => { setSelected(d); setTab('climate'); setMobileSheet('detail'); });
         m.on('mouseover', () => { m.setStyle({ fillOpacity: 1, weight: 3 }); });
         m.on('mouseout',  () => { m.setStyle({ fillOpacity: 0.85, weight: 1.5 }); });
         mrkRef.current.set(d.id, m);
@@ -305,27 +315,27 @@ export default function BangladeshClimateMap({ compact = false, height = '100vh'
 
       {/* ── Header ─────────────────────────────────────────────────────── */}
       <header style={{ background:'linear-gradient(135deg,#0f4c3a 0%,#1a6b52 100%)',
-                       color:'white', padding:'0 20px', height:'60px',
+                       color:'white', padding: isMobile ? '0 12px' : '0 20px',
+                       height: isMobile ? '44px' : '60px',
                        display:'flex', alignItems:'center', justifyContent:'space-between',
-                       flexShrink:0, boxShadow:'0 4px 12px rgba(0,0,0,0.2)' }}>
-        <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-          <div style={{ width:36, height:36, background:'rgba(255,255,255,0.15)',
-                        borderRadius:10, display:'flex', alignItems:'center',
-                        justifyContent:'center', fontSize:20 }}>🇧🇩</div>
-          <div>
-            <div style={{ fontWeight:700, fontSize:16, letterSpacing:'-0.3px' }}>
-              Bangladesh Climate Intelligence 2016–2050
+                       flexShrink:0, boxShadow:'0 4px 12px rgba(0,0,0,0.2)', gap:8 }}>
+        <div style={{ display:'flex', alignItems:'center', gap:8, minWidth:0 }}>
+          <div style={{ width: isMobile?28:36, height: isMobile?28:36, background:'rgba(255,255,255,0.15)',
+                        borderRadius:8, display:'flex', alignItems:'center',
+                        justifyContent:'center', fontSize: isMobile?16:20, flexShrink:0 }}>🇧🇩</div>
+          <div style={{ minWidth:0 }}>
+            <div style={{ fontWeight:700, fontSize: isMobile?13:16, letterSpacing:'-0.3px', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
+              {isMobile ? 'Climate Map 2016–2050' : 'Bangladesh Climate Intelligence 2016–2050'}
             </div>
-            <div style={{ fontSize:11, opacity:0.85 }}>
-              64 Districts · Historical Data · IPCC AR6 Projections · Earthquake Risk
-            </div>
+            {!isMobile && <div style={{ fontSize:11, opacity:0.85 }}>64 Districts · Historical Data · IPCC AR6 Projections · Earthquake Risk</div>}
           </div>
         </div>
-        <div style={{ display:'flex', gap:10 }}>
-          {[['🌡',`${avgTemp}°C`],['🌧',`${avgRain.toLocaleString()}mm`],['🌊',`${avgSLR}cm SLR`]].map(([ic,val])=>(
-            <div key={String(val)} style={{ display:'flex', alignItems:'center', gap:5,
-                           background:'rgba(255,255,255,0.12)', padding:'5px 11px',
-                           borderRadius:20, fontSize:12, fontWeight:500 }}>
+        {/* Stats badges — scrollable on mobile */}
+        <div style={{ display:'flex', gap: isMobile?6:10, overflowX:'auto', flexShrink:0 }}>
+          {[['🌡',`${avgTemp}°C`],['🌧',`${avgRain.toLocaleString()}mm`],['🌊',`${avgSLR}cm`]].map(([ic,val])=>(
+            <div key={String(val)} style={{ display:'flex', alignItems:'center', gap:4,
+                           background:'rgba(255,255,255,0.12)', padding: isMobile?'3px 8px':'5px 11px',
+                           borderRadius:20, fontSize: isMobile?10:12, fontWeight:500, whiteSpace:'nowrap', flexShrink:0 }}>
               <span>{ic}</span><span>{val}</span>
             </div>
           ))}
@@ -333,62 +343,116 @@ export default function BangladeshClimateMap({ compact = false, height = '100vh'
       </header>
 
       {/* ── Timeline Controls ──────────────────────────────────────────── */}
-      <div style={{ background:'white', borderBottom:'1px solid #e2e8f0',
-                    padding:'0 20px', height:'48px', display:'flex',
-                    alignItems:'center', gap:14, flexShrink:0 }}>
-        <button onClick={()=>setPlaying(p=>!p)}
-          style={{ width:34, height:34, borderRadius:'50%', border:'none', cursor:'pointer',
-                   background:'linear-gradient(135deg,#0f4c3a,#1a6b52)', color:'white',
-                   fontSize:14, display:'flex', alignItems:'center', justifyContent:'center' }}>
-          {playing ? '⏸' : '▶'}
-        </button>
-        <div style={{ flex:1, display:'flex', flexDirection:'column', gap:3 }}>
-          <div style={{ display:'flex', justifyContent:'space-between', fontSize:10,
-                        color:'#64748b', fontWeight:600 }}>
-            {[2016,2020,2025,2030,2035,2040,2045,2050].map(y=><span key={y}>{y}</span>)}
+      <div style={{ background:'white', borderBottom:'1px solid #e2e8f0', flexShrink:0,
+                    padding: isMobile ? '6px 10px' : '0 20px',
+                    minHeight: isMobile ? 'auto' : '48px',
+                    display:'flex', flexDirection: isMobile ? 'column' : 'row',
+                    alignItems: isMobile ? 'stretch' : 'center', gap: isMobile ? 5 : 14 }}>
+        {/* Row 1 (mobile) / single row (desktop): play + slider + year */}
+        <div style={{ display:'flex', alignItems:'center', gap: isMobile?8:14, flex:1 }}>
+          <button onClick={()=>setPlaying(p=>!p)}
+            style={{ width:30, height:30, borderRadius:'50%', border:'none', cursor:'pointer',
+                     background:'linear-gradient(135deg,#0f4c3a,#1a6b52)', color:'white',
+                     fontSize:13, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+            {playing ? '⏸' : '▶'}
+          </button>
+          <div style={{ flex:1 }}>
+            {!isMobile && <div style={{ display:'flex', justifyContent:'space-between', fontSize:10, color:'#64748b', fontWeight:600, marginBottom:3 }}>
+              {[2016,2020,2025,2030,2035,2040,2045,2050].map(y=><span key={y}>{y}</span>)}
+            </div>}
+            <input type="range" min="2016" max="2050" value={year}
+              onChange={e=>{ setYear(Number(e.target.value)); setPlaying(false); }}
+              style={{ width:'100%', accentColor:'#0f4c3a', height:6 }} />
           </div>
-          <input type="range" min="2016" max="2050" value={year}
-            onChange={e=>{ setYear(Number(e.target.value)); setPlaying(false); }}
-            style={{ width:'100%', accentColor:'#0f4c3a', height:6 }} />
-        </div>
-        <div style={{ textAlign:'center', minWidth:80 }}>
-          <div style={{ fontSize:22, fontWeight:800, color:'#0f4c3a', lineHeight:1 }}>{year}</div>
-          <div style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:4, marginTop:2,
-                        background: isProjected?'#fef3c7':'#f0fdf4',
-                        color: isProjected?'#92400e':'#166534' }}>
-            {isProjected ? 'PROJECTED' : 'HISTORICAL'}
+          <div style={{ textAlign:'center', minWidth: isMobile?56:80 }}>
+            <div style={{ fontSize: isMobile?18:22, fontWeight:800, color:'#0f4c3a', lineHeight:1 }}>{year}</div>
+            <div style={{ fontSize:9, fontWeight:700, padding:'1px 6px', borderRadius:4, marginTop:2,
+                          background: isProjected?'#fef3c7':'#f0fdf4',
+                          color: isProjected?'#92400e':'#166534' }}>
+              {isProjected ? 'PROJ' : 'HIST'}
+            </div>
           </div>
         </div>
-        {/* Scenario toggle */}
-        <div style={{ display:'flex', background:'#f1f5f9', borderRadius:8, padding:3, gap:3 }}>
-          {(['rcp45','rcp85'] as Scenario[]).map(sc=>(
-            <button key={sc} onClick={()=>setScenario(sc)}
-              style={{ border:'none', padding:'5px 13px', borderRadius:6, cursor:'pointer',
-                       fontSize:12, fontWeight:600, transition:'all 0.2s',
-                       background: scenario===sc?'white':'transparent',
-                       color: scenario===sc?'#0f4c3a':'#475569',
-                       boxShadow: scenario===sc?'0 2px 4px rgba(0,0,0,0.1)':'none' }}>
-              {sc==='rcp45'?'RCP 4.5':'RCP 8.5'}
-            </button>
-          ))}
+        {/* Row 2 (mobile) / inline (desktop): scenario + indicator */}
+        <div style={{ display:'flex', gap:6, alignItems:'center' }}>
+          <div style={{ display:'flex', background:'#f1f5f9', borderRadius:8, padding:3, gap:3 }}>
+            {(['rcp45','rcp85'] as Scenario[]).map(sc=>(
+              <button key={sc} onClick={()=>setScenario(sc)}
+                style={{ border:'none', padding: isMobile?'4px 8px':'5px 13px', borderRadius:6, cursor:'pointer',
+                         fontSize: isMobile?11:12, fontWeight:600, transition:'all 0.2s',
+                         background: scenario===sc?'white':'transparent',
+                         color: scenario===sc?'#0f4c3a':'#475569',
+                         boxShadow: scenario===sc?'0 2px 4px rgba(0,0,0,0.1)':'none' }}>
+                {sc==='rcp45'?'4.5':'8.5'}
+              </button>
+            ))}
+          </div>
+          <select value={indicator} onChange={e=>setIndicator(e.target.value)}
+            style={{ border:'1px solid #e2e8f0', borderRadius:8, padding: isMobile?'4px 6px':'5px 10px',
+                     fontSize: isMobile?11:12, fontWeight:600, color:'#0f172a', background:'white',
+                     cursor:'pointer', outline:'none', flex: isMobile?1:'none' }}>
+            {INDICATORS.map(i=><option key={i.key} value={i.key}>{i.label}</option>)}
+          </select>
         </div>
-        {/* Indicator selector */}
-        <select value={indicator} onChange={e=>setIndicator(e.target.value)}
-          style={{ border:'1px solid #e2e8f0', borderRadius:8, padding:'5px 10px',
-                   fontSize:12, fontWeight:600, color:'#0f172a', background:'white',
-                   cursor:'pointer', outline:'none' }}>
-          {INDICATORS.map(i=><option key={i.key} value={i.key}>{i.label}</option>)}
-        </select>
       </div>
 
-      {/* ── Main ───────────────────────────────────────────────────────── */}
-      <div style={{ flex:1, display:'grid',
-                    gridTemplateColumns: selected ? '260px 1fr 380px' : '260px 1fr',
-                    overflow:'hidden' }}>
+      {/* ── Mobile parameter strip ─────────────────────────────────────── */}
+      {isMobile && (
+        <div style={{ background:'#0f4c3a', overflowX:'auto', flexShrink:0,
+                      display:'flex', alignItems:'center', gap:6, padding:'6px 10px',
+                      scrollbarWidth:'none' }}>
+          {/* Year chip */}
+          <div style={{ display:'flex', alignItems:'center', gap:4, background:'rgba(255,255,255,0.15)',
+                        borderRadius:20, padding:'4px 10px', whiteSpace:'nowrap', flexShrink:0 }}>
+            <span style={{ fontSize:10, color:'rgba(255,255,255,0.7)' }}>📅</span>
+            <span style={{ fontSize:12, fontWeight:800, color:'white' }}>{year}</span>
+            <span style={{ fontSize:9, fontWeight:700, padding:'1px 5px', borderRadius:4,
+                           background: isProjected?'#fef3c7':'#f0fdf4',
+                           color: isProjected?'#92400e':'#166534' }}>
+              {isProjected?'PROJ':'HIST'}
+            </span>
+          </div>
+          {/* Scenario chip */}
+          <div style={{ display:'flex', alignItems:'center', gap:3, background:'rgba(255,255,255,0.15)',
+                        borderRadius:20, padding:'4px 10px', whiteSpace:'nowrap', flexShrink:0 }}>
+            <span style={{ fontSize:10 }}>🌍</span>
+            <span style={{ fontSize:11, fontWeight:700, color:'white' }}>RCP {scenario==='rcp45'?'4.5':'8.5'}</span>
+          </div>
+          {/* Indicator chip */}
+          <div style={{ display:'flex', alignItems:'center', gap:3, background:'rgba(255,255,255,0.15)',
+                        borderRadius:20, padding:'4px 10px', whiteSpace:'nowrap', flexShrink:0 }}>
+            <span style={{ fontSize:11, fontWeight:700, color:'#86efac' }}>
+              {INDICATORS.find(i=>i.key===indicator)?.label ?? indicator}
+            </span>
+          </div>
+          {/* Active filter chip */}
+          {filter !== 'all' && (
+            <div style={{ display:'flex', alignItems:'center', gap:3, background:'rgba(255,200,0,0.25)',
+                          borderRadius:20, padding:'4px 10px', whiteSpace:'nowrap', flexShrink:0 }}>
+              <span style={{ fontSize:11, fontWeight:700, color:'#fde68a' }}>
+                {FILTERS.find(f=>f.key===filter)?.icon} {FILTERS.find(f=>f.key===filter)?.label}
+              </span>
+            </div>
+          )}
+          {/* Avg stats */}
+          <div style={{ marginLeft:'auto', display:'flex', gap:8, flexShrink:0 }}>
+            {[['🌡',`${avgTemp}°C`],['🌧',`${avgRain}mm`],['🌊',`${avgSLR}cm`]].map(([ic,v])=>(
+              <div key={String(v)} style={{ display:'flex', alignItems:'center', gap:3, whiteSpace:'nowrap' }}>
+                <span style={{ fontSize:10 }}>{ic}</span>
+                <span style={{ fontSize:10, fontWeight:700, color:'#a7f3d0' }}>{v}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
-        {/* ── Sidebar ──────────────────────────────────────────────────── */}
+      {/* ── Main ───────────────────────────────────────────────────────── */}
+      <div style={{ flex:1, display:'grid', overflow:'hidden',
+                    gridTemplateColumns: isMobile ? '1fr' : (selected ? '260px 1fr 380px' : '260px 1fr') }}>
+
+        {/* ── Sidebar — hidden on mobile (available via bottom sheet) ── */}
         <aside style={{ background:'white', borderRight:'1px solid #e2e8f0',
-                         overflowY:'auto', padding:14, display:'flex',
+                         overflowY:'auto', padding:14, display: isMobile ? 'none' : 'flex',
                          flexDirection:'column', gap:14 }}>
           {/* Risk Filters */}
           <div>
@@ -571,8 +635,8 @@ export default function BangladeshClimateMap({ compact = false, height = '100vh'
           </div>
         </div>
 
-        {/* ── Detail / Welcome Panel ────────────────────────────────────── */}
-        {selected ? (
+        {/* ── Detail panel — desktop only (mobile shows as bottom sheet) ── */}
+        {selected && !isMobile ? (
           <div style={{ background:'white', borderLeft:'1px solid #e2e8f0',
                          overflowY:'auto', display:'flex', flexDirection:'column' }}>
             {/* Header */}
@@ -871,57 +935,206 @@ export default function BangladeshClimateMap({ compact = false, height = '100vh'
               )}
             </div>
           </div>
-        ) : (
-          /* Welcome panel */
-          <div style={{ background:'white', borderLeft:'1px solid #e2e8f0',
-                         overflowY:'auto', padding:20, display:'flex',
-                         flexDirection:'column', gap:14 }}>
-            <div style={{ fontWeight:800, fontSize:18, color:'#0f172a', lineHeight:1.3 }}>
-              Bangladesh Climate Intelligence<br/>2016–2050
-            </div>
-            <div style={{ fontSize:13, color:'#475569', lineHeight:1.7 }}>
-              Explore climate data, IPCC projections, and earthquake risk for all 64 districts.
-              Play the timeline animation, toggle RCP scenarios, and click any district for deep analysis.
-            </div>
-            {[
-              { icon:'⏱', title:'35-Year Animation',
-                desc:'Play 2016–2050 to watch temperature, rainfall & sea-level change in real time.' },
-              { icon:'📊', title:'Dual RCP Scenarios',
-                desc:'Compare moderate mitigation (4.5) vs high-emissions (8.5) climate futures.' },
-              { icon:'⚡', title:'Earthquake Risk Layer',
-                desc:'Switch to "Earthquake Risk" filter to view seismic zones I–IV based on BNBC 2020.' },
-              { icon:'📋', title:'District Deep Dive',
-                desc:'3-tab detail panel: Climate projections, hazard events, and seismic risk report.' },
-            ].map(f=>(
-              <div key={f.title} style={{ display:'flex', gap:12, padding:12,
-                                          background:'#f8fafc', borderRadius:10,
-                                          border:'1px solid #e2e8f0' }}>
-                <div style={{ width:34, height:34, borderRadius:8, flexShrink:0, display:'flex',
-                              alignItems:'center', justifyContent:'center', fontSize:16,
-                              background:'linear-gradient(135deg,#0f4c3a,#1a6b52)', color:'white' }}>
-                  {f.icon}
+        ) : null}
+      </div>
+
+      {/* ── Mobile floating buttons ───────────────────────────────────── */}
+      {isMobile && (
+        <>
+          {/* Controls button — shows active filter name */}
+          <button onClick={() => setMobileSheet(s => s==='controls' ? 'none' : 'controls')}
+            style={{ position:'absolute', bottom: selected ? 340 : 80, left:12, zIndex:600,
+                     background: mobileSheet==='controls' ? '#0f4c3a' : 'white',
+                     color: mobileSheet==='controls' ? 'white' : '#0f4c3a',
+                     border:'2px solid #0f4c3a', borderRadius:28, padding:'8px 14px',
+                     fontSize:12, fontWeight:700, cursor:'pointer', boxShadow:'0 4px 16px rgba(0,0,0,0.18)',
+                     display:'flex', alignItems:'center', gap:6, transition:'all 0.2s' }}>
+            {mobileSheet==='controls' ? '✕ Close' : `⚙️ ${filter==='all' ? 'Filters' : (FILTERS.find(f=>f.key===filter)?.icon+' '+FILTERS.find(f=>f.key===filter)?.label)}`}
+          </button>
+
+          {/* District detail button — shown when district selected */}
+          {selected && (
+            <button onClick={() => setMobileSheet(s => s==='detail' ? 'none' : 'detail')}
+              style={{ position:'absolute', bottom:80, right:12, zIndex:600,
+                       background:'#0f4c3a', color:'white',
+                       border:'none', borderRadius:28, padding:'8px 14px',
+                       fontSize:12, fontWeight:700, cursor:'pointer', boxShadow:'0 4px 16px rgba(0,0,0,0.25)',
+                       display:'flex', alignItems:'center', gap:6, animation:'pulse 2s infinite' }}>
+              📊 {selected.name.en}
+            </button>
+          )}
+
+          {/* Controls bottom sheet — full parameter control */}
+          {mobileSheet === 'controls' && (
+            <div style={{ position:'absolute', bottom:0, left:0, right:0, zIndex:700,
+                          background:'white', borderRadius:'20px 20px 0 0',
+                          boxShadow:'0 -8px 32px rgba(0,0,0,0.2)',
+                          maxHeight:'80vh', overflowY:'auto', padding:'12px 14px 28px',
+                          animation:'slideUpSheet 0.25s ease-out' }}>
+              <div style={{ width:36, height:4, background:'#e2e8f0', borderRadius:2, margin:'0 auto 12px' }} />
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:14 }}>
+                <div style={{ fontWeight:700, fontSize:14, color:'#0f172a' }}>⚙️ Climate Map Controls</div>
+                <button onClick={() => setMobileSheet('none')}
+                  style={{ border:'none', background:'#f1f5f9', borderRadius:8, width:30, height:30, cursor:'pointer', fontSize:16 }}>✕</button>
+              </div>
+
+              {/* ── Year timeline ── */}
+              <div style={{ background:'#f8fafc', borderRadius:12, padding:'10px 12px', marginBottom:12, border:'1px solid #e2e8f0' }}>
+                <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
+                  <div style={{ fontSize:10, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.8px', color:'#64748b' }}>📅 Year</div>
+                  <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+                    <span style={{ fontSize:18, fontWeight:800, color:'#0f4c3a' }}>{year}</span>
+                    <span style={{ fontSize:9, fontWeight:700, padding:'2px 6px', borderRadius:4,
+                                   background: isProjected?'#fef3c7':'#f0fdf4',
+                                   color: isProjected?'#92400e':'#166534' }}>
+                      {isProjected?'PROJECTED':'HISTORICAL'}
+                    </span>
+                  </div>
+                </div>
+                <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                  <button onClick={()=>setPlaying(p=>!p)}
+                    style={{ width:32, height:32, borderRadius:'50%', border:'none', cursor:'pointer',
+                             background:'linear-gradient(135deg,#0f4c3a,#1a6b52)', color:'white', fontSize:13,
+                             display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                    {playing?'⏸':'▶'}
+                  </button>
+                  <input type="range" min="2016" max="2050" value={year}
+                    onChange={e=>{ setYear(Number(e.target.value)); setPlaying(false); }}
+                    style={{ flex:1, accentColor:'#0f4c3a', height:6 }} />
+                </div>
+                <div style={{ display:'flex', justifyContent:'space-between', fontSize:9, color:'#94a3b8', fontWeight:600, marginTop:4 }}>
+                  {[2016,2020,2025,2030,2035,2040,2045,2050].map(y=><span key={y}>{y}</span>)}
+                </div>
+              </div>
+
+              {/* ── Scenario + Indicator row ── */}
+              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8, marginBottom:12 }}>
+                <div style={{ background:'#f8fafc', borderRadius:12, padding:'10px 12px', border:'1px solid #e2e8f0' }}>
+                  <div style={{ fontSize:10, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.8px', color:'#64748b', marginBottom:8 }}>🌍 Scenario</div>
+                  <div style={{ display:'flex', background:'#f1f5f9', borderRadius:8, padding:3, gap:3 }}>
+                    {(['rcp45','rcp85'] as Scenario[]).map(sc=>(
+                      <button key={sc} onClick={()=>setScenario(sc)}
+                        style={{ flex:1, border:'none', padding:'6px 4px', borderRadius:6, cursor:'pointer', fontSize:11,
+                                 fontWeight:700, transition:'all 0.2s', textAlign:'center',
+                                 background: scenario===sc?'#0f4c3a':'transparent',
+                                 color: scenario===sc?'white':'#475569',
+                                 boxShadow: scenario===sc?'0 2px 4px rgba(0,0,0,0.15)':'none' }}>
+                        {sc==='rcp45'?'4.5':'8.5'}
+                      </button>
+                    ))}
+                  </div>
+                  <div style={{ fontSize:9, color:'#94a3b8', marginTop:6 }}>
+                    {scenario==='rcp45'?'Moderate emissions':'High emissions'}
+                  </div>
+                </div>
+                <div style={{ background:'#f8fafc', borderRadius:12, padding:'10px 12px', border:'1px solid #e2e8f0' }}>
+                  <div style={{ fontSize:10, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.8px', color:'#64748b', marginBottom:8 }}>📊 Indicator</div>
+                  <select value={indicator} onChange={e=>setIndicator(e.target.value)}
+                    style={{ width:'100%', padding:'6px 8px', border:'1px solid #e2e8f0', borderRadius:8,
+                             fontSize:11, fontWeight:600, color:'#0f172a', background:'white', cursor:'pointer', outline:'none' }}>
+                    {INDICATORS.map(i=><option key={i.key} value={i.key}>{i.label}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              {/* ── Risk filters ── */}
+              <div style={{ fontSize:10, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.8px', color:'#64748b', marginBottom:8 }}>⚡ Risk Filter</div>
+              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:6, marginBottom:12 }}>
+                {FILTERS.map(f=>(
+                  <button key={f.key} onClick={()=>setFilter(f.key)}
+                    style={{ display:'flex', alignItems:'center', gap:6, padding:'9px 10px', border:'none', borderRadius:10,
+                             cursor:'pointer', fontSize:11, fontWeight:600, transition:'all 0.18s',
+                             background: filter===f.key ? 'linear-gradient(135deg,#0f4c3a,#1a6b52)' : '#f8fafc',
+                             color: filter===f.key ? 'white' : '#0f172a',
+                             boxShadow: filter===f.key ? '0 3px 8px rgba(15,76,58,0.3)' : '0 1px 3px rgba(0,0,0,0.06)' }}>
+                    <span style={{ fontSize:14 }}>{f.icon}</span><span>{f.label}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* ── Division + Basemap row ── */}
+              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8 }}>
+                <div>
+                  <div style={{ fontSize:10, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.8px', color:'#64748b', marginBottom:6 }}>🏙 Division</div>
+                  <select value={division} onChange={e=>setDivision(e.target.value)}
+                    style={{ width:'100%', padding:'8px 10px', border:'1px solid #e2e8f0', borderRadius:10,
+                             fontSize:11, fontWeight:600, color:'#0f172a', cursor:'pointer', outline:'none', background:'white' }}>
+                    <option value="all">All Divisions</option>
+                    {DIVISIONS.map(d=><option key={d} value={d}>{d}</option>)}
+                  </select>
                 </div>
                 <div>
-                  <div style={{ fontWeight:700, fontSize:13, marginBottom:2 }}>{f.title}</div>
-                  <div style={{ fontSize:11, color:'#64748b', lineHeight:1.5 }}>{f.desc}</div>
+                  <div style={{ fontSize:10, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.8px', color:'#64748b', marginBottom:6 }}>🗺 Basemap</div>
+                  <div style={{ display:'flex', flexDirection:'column', gap:4 }}>
+                    {([['street','🗺 Street'],['satellite','🛰 Satellite'],['hybrid','🌍 Hybrid']] as ['street'|'satellite'|'hybrid', string][]).map(([k,l])=>(
+                      <button key={k} onClick={()=>setBasemap(k)}
+                        style={{ padding:'6px 8px', border:'none', borderRadius:8, cursor:'pointer', fontSize:11, fontWeight:700,
+                                 textAlign:'left', background: basemap===k ? '#0f4c3a' : '#f1f5f9',
+                                 color: basemap===k ? 'white' : '#475569' }}>{l}</button>
+                    ))}
+                  </div>
                 </div>
               </div>
-            ))}
-            <div style={{ background:'linear-gradient(135deg,#f0fdf4,#dcfce7)',
-                           border:'1px solid #bbf7d0', borderRadius:12, padding:14 }}>
-              <div style={{ fontSize:12, fontWeight:700, color:'#0f4c3a', marginBottom:6 }}>
-                💡 Key Insight
+            </div>
+          )}
+
+          {/* District detail bottom sheet */}
+          {mobileSheet === 'detail' && selected && selData && (
+            <div style={{ position:'absolute', bottom:0, left:0, right:0, zIndex:700,
+                          background:'white', borderRadius:'20px 20px 0 0',
+                          boxShadow:'0 -8px 32px rgba(0,0,0,0.2)',
+                          maxHeight:'70vh', overflowY:'auto',
+                          animation:'slideUpSheet 0.25s ease-out' }}>
+              {/* District header */}
+              <div style={{ background:'linear-gradient(135deg,#0f4c3a,#1a6b52)', color:'white',
+                            padding:'12px 14px 10px', borderRadius:'20px 20px 0 0', position:'relative' }}>
+                <div style={{ width:36, height:4, background:'rgba(255,255,255,0.3)', borderRadius:2, margin:'0 auto 10px' }} />
+                <button onClick={() => setMobileSheet('none')}
+                  style={{ position:'absolute', top:12, right:12, width:28, height:28,
+                           background:'rgba(255,255,255,0.15)', border:'none', borderRadius:7,
+                           color:'white', cursor:'pointer', fontSize:16 }}>✕</button>
+                <div style={{ fontWeight:800, fontSize:18 }}>{selected.name.en}</div>
+                <div style={{ fontSize:11, opacity:0.85 }}>{selected.division} · {selected.zone}</div>
               </div>
-              <div style={{ fontSize:11, color:'#374151', lineHeight:1.6 }}>
-                Bangladesh faces the <b>Dauki Fault</b> threat (M8+ potential) in Sylhet,
-                a <b>+2.5°C warming</b> risk in the northwest under RCP 8.5, and
-                <b> 20cm+ sea-level rise</b> threatening coastal millions by 2050.
-                Use the earthquake filter to see the full seismic risk picture.
+              {/* Quick stats grid */}
+              <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:8, padding:'12px 14px' }}>
+                {[['🌡', `${selData.temp}°C`, 'Temp'],
+                  ['🌧', `${selData.rain}mm`, 'Rain'],
+                  ['💧', `${selData.humidity}%`, 'Humidity'],
+                  ['🌊', `${selData.slr}cm`, 'SLR']].map(([ic, val, lbl]) => (
+                  <div key={String(lbl)} style={{ background:'#f8fafc', borderRadius:10, padding:'8px', textAlign:'center', border:'1px solid #e2e8f0' }}>
+                    <div style={{ fontSize:16 }}>{ic}</div>
+                    <div style={{ fontSize:13, fontWeight:800, color:'#0f4c3a' }}>{val}</div>
+                    <div style={{ fontSize:9, color:'#64748b', fontWeight:600 }}>{lbl}</div>
+                  </div>
+                ))}
+              </div>
+              {/* Risks */}
+              <div style={{ padding:'0 14px 20px' }}>
+                <div style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', color:'#64748b', marginBottom:8 }}>Hazard Risks</div>
+                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:6 }}>
+                  {Object.entries(selected.risks).map(([k, v]) => (
+                    <div key={k} style={{ display:'flex', justifyContent:'space-between', alignItems:'center',
+                                          padding:'6px 10px', background:'#f8fafc', borderRadius:8, border:'1px solid #e2e8f0' }}>
+                      <span style={{ fontSize:11, fontWeight:600, color:'#374151', textTransform:'capitalize' }}>{k}</span>
+                      <span style={{ fontSize:10, fontWeight:700, padding:'2px 7px', borderRadius:20,
+                                     background: v==='Very High'?'#fef2f2':v==='High'?'#fff7ed':v==='Moderate'?'#fefce8':'#f0fdf4',
+                                     color: v==='Very High'?'#dc2626':v==='High'?'#f97316':v==='Moderate'?'#eab308':'#16a34a' }}>{v}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+
+          <style>{`
+            @keyframes slideUpSheet {
+              from { transform: translateY(100%); opacity: 0; }
+              to   { transform: translateY(0);    opacity: 1; }
+            }
+          `}</style>
+        </>
+      )}
     </div>
   );
 }

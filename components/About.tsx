@@ -42,23 +42,56 @@ export default function About({ data }: { data: AboutData }) {
               <div className="absolute -z-10 top-8 -left-8 w-48 h-48 bg-primary-100 rounded-2xl hidden sm:block" />
             </div>
             <div className="order-1 lg:order-2">
-              <p className="section-subtitle mb-3">{tr.subtitle}</p>
-              <h2 className="section-title mb-6">
+              <p className="section-subtitle mb-2 md:mb-3">{tr.subtitle}</p>
+              <h2 className="text-2xl md:text-4xl font-bold font-heading text-gray-900 mb-4 md:mb-6">
                 {headFirst}<span className="text-primary-600"> {headRest}</span>
               </h2>
-              <div className="text-gray-600 leading-relaxed mb-5" dangerouslySetInnerHTML={{ __html: para1 }} />
-              <div className="text-gray-600 leading-relaxed mb-8" dangerouslySetInnerHTML={{ __html: para2 }} />
-              <ul className="space-y-3 mb-10">
-                {highlights.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700 text-sm">{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <a href="#contact" onClick={e => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }} className="btn-primary">
-                {tr.workWithUs}
-              </a>
+
+              {/* Mobile stat badges — visible only on mobile (image is hidden) */}
+              <div className="flex gap-3 mb-4 md:hidden">
+                <div className="flex-1 bg-primary-600 text-white rounded-2xl p-3 shadow-md text-center">
+                  <p className="text-2xl font-bold font-heading leading-none">{data.yearsExperience || '15'}+</p>
+                  <p className="text-[10px] font-medium text-green-200 mt-1 leading-tight">{tr.yearsLabel}</p>
+                </div>
+                <div className="flex-1 bg-white border-2 border-primary-100 rounded-2xl p-3 shadow-md text-center">
+                  <p className="text-2xl font-bold text-primary-600 font-heading leading-none">{data.projectsCompleted || '200'}+</p>
+                  <p className="text-[10px] text-gray-500 mt-1 leading-tight">{tr.projectsLabel}</p>
+                </div>
+                <div className="flex-1 bg-primary-50 border border-primary-100 rounded-2xl p-3 text-center">
+                  <p className="text-2xl font-bold text-primary-700 font-heading leading-none">64</p>
+                  <p className="text-[10px] text-primary-500 mt-1 leading-tight">Districts<br/>Covered</p>
+                </div>
+              </div>
+
+              {/* Both paragraphs — full text */}
+              <div className="text-gray-600 text-sm leading-relaxed mb-3"
+                dangerouslySetInnerHTML={{ __html: para1 }} />
+              <div className="text-gray-600 text-sm leading-relaxed mb-5"
+                dangerouslySetInnerHTML={{ __html: para2 }} />
+
+              {/* All highlights */}
+              <div className="bg-primary-50 rounded-2xl p-4 mb-5">
+                <p className="text-xs font-bold text-primary-700 uppercase tracking-wider mb-3">What We Offer</p>
+                <ul className="space-y-2.5">
+                  {highlights.map((item, i) => (
+                    <li key={i} className="flex items-start gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-primary-600 flex-shrink-0 mt-0.5" />
+                      <span className="text-gray-700 text-sm leading-snug">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="flex gap-3">
+                <a href="#contact" onClick={e => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }}
+                  className="btn-primary flex-1 justify-center text-sm py-3">
+                  {tr.workWithUs}
+                </a>
+                <a href="#services" onClick={e => { e.preventDefault(); document.querySelector('#services')?.scrollIntoView({ behavior: 'smooth' }); }}
+                  className="btn-outline flex-1 justify-center text-sm py-3">
+                  Our Services
+                </a>
+              </div>
             </div>
           </div>
         </div>
