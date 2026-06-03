@@ -57,8 +57,9 @@ export default function BangladeshClimateMap({ compact = false, height = '100vh'
   const settingsRef = useRef<ClimateMapSettings>({});
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const lRef        = useRef<any>(null);
-  const baseTileRef = useRef<import('leaflet').TileLayer | null>(null);
+  const baseTileRef  = useRef<import('leaflet').TileLayer | null>(null);
   const labelTileRef = useRef<import('leaflet').TileLayer | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const [year,           setYear]           = useState(2025);
   const [scenario,       setScenario]       = useState<Scenario>('rcp45');
@@ -74,6 +75,7 @@ export default function BangladeshClimateMap({ compact = false, height = '100vh'
   const [basemap,        setBasemap]        = useState<'street'|'satellite'|'hybrid'>('street');
   const [isMobile,       setIsMobile]       = useState(false);
   const [mobileSheet,    setMobileSheet]    = useState<'none'|'controls'|'detail'>('none');
+  const [mapInView,      setMapInView]      = useState(false);
 
   // ── Fetch saved settings ──────────────────────────────────────────────────
   useEffect(() => {
@@ -98,6 +100,17 @@ export default function BangladeshClimateMap({ compact = false, height = '100vh'
     check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
+  }, []);
+
+  // ── Only show mobile overlays when map is visible in viewport ────────────
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { setMapInView(entry.isIntersecting); if (!entry.isIntersecting) setMobileSheet('none'); },
+      { threshold: 0.1 }
+    );
+    obs.observe(containerRef.current);
+    return () => obs.disconnect();
   }, []);
 
   // ── Live-sync external settings (admin panel) ────────────────────────────
@@ -309,7 +322,7 @@ export default function BangladeshClimateMap({ compact = false, height = '100vh'
   const avgSLR  = (filteredD.reduce((s,d)=>s+getYearData(d,year,scenario,trendOvCalc).slr,0)/filteredD.length).toFixed(1);
 
   return (
-    <div style={{ display:'flex', flexDirection:'column', height,
+    <div ref={containerRef} style={{ display:'flex', flexDirection:'column', height,
                   fontFamily:"'Inter',sans-serif", background:'#f1f5f9',
                   overflow:'hidden' }}>
 
@@ -938,8 +951,8 @@ export default function BangladeshClimateMap({ compact = false, height = '100vh'
         ) : null}
       </div>
 
-      {/* ── Mobile floating buttons ───────────────────────────────────── */}
-      {isMobile && (
+      {/* ── Mobile floating buttons — only when map is visible ──────── */}
+      {isMobile && mapInView && (
         <>
           {/* Backdrop — tap outside to close sheet */}
           {mobileSheet !== 'none' && (
