@@ -941,9 +941,15 @@ export default function BangladeshClimateMap({ compact = false, height = '100vh'
       {/* ── Mobile floating buttons ───────────────────────────────────── */}
       {isMobile && (
         <>
+          {/* Backdrop — tap outside to close sheet */}
+          {mobileSheet !== 'none' && (
+            <div onClick={() => setMobileSheet('none')}
+              style={{ position:'fixed', inset:0, zIndex:9998, background:'rgba(0,0,0,0.4)' }} />
+          )}
+
           {/* Controls button — shows active filter name */}
           <button onClick={() => setMobileSheet(s => s==='controls' ? 'none' : 'controls')}
-            style={{ position:'absolute', bottom: selected ? 340 : 80, left:12, zIndex:600,
+            style={{ position:'fixed', bottom:80, left:12, zIndex:9999,
                      background: mobileSheet==='controls' ? '#0f4c3a' : 'white',
                      color: mobileSheet==='controls' ? 'white' : '#0f4c3a',
                      border:'2px solid #0f4c3a', borderRadius:28, padding:'8px 14px',
@@ -955,7 +961,7 @@ export default function BangladeshClimateMap({ compact = false, height = '100vh'
           {/* District detail button — shown when district selected */}
           {selected && (
             <button onClick={() => setMobileSheet(s => s==='detail' ? 'none' : 'detail')}
-              style={{ position:'absolute', bottom:80, right:12, zIndex:600,
+              style={{ position:'fixed', bottom:80, right:12, zIndex:9999,
                        background:'#0f4c3a', color:'white',
                        border:'none', borderRadius:28, padding:'8px 14px',
                        fontSize:12, fontWeight:700, cursor:'pointer', boxShadow:'0 4px 16px rgba(0,0,0,0.25)',
@@ -966,7 +972,7 @@ export default function BangladeshClimateMap({ compact = false, height = '100vh'
 
           {/* Controls bottom sheet — full parameter control */}
           {mobileSheet === 'controls' && (
-            <div style={{ position:'absolute', bottom:0, left:0, right:0, zIndex:700,
+            <div style={{ position:'fixed', bottom:0, left:0, right:0, zIndex:9999,
                           background:'white', borderRadius:'20px 20px 0 0',
                           boxShadow:'0 -8px 32px rgba(0,0,0,0.2)',
                           maxHeight:'80vh', overflowY:'auto', padding:'12px 14px 28px',
@@ -1080,7 +1086,7 @@ export default function BangladeshClimateMap({ compact = false, height = '100vh'
 
           {/* District detail bottom sheet */}
           {mobileSheet === 'detail' && selected && selData && (
-            <div style={{ position:'absolute', bottom:0, left:0, right:0, zIndex:700,
+            <div style={{ position:'fixed', bottom:0, left:0, right:0, zIndex:9999,
                           background:'white', borderRadius:'20px 20px 0 0',
                           boxShadow:'0 -8px 32px rgba(0,0,0,0.2)',
                           maxHeight:'70vh', overflowY:'auto',
