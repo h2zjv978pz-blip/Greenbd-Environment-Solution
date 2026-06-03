@@ -1097,54 +1097,201 @@ export default function BangladeshClimateMap({ compact = false, height = '100vh'
             </div>
           )}
 
-          {/* District detail bottom sheet */}
-          {mobileSheet === 'detail' && selected && selData && (
+          {/* District detail bottom sheet — elaborate 3-tab view */}
+          {mobileSheet === 'detail' && selected && selData && (() => {
+            const sz  = selected.seismicZone;
+            const szi = SEISMIC_ZONE_INFO[sz];
+            const riskBg  = (v: string) => v==='Very High'?'#fef2f2':v==='High'?'#fff7ed':v==='Moderate'?'#fefce8':v==='Low'?'#f0fdf4':'#f8fafc';
+            const riskClr = (v: string) => v==='Very High'?'#dc2626':v==='High'?'#f97316':v==='Moderate'?'#eab308':v==='Low'?'#16a34a':'#64748b';
+            const riskBar = (v: string) => ({ VH:100,H:75,M:50,L:30,VL:10 }[{
+              'Very High':'VH','High':'H','Moderate':'M','Low':'L','Very Low':'VL'
+            }[v as string] ?? 'L'] ?? 30);
+            return (
             <div style={{ position:'fixed', bottom:0, left:0, right:0, zIndex:9999,
                           background:'white', borderRadius:'20px 20px 0 0',
-                          boxShadow:'0 -8px 32px rgba(0,0,0,0.2)',
-                          maxHeight:'70vh', overflowY:'auto',
+                          boxShadow:'0 -8px 32px rgba(0,0,0,0.25)',
+                          maxHeight:'82vh', display:'flex', flexDirection:'column',
                           animation:'slideUpSheet 0.25s ease-out' }}>
-              {/* District header */}
+
+              {/* ── Header ───────────────────────────────────────────── */}
               <div style={{ background:'linear-gradient(135deg,#0f4c3a,#1a6b52)', color:'white',
-                            padding:'12px 14px 10px', borderRadius:'20px 20px 0 0', position:'relative' }}>
-                <div style={{ width:36, height:4, background:'rgba(255,255,255,0.3)', borderRadius:2, margin:'0 auto 10px' }} />
+                            padding:'10px 14px 12px', borderRadius:'20px 20px 0 0', position:'relative', flexShrink:0 }}>
+                <div style={{ width:36, height:4, background:'rgba(255,255,255,0.3)', borderRadius:2, margin:'0 auto 8px' }} />
                 <button onClick={() => setMobileSheet('none')}
-                  style={{ position:'absolute', top:12, right:12, width:28, height:28,
-                           background:'rgba(255,255,255,0.15)', border:'none', borderRadius:7,
-                           color:'white', cursor:'pointer', fontSize:16 }}>✕</button>
-                <div style={{ fontWeight:800, fontSize:18 }}>{selected.name.en}</div>
-                <div style={{ fontSize:11, opacity:0.85 }}>{selected.division} · {selected.zone}</div>
-              </div>
-              {/* Quick stats grid */}
-              <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:8, padding:'12px 14px' }}>
-                {[['🌡', `${selData.temp}°C`, 'Temp'],
-                  ['🌧', `${selData.rain}mm`, 'Rain'],
-                  ['💧', `${selData.humidity}%`, 'Humidity'],
-                  ['🌊', `${selData.slr}cm`, 'SLR']].map(([ic, val, lbl]) => (
-                  <div key={String(lbl)} style={{ background:'#f8fafc', borderRadius:10, padding:'8px', textAlign:'center', border:'1px solid #e2e8f0' }}>
-                    <div style={{ fontSize:16 }}>{ic}</div>
-                    <div style={{ fontSize:13, fontWeight:800, color:'#0f4c3a' }}>{val}</div>
-                    <div style={{ fontSize:9, color:'#64748b', fontWeight:600 }}>{lbl}</div>
-                  </div>
-                ))}
-              </div>
-              {/* Risks */}
-              <div style={{ padding:'0 14px 20px' }}>
-                <div style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', color:'#64748b', marginBottom:8 }}>Hazard Risks</div>
-                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:6 }}>
-                  {Object.entries(selected.risks).map(([k, v]) => (
-                    <div key={k} style={{ display:'flex', justifyContent:'space-between', alignItems:'center',
-                                          padding:'6px 10px', background:'#f8fafc', borderRadius:8, border:'1px solid #e2e8f0' }}>
-                      <span style={{ fontSize:11, fontWeight:600, color:'#374151', textTransform:'capitalize' }}>{k}</span>
-                      <span style={{ fontSize:10, fontWeight:700, padding:'2px 7px', borderRadius:20,
-                                     background: v==='Very High'?'#fef2f2':v==='High'?'#fff7ed':v==='Moderate'?'#fefce8':'#f0fdf4',
-                                     color: v==='Very High'?'#dc2626':v==='High'?'#f97316':v==='Moderate'?'#eab308':'#16a34a' }}>{v}</span>
+                  style={{ position:'absolute', top:10, right:12, width:28, height:28,
+                           background:'rgba(255,255,255,0.15)', border:'none', borderRadius:8,
+                           color:'white', cursor:'pointer', fontSize:16, display:'flex', alignItems:'center', justifyContent:'center' }}>✕</button>
+                <div style={{ display:'flex', alignItems:'flex-start', gap:10 }}>
+                  <div style={{ flex:1 }}>
+                    <div style={{ fontWeight:800, fontSize:20, lineHeight:1.2 }}>{selected.name.en}</div>
+                    <div style={{ fontSize:11, opacity:0.8, marginTop:2 }}>
+                      {selected.division} Division · {selected.zone} · {selected.area.toLocaleString()} km²
                     </div>
-                  ))}
+                  </div>
+                  <div style={{ display:'flex', flexDirection:'column', gap:4, alignItems:'flex-end', flexShrink:0 }}>
+                    <span style={{ fontSize:9, fontWeight:700, padding:'2px 8px', borderRadius:4,
+                                   background: isProjected?'#fef3c7':'rgba(255,255,255,0.15)',
+                                   color: isProjected?'#92400e':'white' }}>
+                      {year} {isProjected?'PROJECTED':'HISTORICAL'}
+                    </span>
+                    <span style={{ fontSize:10, fontWeight:700, padding:'2px 8px', borderRadius:4,
+                                   background:'rgba(255,255,255,0.15)', color:'white' }}>
+                      RCP {scenario==='rcp45'?'4.5':'8.5'}
+                    </span>
+                  </div>
                 </div>
               </div>
+
+              {/* ── Tab bar ──────────────────────────────────────────── */}
+              <div style={{ display:'flex', borderBottom:'1px solid #f1f5f9', flexShrink:0, background:'white' }}>
+                {(['climate','hazards','seismic'] as Tab[]).map(t=>(
+                  <button key={t} onClick={()=>setTab(t)}
+                    style={{ flex:1, padding:'10px 4px', border:'none', borderBottom: tab===t?'2px solid #0f4c3a':'2px solid transparent',
+                             background:'transparent', cursor:'pointer', fontSize:11, fontWeight:700, textTransform:'capitalize',
+                             color: tab===t?'#0f4c3a':'#94a3b8', transition:'all 0.15s' }}>
+                    {t==='climate'?'🌡 Climate':t==='hazards'?'⚠️ Hazards':'⚡ Seismic'}
+                  </button>
+                ))}
+              </div>
+
+              {/* ── Tab content ──────────────────────────────────────── */}
+              <div style={{ overflowY:'auto', flex:1, padding:'12px 14px 24px' }}>
+
+                {/* CLIMATE TAB */}
+                {tab === 'climate' && (
+                  <>
+                    {/* 4 key stats */}
+                    <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:7, marginBottom:14 }}>
+                      {[['🌡',`${selData.temp}°C`,'Temp','#0f4c3a'],
+                        ['🌧',`${selData.rain}mm`,'Rain','#0369a1'],
+                        ['💧',`${selData.humidity}%`,'Humidity','#0891b2'],
+                        ['🌊',`${selData.slr}cm`,'SLR','#6d28d9']].map(([ic,val,lbl,clr])=>(
+                        <div key={String(lbl)} style={{ background:'#f8fafc', borderRadius:12, padding:'10px 6px', textAlign:'center', border:'1px solid #e2e8f0' }}>
+                          <div style={{ fontSize:18, marginBottom:4 }}>{ic}</div>
+                          <div style={{ fontSize:14, fontWeight:800, color:String(clr), lineHeight:1 }}>{val}</div>
+                          <div style={{ fontSize:9, color:'#64748b', fontWeight:600, marginTop:3 }}>{lbl}</div>
+                        </div>
+                      ))}
+                    </div>
+                    {/* Event counts */}
+                    <div style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', color:'#64748b', letterSpacing:'0.8px', marginBottom:8 }}>Annual Events ({year})</div>
+                    <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:7, marginBottom:14 }}>
+                      {[['🌊', 'Flood events', selData.flood, '#ef4444'],
+                        ['🌀', 'Cyclone events', selData.cyclone, '#f97316'],
+                        ['🔥', 'Heatwave days', selData.heatwave, '#eab308'],
+                        ['☀', 'Drought months', selData.drought, '#84cc16']].map(([ic,lbl,val,clr])=>(
+                        <div key={String(lbl)} style={{ background:'#f8fafc', borderRadius:10, padding:'8px 10px', border:'1px solid #e2e8f0', display:'flex', alignItems:'center', gap:8 }}>
+                          <span style={{ fontSize:20 }}>{ic}</span>
+                          <div>
+                            <div style={{ fontSize:16, fontWeight:800, color:String(clr), lineHeight:1 }}>{val}</div>
+                            <div style={{ fontSize:9, color:'#64748b', fontWeight:600, marginTop:1 }}>{lbl}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    {/* Climate zone & context */}
+                    <div style={{ background:'linear-gradient(135deg,#f0fdf4,#dcfce7)', borderRadius:12, padding:'10px 12px', border:'1px solid #bbf7d0' }}>
+                      <div style={{ fontSize:11, fontWeight:700, color:'#0f4c3a', marginBottom:4 }}>🗺 Climate Zone</div>
+                      <div style={{ fontSize:13, fontWeight:800, color:'#0f4c3a' }}>{selected.zone}</div>
+                      <div style={{ fontSize:10, color:'#374151', marginTop:4, lineHeight:1.5 }}>
+                        Base temp: <b>{selected.base.t}°C</b> · Base rain: <b>{selected.base.r}mm</b> · Humidity: <b>{selected.base.h}%</b>
+                        {selected.base.s > 0 && ` · SLR base: ${selected.base.s}cm`}
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* HAZARDS TAB */}
+                {tab === 'hazards' && (
+                  <>
+                    <div style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', color:'#64748b', letterSpacing:'0.8px', marginBottom:10 }}>Risk Assessment</div>
+                    <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+                      {([['flood','🌊','Flood'],['cyclone','🌀','Cyclone'],['drought','☀','Drought'],
+                         ['heatwave','🔥','Heatwave'],['landslide','⛰','Landslide'],['salinity','💧','Salinity']] as [string,string,string][])
+                        .map(([k,ic,lbl])=>{
+                        const v = selected.risks[k as keyof typeof selected.risks];
+                        const bar = riskBar(v);
+                        return (
+                          <div key={k} style={{ background:'#f8fafc', borderRadius:12, padding:'10px 12px', border:'1px solid #e2e8f0' }}>
+                            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:6 }}>
+                              <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+                                <span style={{ fontSize:16 }}>{ic}</span>
+                                <span style={{ fontSize:12, fontWeight:700, color:'#374151' }}>{lbl} Risk</span>
+                              </div>
+                              <span style={{ fontSize:11, fontWeight:800, padding:'3px 10px', borderRadius:20,
+                                             background:riskBg(v), color:riskClr(v) }}>{v}</span>
+                            </div>
+                            {/* Risk bar */}
+                            <div style={{ background:'#e2e8f0', borderRadius:4, height:5, overflow:'hidden' }}>
+                              <div style={{ height:'100%', borderRadius:4, width:`${bar}%`,
+                                           background:riskClr(v), transition:'width 0.5s ease' }} />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+
+                {/* SEISMIC TAB */}
+                {tab === 'seismic' && (
+                  <>
+                    {/* Zone badge */}
+                    <div style={{ display:'flex', alignItems:'center', gap:12, background:'#f8fafc', borderRadius:12,
+                                  padding:'12px 14px', border:'1px solid #e2e8f0', marginBottom:12 }}>
+                      <div style={{ width:48, height:48, borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center',
+                                    fontSize:22, fontWeight:900, color:'white', flexShrink:0,
+                                    background:SEISMIC_COLORS[sz] }}>
+                        {sz}
+                      </div>
+                      <div>
+                        <div style={{ fontSize:13, fontWeight:800, color:'#0f172a' }}>{SEISMIC_LABELS[sz]}</div>
+                        <div style={{ fontSize:10, color:'#64748b', marginTop:2 }}>Max expected: <b>{szi.maxMag}</b></div>
+                        <div style={{ fontSize:10, color:'#64748b' }}>Risk level: <b style={{ color:SEISMIC_COLORS[sz] }}>{szi.risk}</b></div>
+                      </div>
+                    </div>
+                    {/* Description */}
+                    <div style={{ background:'#fffbeb', borderRadius:12, padding:'10px 12px', border:'1px solid #fde68a', marginBottom:12 }}>
+                      <div style={{ fontSize:10, fontWeight:700, color:'#92400e', marginBottom:4 }}>⚡ Seismic Risk</div>
+                      <div style={{ fontSize:11, color:'#374151', lineHeight:1.6 }}>{szi.description}</div>
+                    </div>
+                    {/* Faults */}
+                    <div style={{ background:'#f8fafc', borderRadius:12, padding:'10px 12px', border:'1px solid #e2e8f0', marginBottom:12 }}>
+                      <div style={{ fontSize:10, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:'0.8px', marginBottom:6 }}>Nearby Faults</div>
+                      <div style={{ fontSize:11, color:'#374151', lineHeight:1.7 }}>{szi.faults}</div>
+                    </div>
+                    {/* Nearby earthquakes */}
+                    {nearbyEQ.length > 0 && (
+                      <>
+                        <div style={{ fontSize:11, fontWeight:700, textTransform:'uppercase', color:'#64748b', letterSpacing:'0.8px', marginBottom:8 }}>Historical Earthquakes Nearby</div>
+                        <div style={{ display:'flex', flexDirection:'column', gap:6 }}>
+                          {nearbyEQ.map((eq,i)=>(
+                            <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:10, background:'#f8fafc',
+                                                   borderRadius:10, padding:'8px 10px', border:'1px solid #e2e8f0' }}>
+                              <div style={{ background:'#fef3c7', borderRadius:8, padding:'4px 8px', flexShrink:0, textAlign:'center' }}>
+                                <div style={{ fontSize:13, fontWeight:800, color:'#92400e' }}>M{eq.mag}</div>
+                                <div style={{ fontSize:9, color:'#92400e' }}>{eq.year}</div>
+                              </div>
+                              <div>
+                                <div style={{ fontSize:11, fontWeight:700, color:'#0f172a' }}>{eq.name}</div>
+                                <div style={{ fontSize:10, color:'#64748b', lineHeight:1.5 }}>{eq.impact}</div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                    {nearbyEQ.length === 0 && (
+                      <div style={{ textAlign:'center', color:'#94a3b8', fontSize:12, padding:'16px' }}>
+                        No major earthquakes recorded within 350km
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
-          )}
+            );
+          })()}
 
           <style>{`
             @keyframes slideUpSheet {
