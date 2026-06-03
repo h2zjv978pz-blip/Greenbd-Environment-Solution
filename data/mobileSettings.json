@@ -1,0 +1,33 @@
+{
+  "sections": {
+    "hero": true,
+    "about": true,
+    "services": true,
+    "projects": true,
+    "stats": false,
+    "climateMap": true,
+    "research": true,
+    "team": false,
+    "clients": false,
+    "contact": true,
+    "mdMessage": false
+  },
+  "compactHeader": false,
+  "showAmbientPlayer": true,
+  "stickyHeader": true,
+  "showScrollHint": true,
+  "typography": {
+    "headingSize": "xl",
+    "bodySize": "base",
+    "textAlign": "left",
+    "lineHeight": "normal",
+    "buttonSize": "lg",
+    "sectionSpacing": "normal"
+  },
+  "layout": {
+    "heroLayout": "full",
+    "projectColumns": "2",
+    "servicesColumns": "1",
+    "cardStyle": "rounded"
+  }
+}

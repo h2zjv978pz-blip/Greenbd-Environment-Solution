@@ -11,12 +11,14 @@ import { SidebarClock } from '@/components/admin/ClockWidget';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { adminT } from '@/lib/i18n/translations';
 
-export default function Sidebar() {
+export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname      = usePathname();
   const router        = useRouter();
   const { lang, toggleLang } = useLanguage();
   const tr = adminT(lang);
   const [resourcesOpen, setResourcesOpen] = useState(pathname.startsWith('/admin/resources'));
+
+  const navigate = (href: string) => { router.push(href); onClose?.(); };
 
   const nav = [
     { href: '/admin',          label: tr.sidebar.dashboard,    icon: LayoutDashboard },
@@ -84,7 +86,7 @@ export default function Sidebar() {
           return (
             <button
               key={href}
-              onClick={() => router.push(href)}
+              onClick={() => navigate(href)}
               className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg mb-0.5 text-sm font-medium transition-all duration-150 text-left ${
                 active
                   ? 'bg-white/20 text-white shadow-sm'
@@ -99,7 +101,7 @@ export default function Sidebar() {
 
         {/* Resources group */}
         <button
-          onClick={() => { router.push('/admin/resources'); setResourcesOpen(true); }}
+          onClick={() => { navigate('/admin/resources'); setResourcesOpen(true); }}
           className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg mb-0.5 text-sm font-medium transition-all duration-150 text-left ${
             pathname.startsWith('/admin/resources')
               ? 'bg-white/20 text-white'
@@ -119,7 +121,7 @@ export default function Sidebar() {
               return (
                 <button
                   key={href}
-                  onClick={() => router.push(href)}
+                  onClick={() => navigate(href)}
                   className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-150 text-left ${
                     active ? 'bg-white/20 text-white' : 'text-white/55 hover:bg-white/10 hover:text-white'
                   }`}
@@ -132,9 +134,6 @@ export default function Sidebar() {
           </div>
         )}
       </nav>
-
-      {/* Sidebar clock */}
-      <SidebarClock />
 
       {/* Bottom */}
       <div className="px-3 py-4 border-t border-white/10 space-y-1">

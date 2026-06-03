@@ -10,6 +10,9 @@ const nextConfig = {
     '/**': ['./data/**'],
   },
 
+  // ── Fix workspace root detection when multiple lockfiles exist ────────────
+  outputFileTracingRoot: require('path').join(__dirname),
+
   // ── Image domains ──────────────────────────────────────────────────────────
   images: {
     unoptimized: true,           // allow <img> tags with uploaded paths

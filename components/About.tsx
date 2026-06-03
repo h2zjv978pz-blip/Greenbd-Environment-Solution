@@ -22,10 +22,10 @@ export default function About({ data }: { data: AboutData }) {
   return (
     <>
       {/* ── Main About ───────────────────────────────────────────────── */}
-      <section id="about" className="py-20 bg-white" style={bf}>
+      <section id="about" className="py-8 md:py-20 bg-white" style={bf}>
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            <div className="relative order-2 lg:order-1 mt-8 sm:mt-10 lg:mt-0">
+          <div className="grid lg:grid-cols-2 gap-0 lg:gap-16 items-center">
+            <div className="relative order-2 lg:order-1 mt-8 sm:mt-10 lg:mt-0 hidden md:block">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                 {data.image && <img src={data.image} alt="Green BD team at work" className="w-full h-56 sm:h-80 lg:h-[480px] object-cover" />}
                 <div className="absolute inset-0 bg-gradient-to-tr from-primary-900/30 to-transparent" />
@@ -66,7 +66,7 @@ export default function About({ data }: { data: AboutData }) {
 
       {/* ── MD Message ───────────────────────────────────────────────── */}
       {data.mdMessage && (
-        <section className="py-20 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #052e16 0%, #14532d 50%, #166534 100%)' }}>
+        <section className="md-message-section py-20 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #052e16 0%, #14532d 50%, #166534 100%)' }}>
           <div className="absolute inset-0 opacity-5">
             <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full border border-white" />
             <div className="absolute bottom-0 right-1/4 w-64 h-64 rounded-full border border-white" />

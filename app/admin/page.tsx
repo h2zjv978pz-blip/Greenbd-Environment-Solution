@@ -3,19 +3,10 @@
 import { useEffect, useState } from 'react';
 import { FolderOpen, Wrench, Users, BookOpen, Building2, Presentation, BarChart3, Phone, Info, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
-import ClockWidget from '@/components/admin/ClockWidget';
+import MobileViewSettings from '@/components/admin/MobileViewSettings';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { adminT } from '@/lib/i18n/translations';
 
-const BangladeshClimateMap = dynamic(
-  () => import('@/components/BangladeshClimateMap'),
-  { ssr: false, loading: () => (
-    <div className="h-[320px] bg-gray-100 rounded-2xl animate-pulse flex items-center justify-center">
-      <p className="text-gray-400 text-sm">Loading map…</p>
-    </div>
-  )}
-);
 
 const SECTION_HREFS = [
   '/admin/hero', '/admin/projects', '/admin/services', '/admin/about',
@@ -55,83 +46,50 @@ export default function AdminDashboard() {
 
   return (
     <div style={banglaFont}>
-      {/* Clock widget */}
-      <ClockWidget />
-
       <h1 className="text-2xl font-bold text-gray-900 mb-6">{tr.dashboard.title}</h1>
 
+      {/* ── Mobile View Settings — top priority ──────────────────────── */}
+      <div className="mb-6">
+        <MobileViewSettings />
+      </div>
+
       {/* Stats row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {stats.map(({ label, value, icon: Icon, color }) => (
-          <div key={label} className="bg-white rounded-xl border border-gray-100 shadow-sm p-5 flex items-center gap-4">
-            <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: color + '18' }}>
+          <div key={label} className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: color + '18' }}>
               <Icon className="w-5 h-5" style={{ color }} />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900 font-heading leading-none">{value}</p>
-              <p className="text-gray-400 text-xs mt-0.5">{label}</p>
+              <p className="text-xl font-bold text-gray-900 font-heading leading-none">{value}</p>
+              <p className="text-gray-400 text-xs mt-0.5 leading-tight">{label}</p>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Climate Map widget */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h6 className="font-semibold text-gray-800 text-sm">
-              {lang === 'bn' ? '🗺️ বাংলাদেশ জলবায়ু পরিবর্তন মানচিত্র' : '🗺️ Bangladesh Climate Change Scenario Map'}
-            </h6>
-            <p className="text-xs text-gray-400 mt-0.5">
-              {lang === 'bn' ? 'স্থানে ক্লিক করুন বিস্তারিত দেখতে' : 'Click a location to view climate projections'}
-            </p>
-          </div>
-          <a href="/#climate-map" target="_blank"
-            className="text-xs text-blue-600 hover:underline font-medium">
-            {lang === 'bn' ? 'পাবলিক ভিউ →' : 'Public view →'}
-          </a>
+      {/* ── Content sections — mobile tap-to-edit cards ──────────────── */}
+      <div>
+        <h6 className="font-semibold text-gray-600 text-xs uppercase tracking-wider mb-3 px-1">{tr.dashboard.contentSections}</h6>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+          {tr.dashboard.sections.map(({ label, desc }, i) => {
+            const Icon = SECTION_ICONS[i];
+            const href = SECTION_HREFS[i];
+            return (
+              <Link key={href} href={href}
+                className="group flex items-center gap-4 bg-white border border-gray-100 rounded-2xl px-4 py-4 shadow-sm hover:shadow-md hover:border-blue-200 active:scale-[0.98] transition-all min-h-[72px]">
+                <div className="w-11 h-11 rounded-xl bg-blue-50 group-hover:bg-blue-600 flex items-center justify-center flex-shrink-0 transition-colors">
+                  <Icon className="w-5 h-5 text-blue-500 group-hover:text-white transition-colors" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-gray-800 group-hover:text-blue-700 transition-colors truncate">{label}</p>
+                  <p className="text-xs text-gray-400 mt-0.5 truncate">{desc}</p>
+                </div>
+                <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-blue-500 flex-shrink-0 transition-colors" />
+              </Link>
+            );
+          })}
         </div>
-        <BangladeshClimateMap compact />
-      </div>
-
-      {/* Sections table */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100">
-          <h6 className="font-semibold text-gray-700 text-sm">{tr.dashboard.contentSections}</h6>
-        </div>
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-gray-100">
-              {[tr.dashboard.colNo, tr.dashboard.colSection, tr.dashboard.colDesc, tr.dashboard.colAction].map(h => (
-                <th key={h} className="text-left px-6 py-3 text-xs uppercase text-gray-400 font-semibold tracking-wider">{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {tr.dashboard.sections.map(({ label, desc }, i) => {
-              const Icon = SECTION_ICONS[i];
-              const href = SECTION_HREFS[i];
-              return (
-                <tr key={href} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-3.5 text-sm text-gray-400">{i + 1}</td>
-                  <td className="px-6 py-3.5">
-                    <div className="flex items-center gap-2.5">
-                      <Icon className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                      <span className="text-sm font-semibold text-gray-800">{label}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-3.5 text-sm text-gray-400">{desc}</td>
-                  <td className="px-6 py-3.5">
-                    <Link href={href}
-                      className="inline-flex items-center gap-1 text-xs px-3 py-1.5 border border-blue-400 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-medium">
-                      {tr.common.manage} <ArrowRight className="w-3 h-3" />
-                    </Link>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
       </div>
     </div>
   );

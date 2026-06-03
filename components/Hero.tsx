@@ -55,32 +55,30 @@ function HeroClock() {
 
   return (
     <div className="absolute top-20 sm:top-24 left-3 sm:left-5 md:left-9 z-20 select-none hidden xs:block sm:block">
-      <div className="rounded-xl px-3 py-2.5 border border-white/10 shadow-lg"
+      <div className="rounded-xl px-3 py-2 border border-white/10 shadow-lg"
         style={{ background: 'rgba(0,0,0,0.22)', backdropFilter: 'blur(8px)' }}>
 
-        {/* Time + seconds */}
-        <div className="flex items-baseline gap-0.5 leading-none">
-          <span className="font-mono font-bold text-white tabular-nums" style={{ fontSize: 22, letterSpacing: -0.5 }}>
-            {time}
-          </span>
-          <span className="font-mono text-white/40 tabular-nums ml-0.5" style={{ fontSize: 13, opacity: blink ? 0.6 : 0.15, transition: 'opacity 0.12s' }}>
-            {secs}
-          </span>
-          <span className="text-white/50 font-semibold ml-1" style={{ fontSize: 10 }}>{ampm}</span>
+        {/* Single row: Time · Date · Temperature */}
+        <div className="flex items-center gap-2 leading-none">
+          {/* Time */}
+          <div className="flex items-baseline gap-0.5">
+            <span className="font-mono font-bold text-white tabular-nums" style={{ fontSize: 20, letterSpacing: -0.5 }}>{time}</span>
+            <span className="font-mono text-white/40 tabular-nums ml-0.5" style={{ fontSize: 12, opacity: blink ? 0.6 : 0.15, transition: 'opacity 0.12s' }}>{secs}</span>
+            <span className="text-white/50 font-semibold ml-1" style={{ fontSize: 10 }}>{ampm}</span>
+          </div>
+
+          <span className="text-white/20" style={{ fontSize: 12 }}>|</span>
+
+          {/* Date */}
+          <span className="text-white/55 font-medium tabular-nums" style={{ fontSize: 10 }}>{date}</span>
+
+          {/* Temperature */}
+          {temp !== null && (<>
+            <span className="text-white/20" style={{ fontSize: 12 }}>|</span>
+            <span className="text-amber-300/90 font-bold" style={{ fontSize: 11 }}>{wx} {temp.toFixed(1)}°C</span>
+          </>)}
         </div>
 
-        {/* Date + Temperature */}
-        <div className="flex items-center justify-between gap-4 mt-1">
-          <span className="text-white/45 font-medium" style={{ fontSize: 10 }}>{date}</span>
-          {temp !== null && (
-            <span className="text-amber-300/90 font-bold flex items-center gap-0.5" style={{ fontSize: 11 }}>
-              {wx} {temp.toFixed(1)}°C
-            </span>
-          )}
-        </div>
-
-        {/* BST label */}
-        <p className="text-white/25 mt-0.5" style={{ fontSize: 9, letterSpacing: '0.08em' }}>BST · Dhaka</p>
       </div>
     </div>
   );
@@ -121,8 +119,6 @@ export default function Hero({ slides }: { slides: HeroSlide[] }) {
       <div className="absolute inset-0 bg-cover bg-center transition-opacity duration-700" style={{ backgroundImage: `url('${slide.image}')`, opacity: fade ? 1 : 0 }} />
       <div className="absolute inset-0 bg-gradient-to-br from-primary-950/80 via-primary-900/60 to-primary-800/40" />
 
-      {/* Clock widget — top-left, below the fixed header */}
-      <HeroClock />
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full border border-white/30 animate-ping" style={{ animationDuration: '4s' }} />
         <div className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full border border-white/20 animate-ping" style={{ animationDuration: '6s' }} />
