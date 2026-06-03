@@ -50,8 +50,8 @@ export default function Home() {
   const show = (key: string) => sec[key] !== false;
 
   // Map settings to CSS values
-  const headingPx: Record<string,string> = { sm:'1.1rem',base:'1.25rem',xl:'1.6rem','2xl':'2rem','3xl':'2.5rem' };
-  const bodyPx:    Record<string,string> = { xs:'0.72rem',sm:'0.8rem',base:'0.875rem',lg:'1rem' };
+  const headingPx: Record<string,string> = { xs:'0.75rem',sm:'0.875rem',base:'1rem',xl:'1.25rem','2xl':'1.5rem','3xl':'1.875rem' };
+  const bodyPx:    Record<string,string> = { xs:'0.6875rem',sm:'0.8125rem',base:'0.875rem',lg:'1rem' };
   const lhMap:     Record<string,string> = { tight:'1.3',normal:'1.6',relaxed:'1.8',loose:'2' };
   const spaceMap:  Record<string,string> = { compact:'3rem',normal:'5rem',spacious:'7rem' };
   const btnPad:    Record<string,string> = { sm:'0.4rem 1rem',base:'0.6rem 1.5rem',lg:'0.75rem 2rem',xl:'0.9rem 2.5rem' };
@@ -70,7 +70,8 @@ export default function Home() {
     --m-align:   ${ty.textAlign ?? 'center'};
     --m-btn-pad: ${btnPad[ty.buttonSize??'lg']         ?? '0.75rem 2rem'};
   }
-  section { padding-top: var(--m-space) !important; padding-bottom: var(--m-space) !important; }
+  section:not(#home) { padding-top: var(--m-space); padding-bottom: var(--m-space); }
+  .hero-heading { font-size: var(--m-heading) !important; line-height: 1.25 !important; }
   .section-title { font-size: var(--m-heading) !important; text-align: var(--m-align) !important; }
   p, .text-gray-500, .text-gray-600 { font-size: var(--m-body); line-height: var(--m-lh); text-align: var(--m-align); }
   .btn-primary, .btn-outline { padding: var(--m-btn-pad) !important; }

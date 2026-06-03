@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Menu, X, Leaf, ChevronDown, Newspaper, Scale, Download, Images, Search, ClipboardList, CalendarClock, Handshake, MessageSquare, Video, Clock } from 'lucide-react';
+import { Menu, X, Leaf, ChevronDown, Newspaper, Scale, Download, Images, Search, ClipboardList, CalendarClock, Handshake, MessageSquare, Video } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
@@ -28,8 +28,8 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
 
   const [scrolled,      setScrolled]      = useState(false);
   const [menuOpen,      setMenuOpen]      = useState(false);
-  const [clockTime,     setClockTime]     = useState('');
   const [activeLink,    setActiveLink]    = useState('#home');
+  const [liveInfo,      setLiveInfo]      = useState({ time:'', date:'', temp:'' });
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [contactOpen,   setContactOpen]   = useState(false);
   const [mobileRes,     setMobileRes]     = useState(false);
@@ -70,16 +70,34 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Live clock in header (BST)
+  // Live time + date (updates every second)
   useEffect(() => {
     const tick = () => {
-      setClockTime(new Intl.DateTimeFormat('en-US', {
-        timeZone: 'Asia/Dhaka', hour12: true,
-        hour: 'numeric', minute: '2-digit',
-      }).format(new Date()));
+      const now = new Date();
+      setLiveInfo(prev => ({
+        ...prev,
+        time: new Intl.DateTimeFormat('en-US', { timeZone:'Asia/Dhaka', hour12:true, hour:'numeric', minute:'2-digit', second:'2-digit' }).format(now),
+        date: new Intl.DateTimeFormat('en-US', { timeZone:'Asia/Dhaka', month:'short', day:'numeric', year:'numeric' }).format(now),
+      }));
     };
     tick();
-    const id = setInterval(tick, 10000);
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Live temperature (refreshed every 15 min)
+  useEffect(() => {
+    const fetchTemp = () =>
+      fetch('https://api.open-meteo.com/v1/forecast?latitude=23.8103&longitude=90.4125&current_weather=true&temperature_unit=celsius')
+        .then(r => r.json())
+        .then(d => {
+          const t = d.current_weather?.temperature;
+          const c = d.current_weather?.weathercode ?? 0;
+          const wx = c === 0 ? '☀️' : c <= 3 ? '⛅' : c <= 55 ? '🌦' : '🌧';
+          if (t != null) setLiveInfo(prev => ({ ...prev, temp: `${wx} ${t.toFixed(1)}°C` }));
+        }).catch(() => {});
+    fetchTemp();
+    const id = setInterval(fetchTemp, 15 * 60 * 1000);
     return () => clearInterval(id);
   }, []);
 
@@ -142,11 +160,17 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
             >
               {sub}
             </span>
-            {clockTime && (
-              <span className={`flex items-center gap-1 mt-0.5 transition-colors ${scrolled ? 'text-primary-500' : 'text-green-300'}`}
-                style={{ fontSize: 10, fontFamily: 'Inter, monospace', fontWeight: 600, letterSpacing: '0.02em' }}>
-                <Clock style={{ width: 9, height: 9 }} />
-                {clockTime} BST
+            {/* Live time · date · temperature — one line, left-aligned */}
+            {liveInfo.time && (
+              <span className={`flex items-center gap-1.5 mt-2 flex-wrap transition-colors ${scrolled ? 'text-gray-500' : 'text-green-200/80'}`}
+                style={{ fontSize: 10, fontFamily: 'Inter, monospace', fontWeight: 500, lineHeight: 1.4 }}>
+                <span className={scrolled ? 'text-primary-500' : 'text-green-300'}>{liveInfo.time} BST</span>
+                <span className="opacity-40">·</span>
+                <span>{liveInfo.date}</span>
+                {liveInfo.temp && <>
+                  <span className="opacity-40">·</span>
+                  <span className={scrolled ? 'text-amber-500' : 'text-amber-300'}>{liveInfo.temp}</span>
+                </>}
               </span>
             )}
           </div>

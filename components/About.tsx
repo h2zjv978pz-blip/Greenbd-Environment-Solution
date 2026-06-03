@@ -47,19 +47,19 @@ export default function About({ data }: { data: AboutData }) {
                 {headFirst}<span className="text-primary-600"> {headRest}</span>
               </h2>
 
-              {/* Mobile stat badges — visible only on mobile (image is hidden) */}
-              <div className="flex gap-3 mb-4 md:hidden">
-                <div className="flex-1 bg-primary-600 text-white rounded-2xl p-3 shadow-md text-center">
-                  <p className="text-2xl font-bold font-heading leading-none">{data.yearsExperience || '15'}+</p>
-                  <p className="text-[10px] font-medium text-green-200 mt-1 leading-tight">{tr.yearsLabel}</p>
+              {/* Mobile stat badges — compact inline row */}
+              <div className="flex gap-2 mb-3 md:hidden">
+                <div className="flex-1 bg-primary-600 text-white rounded-xl p-2 shadow-sm text-center">
+                  <p className="text-base font-bold font-heading leading-none">{data.yearsExperience || '15'}+</p>
+                  <p className="text-[9px] font-medium text-green-200 mt-0.5 leading-tight">{tr.yearsLabel}</p>
                 </div>
-                <div className="flex-1 bg-white border-2 border-primary-100 rounded-2xl p-3 shadow-md text-center">
-                  <p className="text-2xl font-bold text-primary-600 font-heading leading-none">{data.projectsCompleted || '200'}+</p>
-                  <p className="text-[10px] text-gray-500 mt-1 leading-tight">{tr.projectsLabel}</p>
+                <div className="flex-1 bg-white border border-primary-100 rounded-xl p-2 shadow-sm text-center">
+                  <p className="text-base font-bold text-primary-600 font-heading leading-none">{data.projectsCompleted || '200'}+</p>
+                  <p className="text-[9px] text-gray-500 mt-0.5 leading-tight">{tr.projectsLabel}</p>
                 </div>
-                <div className="flex-1 bg-primary-50 border border-primary-100 rounded-2xl p-3 text-center">
-                  <p className="text-2xl font-bold text-primary-700 font-heading leading-none">64</p>
-                  <p className="text-[10px] text-primary-500 mt-1 leading-tight">Districts<br/>Covered</p>
+                <div className="flex-1 bg-primary-50 border border-primary-100 rounded-xl p-2 text-center">
+                  <p className="text-base font-bold text-primary-700 font-heading leading-none">64</p>
+                  <p className="text-[9px] text-primary-500 mt-0.5 leading-tight">Districts</p>
                 </div>
               </div>
 

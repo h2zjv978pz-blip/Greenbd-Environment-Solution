@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { FolderOpen, Wrench, Users, BookOpen, Building2, Presentation, BarChart3, Phone, Info, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import MobileViewSettings from '@/components/admin/MobileViewSettings';
+import TitleSizeControl from '@/components/admin/TitleSizeControl';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { adminT } from '@/lib/i18n/translations';
 
@@ -48,7 +49,10 @@ export default function AdminDashboard() {
     <div style={banglaFont}>
       <h1 className="text-2xl font-bold text-gray-900 mb-6">{tr.dashboard.title}</h1>
 
-      {/* ── Mobile View Settings — top priority ──────────────────────── */}
+      {/* ── Title Size — quick editor ─────────────────────────────────── */}
+      <TitleSizeControl />
+
+      {/* ── Mobile View Settings ──────────────────────────────────────── */}
       <div className="mb-6">
         <MobileViewSettings />
       </div>

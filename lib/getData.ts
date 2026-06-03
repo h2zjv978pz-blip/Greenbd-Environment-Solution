@@ -9,7 +9,7 @@ export const getStats    = () => { const d = readData<{ stats: Stat[] }>('stats'
 export const getTeam     = () => { const d = readData<{ members: TeamMember[] }>('team');         return { members:       Array.isArray(d.members)       ? d.members       : [] }; };
 export const getClients  = () => { const d = readData<{ clients: Client[]; testimonials: Testimonial[] }>('clients'); return { clients: Array.isArray(d.clients) ? d.clients : [], testimonials: Array.isArray(d.testimonials) ? d.testimonials : [] }; };
 export const getResearch = () => { const d = readData<{ publications: Publication[] }>('research'); return { publications: Array.isArray(d.publications) ? d.publications : [] }; };
-export const getContact  = () => { const d = readData<ContactData>('contact');                     return { address: d.address ?? '', phone: d.phone ?? '', email: d.email ?? '', mapLabel: d.mapLabel ?? '', ctaTitle: d.ctaTitle ?? 'Get In Touch', ctaDesc: d.ctaDesc ?? '', formTitle: d.formTitle ?? 'Contact Us', formDesc: d.formDesc ?? '', subjects: Array.isArray(d.subjects) ? d.subjects : [] } as ContactData; };
+export const getContact  = () => { const d = readData<ContactData>('contact');                     return { address: d.address ?? '', phone: d.phone ?? '', email: d.email ?? '', whatsapp: d.whatsapp ?? '', mapLabel: d.mapLabel ?? '', ctaTitle: d.ctaTitle ?? 'Get In Touch', ctaDesc: d.ctaDesc ?? '', formTitle: d.formTitle ?? 'Contact Us', formDesc: d.formDesc ?? '', subjects: Array.isArray(d.subjects) ? d.subjects : [] } as ContactData; };
 export const getSettings = () => readData<SiteSettings>('settings');
 
 // ── Types ────────────────────────────────────────────────────────────────
@@ -95,7 +95,7 @@ export interface Publication {
   abstract: string; abstract_bn?: string;
 }
 export interface ContactData {
-  address: string; phone: string; email: string;
+  address: string; phone: string; email: string; whatsapp?: string;
   mapLabel: string; mapLabel_bn?: string;
   ctaTitle: string; ctaTitle_bn?: string;
   ctaDesc: string; ctaDesc_bn?: string;

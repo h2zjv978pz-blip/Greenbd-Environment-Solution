@@ -27,7 +27,7 @@ export default function Research({ publications }: { publications: Publication[]
         {/* Header */}
         <div className="text-center mb-5 md:mb-12">
           <p className="section-subtitle mb-1 md:mb-3">{tr.subtitle}</p>
-          <h2 className="text-2xl md:text-4xl font-bold font-heading text-gray-900 mb-2 md:mb-4">{tr.title}</h2>
+          <h2 className="text-lg md:text-4xl font-bold font-heading text-gray-900 mb-2 md:mb-4">{tr.title}</h2>
           <p className="text-gray-500 text-sm max-w-2xl mx-auto hidden sm:block">{tr.desc}</p>
         </div>
 
@@ -49,7 +49,7 @@ export default function Research({ publications }: { publications: Publication[]
 
                     {/* Title */}
                     <Link href={`/research/${pub.id}`}>
-                      <h3 className="font-heading font-semibold text-gray-900 text-sm sm:text-base leading-snug mb-1.5 group-hover:text-primary-700 transition-colors cursor-pointer hover:underline underline-offset-2 line-clamp-2 sm:line-clamp-none">
+                      <h3 className="font-heading font-semibold text-gray-900 text-xs sm:text-base leading-snug mb-1.5 group-hover:text-primary-700 transition-colors cursor-pointer hover:underline underline-offset-2 line-clamp-2 sm:line-clamp-none">
                         {title}
                       </h3>
                     </Link>

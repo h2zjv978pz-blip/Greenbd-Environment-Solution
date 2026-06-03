@@ -124,8 +124,10 @@ export default function Hero({ slides }: { slides: HeroSlide[] }) {
         <div className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full border border-white/20 animate-ping" style={{ animationDuration: '6s' }} />
       </div>
 
-      <div className="relative z-10 text-center px-4 max-w-5xl mx-auto mt-20">
-        <div className="flex flex-wrap justify-center gap-3 mb-8">
+      <div className="relative z-10 text-center px-4 max-w-5xl mx-auto mt-16 sm:mt-20">
+
+        {/* Badges — hidden on mobile */}
+        <div className="hidden md:flex flex-wrap justify-center gap-3 mb-8">
           {badges.map(({ icon: Icon, label }) => (
             <span key={label} className="flex items-center gap-1.5 bg-white/10 backdrop-blur border border-white/20 text-white text-xs font-medium px-3 py-1.5 rounded-full">
               <Icon className="w-3.5 h-3.5 text-green-300" />{label}
@@ -133,26 +135,33 @@ export default function Hero({ slides }: { slides: HeroSlide[] }) {
           ))}
         </div>
 
-        <h1 className={`font-heading font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-tight mb-4 transition-all duration-500 ${fade ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        {/* Heading — smaller on mobile */}
+        <h1 className={`hero-heading font-heading font-bold text-2xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-snug mb-2 sm:mb-4 transition-all duration-500 ${fade ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           {title}<br /><span className="text-green-300">{subtitle}</span>
         </h1>
 
-        <div className={`text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-10 transition-all duration-500 delay-100 ${fade ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+        {/* Description — 2-line clamp on mobile */}
+        <div className={`text-white/70 text-[9px] sm:text-lg md:text-xl max-w-2xl mx-auto mb-2 sm:mb-10 transition-all duration-500 delay-100 line-clamp-1 sm:line-clamp-none ${fade ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
           dangerouslySetInnerHTML={{ __html: desc }} />
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="#projects" onClick={(e) => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' }); }} className="bg-primary-600 hover:bg-primary-500 text-white font-semibold px-8 py-4 rounded-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 text-base">{tr.exploreWork}</a>
-          <a href="#contact"  onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }} className="border-2 border-white/60 hover:border-white text-white hover:bg-white/10 font-semibold px-8 py-4 rounded-xl transition-all duration-300 text-base backdrop-blur">{tr.contactUs}</a>
+        {/* Buttons — side by side on mobile, smaller */}
+        <div className="flex flex-row gap-2 sm:gap-4 justify-center">
+          <a href="#projects" onClick={(e) => { e.preventDefault(); document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' }); }}
+            className="bg-primary-600 hover:bg-primary-500 text-white font-semibold px-5 sm:px-8 py-2.5 sm:py-4 rounded-xl transition-all duration-300 text-sm sm:text-base">{tr.exploreWork}</a>
+          <a href="#contact"  onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }}
+            className="border-2 border-white/60 hover:border-white text-white hover:bg-white/10 font-semibold px-5 sm:px-8 py-2.5 sm:py-4 rounded-xl transition-all duration-300 text-sm sm:text-base backdrop-blur">{tr.contactUs}</a>
         </div>
 
-        <div className="flex justify-center gap-2 mt-12">
+        {/* Slide dots — compact */}
+        <div className="flex justify-center gap-1.5 mt-6 sm:mt-12">
           {slides.map((_, i) => (
-            <button key={i} onClick={() => { setCurrent(i); setFade(true); }} className={`h-1.5 rounded-full transition-all duration-300 ${i === current ? 'w-8 bg-green-400' : 'w-2 bg-white/40'}`} />
+            <button key={i} onClick={() => { setCurrent(i); setFade(true); }} className={`h-1 sm:h-1.5 rounded-full transition-all duration-300 ${i === current ? 'w-6 sm:w-8 bg-green-400' : 'w-1.5 sm:w-2 bg-white/40'}`} />
           ))}
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/60 animate-bounce">
+      {/* Scroll hint — hidden on mobile */}
+      <div className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-1 text-white/60 animate-bounce">
         <span className="text-xs tracking-widest uppercase">{tr.scroll}</span>
         <ChevronDown className="w-5 h-5" />
       </div>

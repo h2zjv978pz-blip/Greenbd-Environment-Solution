@@ -8,12 +8,12 @@ import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { adminT } from '@/lib/i18n/translations';
 
 interface ContactData {
-  address: string; phone: string; email: string; mapLabel: string;
+  address: string; phone: string; email: string; whatsapp?: string; mapLabel: string;
   ctaTitle: string; ctaDesc: string; formTitle: string; formDesc: string; subjects: string[];
   mapLabel_bn?: string; ctaTitle_bn?: string; ctaDesc_bn?: string;
   formTitle_bn?: string; formDesc_bn?: string; subjects_bn?: string[];
 }
-const DEF: ContactData = { address:'', phone:'', email:'', mapLabel:'', ctaTitle:'', ctaDesc:'', formTitle:'', formDesc:'', subjects:[], mapLabel_bn:'', ctaTitle_bn:'', ctaDesc_bn:'', formTitle_bn:'', formDesc_bn:'', subjects_bn:[] };
+const DEF: ContactData = { address:'', phone:'', email:'', whatsapp:'', mapLabel:'', ctaTitle:'', ctaDesc:'', formTitle:'', formDesc:'', subjects:[], mapLabel_bn:'', ctaTitle_bn:'', ctaDesc_bn:'', formTitle_bn:'', formDesc_bn:'', subjects_bn:[] };
 
 export default function ContactAdmin() {
   const { lang } = useLanguage();
@@ -64,6 +64,19 @@ export default function ContactAdmin() {
             {field('address',  tr.contact.addressField)}
             {field('phone',    tr.contact.phoneField)}
             {field('email',    tr.contact.emailField)}
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5 flex items-center gap-2">
+                <span style={{ color:'#25D366' }}>💬</span> WhatsApp Number
+              </label>
+              <div className="flex items-center gap-2">
+                <div className="flex items-center bg-gray-50 border border-gray-200 rounded-l-lg px-3 h-[42px] text-sm text-gray-500 font-medium">+880</div>
+                <input value={(data.whatsapp ?? '').replace(/^(\+?880|0)/, '')}
+                  onChange={e => setData({ ...data, whatsapp: e.target.value })}
+                  placeholder="1XXXXXXXXX"
+                  className="flex-1 border border-gray-200 border-l-0 rounded-r-lg px-3 py-2.5 text-sm focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-50" />
+              </div>
+              <p className="text-xs text-gray-400 mt-1">Shown as a floating button on the bottom-left of the site.</p>
+            </div>
             {field('mapLabel', tr.contact.mapLabelField)}
             {field('mapLabel_bn', tr.contact.mapLabelBnField, '', undefined, true)}
           </div>

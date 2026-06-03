@@ -17,9 +17,9 @@
   "stickyHeader": true,
   "showScrollHint": true,
   "typography": {
-    "headingSize": "xl",
+    "headingSize": "2xl",
     "bodySize": "base",
-    "textAlign": "left",
+    "textAlign": "center",
     "lineHeight": "normal",
     "buttonSize": "lg",
     "sectionSpacing": "normal"

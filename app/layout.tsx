@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Providers from './providers';
-import AmbientPlayer from '@/components/AmbientPlayer';
+import AmbientPlayer   from '@/components/AmbientPlayer';
+import SplashScreen    from '@/components/SplashScreen';
+import WhatsAppButton  from '@/components/WhatsAppButton';
+import { getContact }  from '@/lib/getData';
 
 export const metadata: Metadata = {
   title: 'Green BD Environmental Solutions | Environment & Climate Resilience Bangladesh',
@@ -21,6 +24,7 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const contact = getContact();
   return (
     <html lang="en">
       <head>
@@ -32,7 +36,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="antialiased">
+        <SplashScreen />
         <Providers>{children}</Providers>
+        {contact.whatsapp && <WhatsAppButton number={contact.whatsapp} />}
         <AmbientPlayer />
       </body>
     </html>
