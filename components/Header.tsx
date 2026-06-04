@@ -141,8 +141,8 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
       style={banglaFont}
     >
       <div className="container mx-auto px-4 lg:px-8 flex items-center justify-between">
-        {/* Logo */}
-        <button onClick={() => handleNav('#home')} className="flex items-center gap-2 group">
+        {/* Logo — links to homepage from any page */}
+        <Link href="/" className="flex items-center gap-2 group" aria-label={`${name} — Home`}>
           <div
             className="bg-primary-600 rounded-xl flex items-center justify-center shadow-md group-hover:bg-primary-700 transition-colors overflow-hidden flex-shrink-0"
             style={{ width: logoSz, height: logoSz, minWidth: logoSz }}
@@ -178,7 +178,7 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
               </span>
             )}
           </div>
-        </button>
+        </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center gap-6">
