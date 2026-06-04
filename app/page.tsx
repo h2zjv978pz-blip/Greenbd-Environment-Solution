@@ -8,7 +8,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Green BD Environmental Solutions | EIA, GIS & Climate Consultancy Bangladesh',
-  alternates: { canonical: 'https://greenbd23.com' },
+  alternates: { canonical: '/' },
 };
 import Header         from '@/components/Header';
 import Hero           from '@/components/Hero';

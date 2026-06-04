@@ -1,4 +1,4 @@
-export const metadata = { title: 'Blog & News', description: 'Environmental research articles, project updates, and climate news from Green BD Environmental Solutions Bangladesh.', alternates: { canonical: 'https://greenbd23.com/resources/blog' } };
+export const metadata = { title: 'Blog & News', description: 'Environmental research articles, project updates, and climate news from Green BD Environmental Solutions Bangladesh.', alternates: { canonical: '/resources/blog' } };
 
 import { readData } from '@/lib/data';
 import Link from 'next/link';

@@ -1,6 +1,8 @@
 import { MetadataRoute } from 'next';
 import { readData } from '@/lib/data';
 
+export const dynamic = 'force-dynamic';
+
 const BASE = 'https://greenbd23.com';
 
 interface Project     { id: number }

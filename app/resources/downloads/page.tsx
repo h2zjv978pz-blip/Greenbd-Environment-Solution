@@ -1,4 +1,4 @@
-export const metadata = { title: 'Downloads & Guides', description: 'Download environmental reports, toolkits, field guides and research publications from Green BD Environmental Solutions.', alternates: { canonical: 'https://greenbd23.com/resources/downloads' } };
+export const metadata = { title: 'Downloads & Guides', description: 'Download environmental reports, toolkits, field guides and research publications from Green BD Environmental Solutions.', alternates: { canonical: '/resources/downloads' } };
 
 import { readData } from '@/lib/data';
 import { Download, FileText, FileArchive, Calendar, HardDrive } from 'lucide-react';
