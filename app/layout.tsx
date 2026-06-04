@@ -14,13 +14,13 @@ export const metadata: Metadata = {
 
   // ── Title template ────────────────────────────────────────────────────────
   title: {
-    default: `${SITE_NAME} | Climate & Environmental Consultancy Bangladesh`,
-    template: `%s | ${SITE_NAME}`,
+    default: `Green BD Environmental Solutions | greenbd23 | Climate & EIA Consultancy Bangladesh`,
+    template: `%s | Green BD Environmental Solutions | greenbd23`,
   },
 
   // ── Description ───────────────────────────────────────────────────────────
   description:
-    'Green BD Environmental Solutions is Bangladesh\'s leading environmental consultancy — specialising in Environmental Impact Assessment (EIA), Climate Change Research, GIS & Remote Sensing, Disaster Risk Reduction, and Sustainability Consulting across all 64 districts.',
+    'Green BD Environmental Solutions (greenbd23.com) — Bangladesh\'s leading environmental consultancy. EIA, Climate Change Research, GIS & Remote Sensing, Disaster Risk Reduction, and Sustainability Consulting across all 64 districts of Bangladesh.',
 
   // ── Keywords ──────────────────────────────────────────────────────────────
   keywords: [
