@@ -1,3 +1,5 @@
+export const metadata = { title: 'Environmental Laws of Bangladesh', description: 'Comprehensive guide to Bangladesh environmental legislation, regulations and legal framework for environmental compliance.', alternates: { canonical: 'https://greenbd23.com/resources/laws' } };
+
 import { readData } from '@/lib/data';
 import { Scale, BookOpen, FileText, ExternalLink, CheckCircle2 } from 'lucide-react';
 

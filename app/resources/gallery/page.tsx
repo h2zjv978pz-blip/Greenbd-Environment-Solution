@@ -1,3 +1,5 @@
+export const metadata = { title: 'Photo Gallery', description: 'Visual documentation of environmental projects, field surveys and community programmes across Bangladesh.', alternates: { canonical: 'https://greenbd23.com/resources/gallery' } };
+
 import { readData } from '@/lib/data';
 import GalleryClient from './GalleryClient';
 
