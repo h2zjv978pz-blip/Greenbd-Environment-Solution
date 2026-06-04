@@ -84,10 +84,9 @@ export const metadata: Metadata = {
     },
   },
 
-  // ── Verification (add your codes when ready) ──────────────────────────────
+  // ── Verification ──────────────────────────────────────────────────────────
   verification: {
-    // google: 'your-google-search-console-code',
-    // yandex: 'your-yandex-code',
+    google: 'BDNj1pyLaK6p_NcZR2LaCw4IpFxGrO9fPW25h8FThjc',
   },
 
   // ── Geo / language ────────────────────────────────────────────────────────
