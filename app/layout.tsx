@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     'sustainability consulting Dhaka',
     'environmental research Bangladesh',
     'climate resilience Bangladesh',
-    'Green BD', 'greenbd',
+    'Green BD', 'greenbd', 'greenbd23', 'greenbd23.com', 'Green BD Environmental',
     'environmental solutions Bangladesh',
     'IPCC AR6 Bangladesh',
     'flood risk assessment Bangladesh',

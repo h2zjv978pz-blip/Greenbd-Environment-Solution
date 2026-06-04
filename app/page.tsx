@@ -93,6 +93,7 @@ export default function Home() {
         '@type': ['Organization', 'EnvironmentalOrganization'],
         '@id': 'https://greenbd23.com/#organization',
         name: 'Green BD Environmental Solutions',
+        alternateName: ['Green BD', 'GreenBD', 'greenbd23', 'Green BD Environmental'],
         url: 'https://greenbd23.com',
         logo: { '@type': 'ImageObject', url: 'https://greenbd23.com/logo.png' },
         description: 'Leading environmental consultancy in Bangladesh specialising in EIA, GIS, Climate Change Research and Disaster Risk Reduction.',
