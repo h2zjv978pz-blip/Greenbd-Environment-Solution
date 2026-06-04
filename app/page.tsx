@@ -3,13 +3,6 @@ import {
   getStats, getTeam, getClients, getResearch, getContact, getSettings,
 } from '@/lib/getData';
 import { readData } from '@/lib/data';
-import JsonLd from '@/components/JsonLd';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Green BD Environmental Solutions | EIA, GIS & Climate Consultancy Bangladesh',
-  alternates: { canonical: '/' },
-};
 import Header         from '@/components/Header';
 import Hero           from '@/components/Hero';
 import Projects       from '@/components/Projects';
@@ -32,7 +25,7 @@ interface MobileSettings {
 }
 
 // Helper: wraps a section in a div that is hidden on mobile if the admin toggled it off
-function Section({ id, visible, children }: { id: string; visible: boolean; children: React.ReactNode }) {
+function Section({ visible, children }: { id?: string; visible: boolean; children: React.ReactNode }) {
   if (visible) return <>{children}</>;
   // Hidden on mobile (< 768px), always shown on md+
   return <div className="hidden md:block">{children}</div>;
@@ -86,74 +79,8 @@ export default function Home() {
   .text-center { text-align: var(--m-align) !important; }
 }`;
 
-  const orgSchema = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': ['Organization', 'EnvironmentalOrganization'],
-        '@id': 'https://greenbd23.com/#organization',
-        name: 'Green BD Environmental Solutions',
-        alternateName: ['Green BD', 'GreenBD', 'greenbd23', 'Green BD Environmental'],
-        url: 'https://greenbd23.com',
-        logo: { '@type': 'ImageObject', url: 'https://greenbd23.com/logo.png' },
-        description: 'Leading environmental consultancy in Bangladesh specialising in EIA, GIS, Climate Change Research and Disaster Risk Reduction.',
-        address: {
-          '@type': 'PostalAddress',
-          streetAddress: 'House 12, Road 5, Dhanmondi',
-          addressLocality: 'Dhaka',
-          addressRegion: 'Dhaka Division',
-          postalCode: '1209',
-          addressCountry: 'BD',
-        },
-        contactPoint: {
-          '@type': 'ContactPoint',
-          telephone: '+880-1845160729',
-          contactType: 'customer service',
-          availableLanguage: ['English', 'Bengali'],
-        },
-        areaServed: { '@type': 'Country', name: 'Bangladesh' },
-        foundingDate: '2009',
-        numberOfEmployees: { '@type': 'QuantitativeValue', value: 20 },
-        sameAs: [
-          'https://www.facebook.com/greenbd',
-          'https://www.linkedin.com/company/greenbd',
-        ],
-        knowsAbout: [
-          'Environmental Impact Assessment',
-          'GIS Remote Sensing',
-          'Climate Change Adaptation',
-          'Disaster Risk Reduction',
-          'Sustainability Consulting',
-          'Bangladesh Environment',
-        ],
-      },
-      {
-        '@type': 'WebSite',
-        '@id': 'https://greenbd23.com/#website',
-        url: 'https://greenbd23.com',
-        name: 'Green BD Environmental Solutions',
-        publisher: { '@id': 'https://greenbd23.com/#organization' },
-        potentialAction: {
-          '@type': 'SearchAction',
-          target: { '@type': 'EntryPoint', urlTemplate: 'https://greenbd23.com/?q={search_term_string}' },
-          'query-input': 'required name=search_term_string',
-        },
-      },
-      {
-        '@type': 'WebPage',
-        '@id': 'https://greenbd23.com/#webpage',
-        url: 'https://greenbd23.com',
-        name: 'Green BD Environmental Solutions | EIA, GIS & Climate Consultancy Bangladesh',
-        isPartOf: { '@id': 'https://greenbd23.com/#website' },
-        about: { '@id': 'https://greenbd23.com/#organization' },
-        inLanguage: 'en-BD',
-      },
-    ],
-  };
-
   return (
     <main>
-      <JsonLd data={orgSchema} />
       {/* Mobile typography/spacing CSS variables */}
       <style dangerouslySetInnerHTML={{ __html: mobileCSS }} />
       <Header settings={settings} />
