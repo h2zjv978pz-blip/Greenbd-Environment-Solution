@@ -28,15 +28,40 @@ export default function Footer({ settings }: { settings?: SiteSettings }) {
 
   return (
     <footer className="bg-gray-950 text-gray-300" style={banglaFont}>
-      <div className="container mx-auto px-4 lg:px-8 pt-16 pb-8">
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8 md:gap-10 mb-10 md:mb-12">
-          {/* Brand column */}
-          <div className="lg:col-span-2">
+      <div className="container mx-auto px-4 lg:px-8 pt-8 md:pt-16 pb-6 md:pb-8">
+
+        {/* ── Mobile: compact brand + socials row ── */}
+        <div className="flex items-center justify-between mb-5 md:hidden">
+          <div className="flex items-center gap-2">
+            <div className="w-9 h-9 bg-primary-600 rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0">
+              {logo ? <img src={logo} alt={name} className="w-full h-full object-cover" /> : <Leaf className="w-5 h-5 text-white" />}
+            </div>
+            <div>
+              <span className="block text-white font-bold font-heading text-sm leading-tight">{name}</span>
+              <span className="block text-green-400 text-[9px] font-medium tracking-wide">{sub}</span>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            {socials.map(({ icon: Icon, href, label }) => (
+              <a key={label} href={href} aria-label={label}
+                className="w-8 h-8 rounded-lg bg-gray-800 hover:bg-primary-600 flex items-center justify-center text-gray-400 hover:text-white transition-all">
+                <Icon className="w-3.5 h-3.5" />
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Mobile: description line ── */}
+        <p className="text-gray-400 text-xs leading-relaxed mb-4 md:hidden line-clamp-2">{footerTxt}</p>
+
+        {/* ── Mobile: link columns 2-col grid, desktop: full layout ── */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-0 md:gap-10 mb-5 md:mb-12">
+
+          {/* Brand column — desktop only */}
+          <div className="hidden md:block lg:col-span-2">
             <div className="flex items-center gap-2 mb-4">
               <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center overflow-hidden">
-                {logo
-                  ? <img src={logo} alt={name} className="w-full h-full object-cover" />
-                  : <Leaf className="w-6 h-6 text-white" />}
+                {logo ? <img src={logo} alt={name} className="w-full h-full object-cover" /> : <Leaf className="w-6 h-6 text-white" />}
               </div>
               <div>
                 <span className="block text-white font-bold font-heading leading-tight">{name}</span>
@@ -46,48 +71,41 @@ export default function Footer({ settings }: { settings?: SiteSettings }) {
             <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-xs">{footerTxt}</p>
             <div className="flex gap-3">
               {socials.map(({ icon: Icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  className="w-11 h-11 rounded-lg bg-gray-800 hover:bg-primary-600 flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200"
-                >
+                <a key={label} href={href} aria-label={label}
+                  className="w-11 h-11 rounded-lg bg-gray-800 hover:bg-primary-600 flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200">
                   <Icon className="w-4 h-4" />
                 </a>
               ))}
             </div>
           </div>
 
-          {/* Link columns */}
-          {COLUMN_KEYS.map((key) => (
-            <div key={key}>
-              <h4 className="text-white font-semibold font-heading text-sm mb-4">{tr.columns[key]}</h4>
-              <ul className="space-y-2">
-                {tr.links[key].map((link) => (
-                  <li key={link}>
-                    <a href="#" className="text-gray-400 hover:text-green-400 text-sm transition-colors duration-200">
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Link columns — 2-col grid on mobile */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:contents gap-x-4 gap-y-4 md:gap-0 lg:gap-10">
+            {COLUMN_KEYS.map((key) => (
+              <div key={key} className="md:block">
+                <h4 className="text-white font-semibold font-heading text-xs md:text-sm mb-2 md:mb-4 uppercase tracking-wider">{tr.columns[key]}</h4>
+                <ul className="space-y-1 md:space-y-2">
+                  {tr.links[key].map((link) => (
+                    <li key={link}>
+                      <a href="#" className="text-gray-400 hover:text-green-400 text-xs md:text-sm transition-colors duration-200 block">
+                        {link}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Newsletter */}
-        <div className="bg-gray-900 rounded-2xl p-6 mb-10 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div>
-            <p className="text-white font-semibold font-heading">{tr.newsletterTitle}</p>
-            <p className="text-gray-400 text-sm">{tr.newsletterDesc}</p>
-          </div>
-          <div className="flex gap-2 w-full md:w-auto">
-            <input
-              type="email"
-              placeholder={tr.emailPlaceholder}
-              className="flex-1 md:w-64 bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary-500"
-            />
-            <button className="bg-primary-600 hover:bg-primary-500 text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition-colors flex-shrink-0">
+        {/* Newsletter — compact on mobile */}
+        <div className="bg-gray-900 rounded-xl md:rounded-2xl p-4 md:p-6 mb-5 md:mb-10">
+          <p className="text-white font-semibold text-sm md:text-base mb-1">{tr.newsletterTitle}</p>
+          <p className="text-gray-400 text-xs md:text-sm mb-3 hidden sm:block">{tr.newsletterDesc}</p>
+          <div className="flex gap-2">
+            <input type="email" placeholder={tr.emailPlaceholder}
+              className="flex-1 bg-gray-800 border border-gray-700 rounded-xl px-3 py-2 text-xs md:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary-500" />
+            <button className="bg-primary-600 hover:bg-primary-500 text-white font-semibold text-xs md:text-sm px-4 py-2 rounded-xl transition-colors flex-shrink-0">
               {tr.subscribe}
             </button>
           </div>

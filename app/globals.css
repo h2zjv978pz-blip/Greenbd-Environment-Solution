@@ -8,6 +8,13 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Offset scroll-to-section by fixed header height so content isn't hidden */
+    scroll-padding-top: 72px;
+  }
+  @media (max-width: 1023px) {
+    html {
+      scroll-padding-top: 60px; /* mobile header is shorter */
+    }
   }
   body {
     @apply font-sans text-gray-800 bg-white;

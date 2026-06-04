@@ -124,7 +124,11 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
     setActiveLink(href);
     setMenuOpen(false);
     const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    if (el) {
+      const headerH = window.innerWidth < 1024 ? 64 : 80;
+      const top = el.getBoundingClientRect().top + window.scrollY - headerH;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
   };
 
   const banglaFont = lang === 'bn' ? { fontFamily: "'Hind Siliguri', sans-serif" } : {};

@@ -73,7 +73,8 @@ export default function Home() {
   section:not(#home) { padding-top: var(--m-space); padding-bottom: var(--m-space); }
   .hero-heading { font-size: var(--m-heading) !important; line-height: 1.25 !important; }
   .section-title { font-size: var(--m-heading) !important; text-align: var(--m-align) !important; }
-  p, .text-gray-500, .text-gray-600 { font-size: var(--m-body); line-height: var(--m-lh); text-align: var(--m-align); }
+  p, .text-gray-500, .text-gray-600 { font-size: var(--m-body); line-height: var(--m-lh); }
+  #about p, #about h2, #about h3, #about span { text-align: left !important; }
   .btn-primary, .btn-outline { padding: var(--m-btn-pad) !important; }
   .text-center { text-align: var(--m-align) !important; }
 }`;

@@ -42,9 +42,12 @@ export default function About({ data }: { data: AboutData }) {
               <div className="absolute -z-10 top-8 -left-8 w-48 h-48 bg-primary-100 rounded-2xl hidden sm:block" />
             </div>
             <div className="order-1 lg:order-2">
-              <p className="section-subtitle mb-2 md:mb-3">{tr.subtitle}</p>
-              <h2 className="text-2xl md:text-4xl font-bold font-heading text-gray-900 mb-4 md:mb-6">
-                {headFirst}<span className="text-primary-600"> {headRest}</span>
+              <p className="section-subtitle mb-2 md:mb-3 text-left mt-4 md:mt-0">{tr.subtitle}</p>
+              <h2 className="text-lg md:text-4xl font-bold font-heading text-gray-900 mb-3 md:mb-6 text-left leading-snug">
+                {/* Mobile: full heading, single color for clarity */}
+                <span className="md:hidden">{heading}</span>
+                {/* Desktop: two-tone heading */}
+                <span className="hidden md:inline">{headFirst}<span className="text-primary-600"> {headRest}</span></span>
               </h2>
 
               {/* Mobile stat badges — compact inline row */}

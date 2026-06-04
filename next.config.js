@@ -29,6 +29,14 @@ const nextConfig = {
     ],
   },
 
+  // ── Dashboard URL alias (/dashboard → /admin) ─────────────────────────────
+  async redirects() {
+    return [
+      { source: '/dashboard',          destination: '/admin',          permanent: false },
+      { source: '/dashboard/:path*',   destination: '/admin/:path*',   permanent: false },
+    ];
+  },
+
   // ── API CORS headers ───────────────────────────────────────────────────────
   async headers() {
     return [
