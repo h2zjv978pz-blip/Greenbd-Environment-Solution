@@ -109,9 +109,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        {/* Favicon sizes */}
-        <link rel="icon"             href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        {/* Favicon — SVG primary, fallbacks for older browsers */}
+        <link rel="icon"             href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon"             href="/favicon.ico" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/favicon.svg" />
+        <meta name="theme-color"     content="#16a34a" />
       </head>
       <body className="antialiased">
         <SplashScreen />
