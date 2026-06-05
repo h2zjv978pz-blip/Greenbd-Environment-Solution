@@ -54,47 +54,74 @@ function RichEditor({ value, onChange, banglaFont = false }: { value: string; on
     onChange(ref.current.innerHTML);
   };
 
+  // Enable CSS-based styling and default paragraph separator on first edit
+  const prepare = () => {
+    try {
+      document.execCommand('styleWithCSS',            false, 'true');
+      document.execCommand('defaultParagraphSeparator', false, 'p');
+    } catch {}
+  };
+
   const cmd = (command: string, arg?: string) => {
     ref.current?.focus();
+    prepare();
     document.execCommand(command, false, arg);
     emit();
   };
 
-  const toolBtn = (icon: React.ReactNode, command: string, title: string, arg?: string) => (
-    <button type="button" title={title} onMouseDown={e => { e.preventDefault(); cmd(command, arg); }}
-      className="w-7 h-7 flex items-center justify-center rounded text-gray-600 hover:bg-gray-200 transition-colors flex-shrink-0">{icon}</button>
-  );
+  const isActive = (command: string) => {
+    try { return document.queryCommandState(command); } catch { return false; }
+  };
+
+  const tb = (icon: React.ReactNode, command: string, title: string, arg?: string) => {
+    const active = isActive(command);
+    return (
+      <button type="button" title={title}
+        onMouseDown={e => { e.preventDefault(); cmd(command, arg); }}
+        className={`w-7 h-7 flex items-center justify-center rounded transition-colors flex-shrink-0
+          ${active ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-200'}`}>
+        {icon}
+      </button>
+    );
+  };
+
+  const SEP = <div className="w-px h-5 bg-gray-200 mx-0.5 flex-shrink-0" />;
 
   return (
     <div className={`border rounded-lg overflow-hidden transition-all focus-within:ring-2 ${banglaFont ? 'border-blue-200 focus-within:border-blue-400 focus-within:ring-blue-50' : 'border-gray-200 focus-within:border-blue-400 focus-within:ring-blue-50'}`}>
+      {/* ── Toolbar ────────────────────────────────────────────────────── */}
       <div className="flex items-center gap-0.5 px-2 py-1.5 bg-gray-50 border-b border-gray-200 flex-wrap">
-        {toolBtn(<Bold className="w-3.5 h-3.5" />,          'bold',              'Bold')}
-        {toolBtn(<Italic className="w-3.5 h-3.5" />,        'italic',            'Italic')}
-        {toolBtn(<Underline className="w-3.5 h-3.5" />,     'underline',         'Underline')}
-        {toolBtn(<Strikethrough className="w-3.5 h-3.5" />, 'strikeThrough',     'Strikethrough')}
-        <div className="w-px h-5 bg-gray-300 mx-1" />
-        {toolBtn(<List className="w-3.5 h-3.5" />,        'insertUnorderedList', 'Bullet List')}
-        {toolBtn(<ListOrdered className="w-3.5 h-3.5" />, 'insertOrderedList',   'Numbered List')}
-        <div className="w-px h-5 bg-gray-300 mx-1" />
-        {toolBtn(<AlignLeft    className="w-3.5 h-3.5" />, 'justifyLeft',   'Align Left')}
-        {toolBtn(<AlignCenter  className="w-3.5 h-3.5" />, 'justifyCenter', 'Align Center')}
-        {toolBtn(<AlignRight   className="w-3.5 h-3.5" />, 'justifyRight',  'Align Right')}
-        {toolBtn(<AlignJustify className="w-3.5 h-3.5" />, 'justifyFull',   'Justify')}
-        <div className="w-px h-5 bg-gray-300 mx-1" />
-        {toolBtn(<Undo className="w-3.5 h-3.5" />, 'undo', 'Undo')}
-        {toolBtn(<Redo className="w-3.5 h-3.5" />, 'redo', 'Redo')}
-        <div className="w-px h-5 bg-gray-300 mx-1" />
+        {tb(<Bold          className="w-3.5 h-3.5" />, 'bold',              'Bold')}
+        {tb(<Italic        className="w-3.5 h-3.5" />, 'italic',            'Italic')}
+        {tb(<Underline     className="w-3.5 h-3.5" />, 'underline',         'Underline')}
+        {tb(<Strikethrough className="w-3.5 h-3.5" />, 'strikeThrough',     'Strikethrough')}
+        {SEP}
+        {tb(<AlignLeft     className="w-3.5 h-3.5" />, 'justifyLeft',   'Align Left')}
+        {tb(<AlignCenter   className="w-3.5 h-3.5" />, 'justifyCenter', 'Align Center')}
+        {tb(<AlignRight    className="w-3.5 h-3.5" />, 'justifyRight',  'Align Right')}
+        {tb(<AlignJustify  className="w-3.5 h-3.5" />, 'justifyFull',   'Justify')}
+        {SEP}
+        {tb(<List          className="w-3.5 h-3.5" />, 'insertUnorderedList', 'Bullet List')}
+        {tb(<ListOrdered   className="w-3.5 h-3.5" />, 'insertOrderedList',   'Numbered List')}
+        {SEP}
+        {tb(<Undo          className="w-3.5 h-3.5" />, 'undo', 'Undo')}
+        {tb(<Redo          className="w-3.5 h-3.5" />, 'redo', 'Redo')}
+        {SEP}
         <select onMouseDown={e => e.stopPropagation()} onChange={e => cmd('fontSize', e.target.value)}
-          className="text-xs bg-white border border-gray-200 rounded px-1 py-0.5 text-gray-600">
+          className="text-xs bg-white border border-gray-200 rounded px-1 py-0.5 text-gray-600 focus:outline-none">
+          <option value="">Size</option>
           {[1,2,3,4,5,6,7].map(n => <option key={n} value={n}>{['8pt','10pt','12pt','14pt','18pt','24pt','36pt'][n-1]}</option>)}
         </select>
       </div>
+
+      {/* ── Editable area ──────────────────────────────────────────────── */}
       <div
         ref={ref}
         contentEditable
         suppressContentEditableWarning
         onInput={emit}
         onBlur={emit}
+        onFocus={prepare}
         className="min-h-[180px] p-3 text-sm text-gray-800 focus:outline-none"
         style={{ lineHeight: 1.7, ...(banglaFont ? { fontFamily: "'Hind Siliguri', sans-serif" } : {}) }}
       />
