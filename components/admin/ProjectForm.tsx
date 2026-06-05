@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, DragEvent } from 'react';
+import { useRef, useState, useEffect, DragEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Bold, Italic, Underline, Strikethrough, List, ListOrdered,
@@ -35,16 +35,35 @@ interface Props { initial?: Partial<ProjectData>; mode: 'create' | 'edit'; }
 
 /* ── Rich-text toolbar ─────────────────────────────────────────────── */
 function RichEditor({ value, onChange, banglaFont = false }: { value: string; onChange: (v: string) => void; banglaFont?: boolean }) {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref     = useRef<HTMLDivElement>(null);
+  const lastVal = useRef('');
+
+  // Sync DOM only when value changes externally (initial load, auto-translate, key reset)
+  useEffect(() => {
+    if (!ref.current) return;
+    if (value !== lastVal.current) {
+      ref.current.innerHTML = value ?? '';
+      lastVal.current = value ?? '';
+    }
+  }, [value]);
+
+  const emit = () => {
+    if (!ref.current) return;
+    lastVal.current = ref.current.innerHTML;
+    onChange(ref.current.innerHTML);
+  };
+
   const cmd = (command: string, arg?: string) => {
     ref.current?.focus();
     document.execCommand(command, false, arg);
-    if (ref.current) onChange(ref.current.innerHTML);
+    emit();
   };
+
   const toolBtn = (icon: React.ReactNode, command: string, title: string, arg?: string) => (
     <button type="button" title={title} onMouseDown={e => { e.preventDefault(); cmd(command, arg); }}
       className="w-7 h-7 flex items-center justify-center rounded text-gray-600 hover:bg-gray-200 transition-colors flex-shrink-0">{icon}</button>
   );
+
   return (
     <div className={`border rounded-lg overflow-hidden transition-all focus-within:ring-2 ${banglaFont ? 'border-blue-200 focus-within:border-blue-400 focus-within:ring-blue-50' : 'border-gray-200 focus-within:border-blue-400 focus-within:ring-blue-50'}`}>
       <div className="flex items-center gap-0.5 px-2 py-1.5 bg-gray-50 border-b border-gray-200 flex-wrap">
@@ -64,9 +83,12 @@ function RichEditor({ value, onChange, banglaFont = false }: { value: string; on
           {[1,2,3,4,5,6,7].map(n => <option key={n} value={n}>{['8pt','10pt','12pt','14pt','18pt','24pt','36pt'][n-1]}</option>)}
         </select>
       </div>
-      <div ref={ref} contentEditable suppressContentEditableWarning
-        onInput={() => { if (ref.current) onChange(ref.current.innerHTML); }}
-        dangerouslySetInnerHTML={{ __html: value }}
+      <div
+        ref={ref}
+        contentEditable
+        suppressContentEditableWarning
+        onInput={emit}
+        onBlur={emit}
         className="min-h-[180px] p-3 text-sm text-gray-800 focus:outline-none"
         style={{ lineHeight: 1.7, ...(banglaFont ? { fontFamily: "'Hind Siliguri', sans-serif" } : {}) }}
       />
