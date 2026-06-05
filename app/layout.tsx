@@ -132,15 +132,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon"             href="/favicon.ico" sizes="32x32" />
         <link rel="apple-touch-icon" href="/favicon.svg" />
         <meta name="theme-color"     content="#16a34a" />
-      </head>
-      <body className="antialiased">
-        <SplashScreen />
-        <Providers>{children}</Providers>
-        {contact.whatsapp && <WhatsAppButton number={contact.whatsapp} />}
-        <AmbientPlayer />
-      </body>
-      {/* ── Structured Data (JSON-LD) ──────────────────────────────────── */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        {/* ── Structured Data (JSON-LD) ────────────────────────────────── */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",
         "@graph": [
           {
@@ -210,6 +203,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }
         ]
       })}} />
+      </head>
+      <body className="antialiased">
+        <SplashScreen />
+        <Providers>{children}</Providers>
+        {contact.whatsapp && <WhatsAppButton number={contact.whatsapp} />}
+        <AmbientPlayer />
+      </body>
     </html>
   );
 }
