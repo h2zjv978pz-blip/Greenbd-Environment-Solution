@@ -143,13 +143,21 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
       <div className="container mx-auto px-4 lg:px-8 flex items-center justify-between">
         {/* Logo — links to homepage from any page */}
         <Link href="/" className="flex items-center gap-2 group" aria-label={`${name} — Home`}>
+          {/* Logo image — capped at 48px on mobile, full logoSz on desktop */}
           <div
             className="bg-primary-600 rounded-xl flex items-center justify-center shadow-md group-hover:bg-primary-700 transition-colors overflow-hidden flex-shrink-0"
-            style={{ width: logoSz, height: logoSz, minWidth: logoSz }}
+            style={{ width: `clamp(40px, ${logoSz}px, 48px)`, height: `clamp(40px, ${logoSz}px, 48px)`, minWidth: 40 }}
           >
-            {logo
-              ? <img src={logo} alt={name} className="w-full h-full object-cover" />
-              : <Leaf className="text-white" style={{ width: logoSz * 0.5, height: logoSz * 0.5 }} />}
+            <img
+              src={logo || '/favicon.svg'}
+              alt={name}
+              className="w-full h-full object-contain"
+              onError={e => {
+                const img = e.target as HTMLImageElement;
+                img.onerror = null;
+                img.src = '/favicon.svg';
+              }}
+            />
           </div>
           <div className="text-left">
             <span
