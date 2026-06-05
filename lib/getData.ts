@@ -116,4 +116,7 @@ export interface SiteSettings {
   taglineFont: string;
   taglineSizePx: string;
   logoSizePx: string;
+  logoSizeMobilePx: string;
+  showNameMobile: boolean;
+  showTaglineMobile: boolean;
 }

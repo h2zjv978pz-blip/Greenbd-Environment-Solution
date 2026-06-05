@@ -10,5 +10,8 @@
   "nameBold": true,
   "taglineFont": "Inter",
   "taglineSizePx": "13",
-  "logoSizePx": "80"
+  "logoSizePx": "80",
+  "logoSizeMobilePx": "40",
+  "showNameMobile": true,
+  "showTaglineMobile": false
 }

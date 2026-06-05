@@ -16,16 +16,20 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
   const router = useRouter();
   const tr = t[lang];
 
-  const name     = settings?.companyName   || 'Green BD';
-  const sub      = (lang === 'bn' && settings?.tagline_bn) ? settings.tagline_bn : (settings?.tagline || 'Environmental Solutions');
-  const logo     = settings?.logo          || '';
-  const logoSz   = Number(settings?.logoSizePx)    || 40;
-  const nameSz   = Number(settings?.nameSizePx)    || 16;
-  const nameFont = settings?.nameFont              || 'Poppins';
-  const nameBold = settings?.nameBold !== false;
-  const tagSz    = Number(settings?.taglineSizePx) || 10;
-  const tagFont  = settings?.taglineFont           || 'Inter';
+  const name            = settings?.companyName        || 'Green BD';
+  const sub             = (lang === 'bn' && settings?.tagline_bn) ? settings.tagline_bn : (settings?.tagline || 'Environmental Solutions');
+  const logo            = settings?.logo               || '';
+  const logoSz          = Number(settings?.logoSizePx)         || 40;
+  const mobileSz        = Number(settings?.logoSizeMobilePx)   || 40;
+  const showNameMobile  = settings?.showNameMobile  !== false;
+  const showTagMobile   = settings?.showTaglineMobile !== false;
+  const nameSz          = Number(settings?.nameSizePx)         || 16;
+  const nameFont        = settings?.nameFont                   || 'Poppins';
+  const nameBold        = settings?.nameBold !== false;
+  const tagSz           = Number(settings?.taglineSizePx)      || 10;
+  const tagFont         = settings?.taglineFont                || 'Inter';
 
+  const [isMobile,      setIsMobile]      = useState(false);
   const [scrolled,      setScrolled]      = useState(false);
   const [menuOpen,      setMenuOpen]      = useState(false);
   const [activeLink,    setActiveLink]    = useState('#home');
@@ -63,6 +67,13 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
     { label: tr.nav.team,       href: '#team'        },
     { label: tr.nav.clients,    href: '#clients'     },
   ];
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -143,10 +154,11 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
       <div className="container mx-auto px-4 lg:px-8 flex items-center justify-between">
         {/* Logo — links to homepage from any page */}
         <Link href="/" className="flex items-center gap-2 group" aria-label={`${name} — Home`}>
-          {/* Logo image — capped at 48px on mobile, full logoSz on desktop */}
+          {/* Logo — size controlled per device via admin settings */}
+          {(() => { const sz = isMobile ? mobileSz : logoSz; return (
           <div
             className="bg-primary-600 rounded-xl flex items-center justify-center shadow-md group-hover:bg-primary-700 transition-colors overflow-hidden flex-shrink-0"
-            style={{ width: `clamp(40px, ${logoSz}px, 48px)`, height: `clamp(40px, ${logoSz}px, 48px)`, minWidth: 40 }}
+            style={{ width: sz, height: sz, minWidth: sz }}
           >
             <img
               src={logo || '/favicon.svg'}
@@ -159,19 +171,24 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
               }}
             />
           </div>
+          ); })()}
           <div className="text-left">
+            {(!isMobile || showNameMobile) && (
             <span
               className={`block leading-tight transition-colors ${scrolled ? 'text-primary-700' : 'text-white drop-shadow'}`}
               style={{ fontFamily: nameFont, fontSize: nameSz, fontWeight: nameBold ? 700 : 400 }}
             >
               {name}
             </span>
+            )}
+            {(!isMobile || showTagMobile) && (
             <span
               className={`block tracking-wide leading-tight transition-colors ${scrolled ? 'text-gray-500' : 'text-green-200'}`}
               style={{ fontFamily: tagFont, fontSize: tagSz }}
             >
               {sub}
             </span>
+            )}
             {/* Live time · date · temperature — one line, left-aligned */}
             {liveInfo.time && (
               <span className={`flex items-center gap-1.5 mt-2 flex-wrap transition-colors ${scrolled ? 'text-gray-500' : 'text-green-200/80'}`}

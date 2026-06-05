@@ -11,6 +11,9 @@ interface SiteSettings {
   nameFont: string; nameSizePx: string; nameBold: boolean;
   taglineFont: string; taglineSizePx: string;
   logoSizePx: string;
+  logoSizeMobilePx: string;
+  showNameMobile: boolean;
+  showTaglineMobile: boolean;
 }
 
 const DEF: SiteSettings = {
@@ -18,6 +21,7 @@ const DEF: SiteSettings = {
   logo: '', favicon: '', footerText: '', copyrightName: 'Green BD Environmental Solutions',
   nameFont: 'Poppins', nameSizePx: '16', nameBold: true,
   taglineFont: 'Inter', taglineSizePx: '10', logoSizePx: '40',
+  logoSizeMobilePx: '40', showNameMobile: true, showTaglineMobile: false,
 };
 
 const FONTS = [
@@ -214,6 +218,95 @@ export default function SettingsAdmin() {
                 ✕ Remove logo (use default leaf icon)
               </button>
             )}
+          </div>
+
+          {/* ── Mobile Logo Settings ───────────────────────────────── */}
+          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-5">
+            <h6 className="font-semibold text-gray-700 text-sm border-b border-gray-100 pb-3 flex items-center gap-2">
+              📱 Mobile Logo Settings
+            </h6>
+            <p className="text-xs text-gray-400 -mt-2">Controls how the logo appears on phone screens (under 768 px wide).</p>
+
+            {/* Mobile preview */}
+            <div className="flex items-start gap-4">
+              {/* Phone frame */}
+              <div className="flex-shrink-0 bg-gray-900 rounded-2xl p-2 w-36 shadow-lg border-2 border-gray-700">
+                <div className="bg-green-900 rounded-xl p-2 flex items-center gap-2">
+                  <div
+                    className="bg-primary-600 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0"
+                    style={{ width: Number(data.logoSizeMobilePx) || 40, height: Number(data.logoSizeMobilePx) || 40 }}
+                  >
+                    <img
+                      src={data.logo || '/favicon.svg'}
+                      alt="logo"
+                      className="w-full h-full object-contain"
+                      onError={e => { (e.target as HTMLImageElement).src = '/favicon.svg'; }}
+                    />
+                  </div>
+                  <div className="overflow-hidden">
+                    {data.showNameMobile && (
+                      <p className="text-white font-bold truncate" style={{ fontSize: 9, fontFamily: data.nameFont }}>
+                        {data.companyName || 'Green BD'}
+                      </p>
+                    )}
+                    {data.showTaglineMobile && (
+                      <p className="text-green-300 truncate" style={{ fontSize: 7, fontFamily: data.taglineFont }}>
+                        {data.tagline || 'Environmental Solutions'}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <p className="text-center text-gray-500 text-[8px] mt-1">Mobile Preview</p>
+              </div>
+
+              {/* Controls */}
+              <div className="flex-1 space-y-4">
+                {/* Mobile logo size */}
+                <div>
+                  <label className={labelCls}>Logo Size on Mobile</label>
+                  <div className="flex items-center gap-3 mb-2">
+                    <input type="range" min="24" max="56" step="4"
+                      value={data.logoSizeMobilePx}
+                      onChange={e => s('logoSizeMobilePx', e.target.value)}
+                      className="flex-1 accent-blue-500"
+                    />
+                    <span className="text-sm font-semibold text-gray-700 w-14 text-center border border-gray-200 rounded-lg py-1">
+                      {data.logoSizeMobilePx}px
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {[{label:'XS',val:'28'},{label:'S',val:'36'},{label:'M',val:'40'},{label:'L',val:'48'},{label:'XL',val:'56'}].map(({label,val}) => (
+                      <button key={val} type="button" onClick={() => s('logoSizeMobilePx', val)}
+                        className={`text-xs px-2.5 py-1 rounded-lg border font-semibold transition-colors ${data.logoSizeMobilePx === val ? 'text-white border-blue-500 bg-blue-500' : 'text-gray-500 border-gray-200 hover:border-blue-400'}`}>
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Visibility toggles */}
+                <div className="space-y-2 pt-1 border-t border-gray-100">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Show on Mobile</p>
+                  {[
+                    { key: 'showNameMobile' as const,    label: 'Company Name',  desc: 'Show "Green BD" text beside logo' },
+                    { key: 'showTaglineMobile' as const, label: 'Tagline',       desc: 'Show "Environmental Solutions" text' },
+                  ].map(({ key, label, desc }) => (
+                    <label key={key} className="flex items-start gap-3 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        checked={data[key] as boolean}
+                        onChange={e => s(key, e.target.checked)}
+                        className="mt-0.5 w-4 h-4 rounded accent-blue-500 flex-shrink-0"
+                      />
+                      <div>
+                        <p className="text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors">{label}</p>
+                        <p className="text-xs text-gray-400">{desc}</p>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Favicon */}
