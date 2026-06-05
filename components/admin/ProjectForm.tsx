@@ -4,6 +4,7 @@ import { useRef, useState, useEffect, DragEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Bold, Italic, Underline, Strikethrough, List, ListOrdered,
+  AlignLeft, AlignCenter, AlignRight, AlignJustify,
   Undo, Redo, X, ImageIcon, Upload, Loader2, CheckCircle2,
 } from 'lucide-react';
 import ImageUpload from './ImageUpload';
@@ -74,6 +75,11 @@ function RichEditor({ value, onChange, banglaFont = false }: { value: string; on
         <div className="w-px h-5 bg-gray-300 mx-1" />
         {toolBtn(<List className="w-3.5 h-3.5" />,        'insertUnorderedList', 'Bullet List')}
         {toolBtn(<ListOrdered className="w-3.5 h-3.5" />, 'insertOrderedList',   'Numbered List')}
+        <div className="w-px h-5 bg-gray-300 mx-1" />
+        {toolBtn(<AlignLeft    className="w-3.5 h-3.5" />, 'justifyLeft',   'Align Left')}
+        {toolBtn(<AlignCenter  className="w-3.5 h-3.5" />, 'justifyCenter', 'Align Center')}
+        {toolBtn(<AlignRight   className="w-3.5 h-3.5" />, 'justifyRight',  'Align Right')}
+        {toolBtn(<AlignJustify className="w-3.5 h-3.5" />, 'justifyFull',   'Justify')}
         <div className="w-px h-5 bg-gray-300 mx-1" />
         {toolBtn(<Undo className="w-3.5 h-3.5" />, 'undo', 'Undo')}
         {toolBtn(<Redo className="w-3.5 h-3.5" />, 'redo', 'Redo')}
