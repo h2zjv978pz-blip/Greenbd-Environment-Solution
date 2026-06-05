@@ -20,23 +20,41 @@ export const metadata: Metadata = {
 
   // ── Description ───────────────────────────────────────────────────────────
   description:
-    'Green BD Environmental Solutions (greenbd23.com) — Bangladesh\'s leading environmental consultancy. EIA, Climate Change Research, GIS & Remote Sensing, Disaster Risk Reduction, and Sustainability Consulting across all 64 districts of Bangladesh.',
+    'Green BD Environmental Solutions (greenbd23.com) — leading environmental consultant in Dhaka, Bangladesh. Specialising in Environmental Impact Assessment (EIA), Environmental Management Plans, Climate Change Consultancy, GIS & Remote Sensing, Disaster Risk Reduction, Flood Vulnerability Mapping, River Erosion Monitoring, and Sustainability Consulting across Bangladesh.',
 
   // ── Keywords ──────────────────────────────────────────────────────────────
   keywords: [
-    'environmental consultancy Bangladesh',
-    'EIA Bangladesh', 'Environmental Impact Assessment Dhaka',
+    // ── Brand ──────────────────────────────────────────────────────────────
+    'Green BD', 'greenbd', 'greenbd23', 'greenbd23.com',
+    'Green BD Environmental Solutions', 'Green BD Environmental consultancy',
+
+    // ── Core services ──────────────────────────────────────────────────────
+    'Environmental consultant in Dhaka',
+    'Environmental consultancy Bangladesh',
+    'Environmental Impact Assessment Bangladesh',
+    'EIA Bangladesh', 'EIA Dhaka',
+    'Environmental Management Plan Bangladesh',
+    'Sustainability consulting Bangladesh',
+    'Green development consultancy Bangladesh',
+    'Environmental research Bangladesh',
+
+    // ── Climate & GIS ──────────────────────────────────────────────────────
+    'Climate change consultancy Bangladesh',
+    'Climate resilience planning Bangladesh',
+    'GIS and remote sensing services Bangladesh',
     'GIS remote sensing Bangladesh',
     'climate change adaptation Bangladesh',
-    'disaster risk reduction Bangladesh',
-    'sustainability consulting Dhaka',
-    'environmental research Bangladesh',
-    'climate resilience Bangladesh',
-    'Green BD', 'greenbd', 'greenbd23', 'greenbd23.com', 'Green BD Environmental',
-    'environmental solutions Bangladesh',
-    'IPCC AR6 Bangladesh',
+
+    // ── Disaster & Risk ────────────────────────────────────────────────────
+    'Disaster risk reduction Bangladesh',
+    'Flood vulnerability mapping Bangladesh',
+    'River erosion monitoring Bangladesh',
     'flood risk assessment Bangladesh',
     'sea level rise Bangladesh coast',
+
+    // ── Technical ──────────────────────────────────────────────────────────
+    'IPCC AR6 Bangladesh',
+    'environmental solutions Bangladesh',
   ],
 
   // ── Authors / publisher ───────────────────────────────────────────────────
