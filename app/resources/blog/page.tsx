@@ -1,4 +1,25 @@
-export const metadata = { title: 'Blog & News', description: 'Environmental research articles, project updates, and climate news from Green BD Environmental Solutions Bangladesh.', alternates: { canonical: '/resources/blog' } };
+export const metadata = {
+  title: 'Environmental Blog & News — Bangladesh',
+  description: 'Environmental research articles, EIA guides, climate change insights, GIS/remote sensing updates and sustainability news from Green BD Environmental Solutions Bangladesh.',
+  keywords: [
+    'environmental blog Bangladesh',
+    'EIA guide Bangladesh',
+    'climate change articles Bangladesh',
+    'GIS remote sensing blog',
+    'environmental consultancy news Bangladesh',
+    'sustainability articles Bangladesh',
+    'Green BD blog',
+    'greenbd23 news',
+  ],
+  alternates: { canonical: '/resources/blog' },
+  openGraph: {
+    title:       'Environmental Blog & News | Green BD Environmental Solutions',
+    description: 'Expert insights on EIA, climate change, GIS, disaster risk reduction and sustainability in Bangladesh.',
+    type:        'website',
+    url:         'https://greenbd23.com/resources/blog',
+    images:      [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Green BD Blog' }],
+  },
+};
 
 import { readData } from '@/lib/data';
 import Link from 'next/link';
@@ -46,20 +67,24 @@ export default function BlogPage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {published.map(post => (
             <article key={post.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col">
-              {post.image && (
-                <div className="relative h-48 overflow-hidden">
-                  <img src={post.image} alt={post.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute top-3 left-3">
-                    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${CATEGORY_COLORS[post.category] ?? 'bg-gray-100 text-gray-600'}`}>
-                      {post.category}
-                    </span>
+              <Link href={`/resources/blog/${post.slug}`} className="block">
+                {post.image && (
+                  <div className="relative h-48 overflow-hidden">
+                    <img src={post.image} alt={post.title} width={400} height={192} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" loading="lazy" />
+                    <div className="absolute top-3 left-3">
+                      <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${CATEGORY_COLORS[post.category] ?? 'bg-gray-100 text-gray-600'}`}>
+                        {post.category}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </Link>
               <div className="p-6 flex flex-col flex-1">
-                <h2 className="font-heading font-bold text-gray-900 text-lg leading-snug mb-3 line-clamp-2 hover:text-primary-600 transition-colors">
-                  {post.title}
-                </h2>
+                <Link href={`/resources/blog/${post.slug}`}>
+                  <h2 className="font-heading font-bold text-gray-900 text-lg leading-snug mb-3 line-clamp-2 hover:text-primary-600 transition-colors">
+                    {post.title}
+                  </h2>
+                </Link>
                 <p className="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-3 flex-1">{post.excerpt}</p>
                 <div className="flex items-center gap-4 text-xs text-gray-400 border-t border-gray-50 pt-4">
                   <span className="flex items-center gap-1"><User className="w-3.5 h-3.5" />{post.author}</span>
@@ -72,9 +97,9 @@ export default function BlogPage() {
                     </span>
                   ))}
                 </div>
-                <button className="mt-4 flex items-center gap-1.5 text-primary-600 text-sm font-semibold hover:gap-2.5 transition-all">
+                <Link href={`/resources/blog/${post.slug}`} className="mt-4 flex items-center gap-1.5 text-primary-600 text-sm font-semibold hover:gap-2.5 transition-all">
                   Read More <ArrowRight className="w-4 h-4" />
-                </button>
+                </Link>
               </div>
             </article>
           ))}

@@ -7,6 +7,7 @@ const BASE = 'https://greenbd23.com';
 
 interface Project     { id: number }
 interface Publication { id: number }
+interface BlogPost    { slug: string; date: string; published: boolean }
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date().toISOString();
@@ -55,5 +56,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }));
   } catch { /* graceful skip */ }
 
-  return [...statics, ...projectUrls, ...researchUrls];
+  // Dynamic blog post pages
+  let blogUrls: MetadataRoute.Sitemap = [];
+  try {
+    const { posts = [] } = readData<{ posts: BlogPost[] }>('blog');
+    blogUrls = posts
+      .filter(p => p.published)
+      .map(p => ({
+        url:             `${BASE}/resources/blog/${p.slug}`,
+        lastModified:    p.date || now,
+        changeFrequency: 'monthly' as const,
+        priority:        0.8,
+      }));
+  } catch { /* graceful skip */ }
+
+  return [...statics, ...projectUrls, ...researchUrls, ...blogUrls];
 }

@@ -139,6 +139,77 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {contact.whatsapp && <WhatsAppButton number={contact.whatsapp} />}
         <AmbientPlayer />
       </body>
+      {/* ── Structured Data (JSON-LD) ──────────────────────────────────── */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": ["Organization", "LocalBusiness", "ProfessionalService"],
+            "@id": `${SITE_URL}/#organization`,
+            "name": "Green BD Environmental Solutions",
+            "alternateName": ["greenbd23", "Green BD", "greenbd23.com", "GreenBD"],
+            "url": SITE_URL,
+            "logo": { "@type": "ImageObject", "url": `${SITE_URL}/favicon.svg`, "width": 100, "height": 100 },
+            "image": `${SITE_URL}/og-image.png`,
+            "description": "Leading environmental consultancy in Bangladesh specialising in Environmental Impact Assessment (EIA), Climate Change Adaptation, GIS & Remote Sensing, Disaster Risk Reduction, and Sustainability Consulting.",
+            "telephone": "+8801711034941",
+            "email": "info@greenbd-env.com",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "House 12, Road 5, Dhanmondi",
+              "addressLocality": "Dhaka",
+              "postalCode": "1209",
+              "addressCountry": "BD"
+            },
+            "geo": { "@type": "GeoCoordinates", "latitude": 23.8103, "longitude": 90.4125 },
+            "areaServed": { "@type": "Country", "name": "Bangladesh" },
+            "priceRange": "$$",
+            "knowsAbout": [
+              "Environmental Impact Assessment Bangladesh",
+              "Climate Change Adaptation",
+              "GIS and Remote Sensing",
+              "Disaster Risk Reduction Bangladesh",
+              "Environmental Management Plans",
+              "Flood Vulnerability Mapping Bangladesh",
+              "River Erosion Monitoring",
+              "Sustainability Consulting Bangladesh",
+              "Environmental Compliance Bangladesh",
+              "Sea Level Rise Bangladesh",
+              "Green Development Bangladesh"
+            ],
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Environmental Consulting Services Bangladesh",
+              "itemListElement": [
+                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Environmental Impact Assessment (EIA)", "areaServed": "Bangladesh" } },
+                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Climate Change Consultancy Bangladesh" } },
+                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "GIS & Remote Sensing Services Bangladesh" } },
+                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Disaster Risk Reduction Bangladesh" } },
+                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Sustainability Consulting Bangladesh" } },
+                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Environmental Management Plans Bangladesh" } },
+                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Flood Vulnerability Mapping Bangladesh" } },
+                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "River Erosion Monitoring Bangladesh" } },
+                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Climate Resilience Planning Bangladesh" } }
+              ]
+            }
+          },
+          {
+            "@type": "WebSite",
+            "@id": `${SITE_URL}/#website`,
+            "url": SITE_URL,
+            "name": "Green BD Environmental Solutions",
+            "alternateName": "greenbd23",
+            "description": "Leading environmental consultancy in Bangladesh — EIA, GIS, Climate Change, Disaster Risk Reduction & Sustainability.",
+            "publisher": { "@id": `${SITE_URL}/#organization` },
+            "inLanguage": ["en-BD", "bn"],
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": { "@type": "EntryPoint", "urlTemplate": `${SITE_URL}/?s={search_term_string}` },
+              "query-input": "required name=search_term_string"
+            }
+          }
+        ]
+      })}} />
     </html>
   );
 }
