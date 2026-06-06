@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Send, MapPin, Phone, Mail, CheckCircle } from 'lucide-react';
+import { Send, MapPin, Phone, Mail, CheckCircle, Globe } from 'lucide-react';
 import type { ContactData } from '@/lib/getData';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import t from '@/lib/i18n/translations';
@@ -99,6 +99,23 @@ export default function ContactCTA({ contact }: { contact: ContactData }) {
                     <p className="text-gray-800 text-xs md:text-sm font-medium mt-0.5 truncate">{value}</p>
                   </div>
                 </div>
+              ))}
+
+              {/* Partner websites */}
+              {[
+                { label: 'Archcell BD', href: 'https://www.archcellbd.com/' },
+                { label: 'Metta BD',    href: 'https://mettabd.org/'        },
+              ].map(({ label, href }) => (
+                <a key={label} href={href} target="_blank" rel="noopener noreferrer"
+                  className="flex items-center gap-3 group">
+                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-primary-100 group-hover:bg-primary-200 flex items-center justify-center flex-shrink-0 transition-colors">
+                    <Globe className="w-4 h-4 md:w-5 md:h-5 text-primary-600" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[10px] md:text-xs text-gray-400 font-medium leading-none">Partner Website</p>
+                    <p className="text-primary-600 group-hover:text-primary-700 text-xs md:text-sm font-medium mt-0.5 truncate transition-colors">{label}</p>
+                  </div>
+                </a>
               ))}
             </div>
 
