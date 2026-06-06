@@ -12,7 +12,26 @@ import AutoTranslateButton from './AutoTranslateButton';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { adminT } from '@/lib/i18n/translations';
 
-const CATEGORIES = ['Climate', 'GIS/RS', 'Research', 'Disaster Risk', 'Sustainability', 'Community'];
+const CATEGORIES = [
+  'Climate',
+  'GIS/RS',
+  'Research',
+  'Disaster Risk',
+  'Sustainability',
+  'Community',
+  'EIA',
+  'Environmental Management',
+  'Water Resources',
+  'Biodiversity',
+  'Coastal Management',
+  'Flood Management',
+  'Air Quality',
+  'River Erosion',
+  'Renewable Energy',
+  'Urban Planning',
+  'Carbon Assessment',
+  'Climate Resilience',
+];
 
 export interface ProjectData {
   id?: number;
@@ -255,6 +274,7 @@ export default function ProjectForm({ initial, mode }: Props) {
       } else {
         await fetch(`/api/content/projects/${form.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) });
       }
+      router.refresh();
       router.push('/admin/projects');
     } catch {
       setError(pf.errorSave);
