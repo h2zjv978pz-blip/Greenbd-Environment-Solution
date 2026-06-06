@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { readData, writeData } from '@/lib/data';
 import { verifyToken } from '@/lib/auth';
 import { cookies } from 'next/headers';
+import { revalidatePath } from 'next/cache';
 
 const ARRAY_KEY: Record<string, string> = {
   projects:     'projects',
@@ -44,6 +45,7 @@ export async function PUT(
 
   data[key][idx] = { ...data[key][idx], ...body, id: Number(id) };
   writeData(file, data);
+  revalidatePath('/', 'layout');
   return NextResponse.json(data[key][idx]);
 }
 
@@ -61,5 +63,6 @@ export async function DELETE(
   const data = readData<Record<string, { id: number }[]>>(file);
   data[key] = data[key].filter((i) => i.id !== Number(id));
   writeData(file, data);
+  revalidatePath('/', 'layout');
   return NextResponse.json({ ok: true });
 }

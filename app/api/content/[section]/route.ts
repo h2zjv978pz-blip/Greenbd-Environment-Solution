@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { readData, writeData, getNextId } from '@/lib/data';
 import { verifyToken } from '@/lib/auth';
 import { cookies } from 'next/headers';
+import { revalidatePath } from 'next/cache';
 
 // Sections that hold an array under a specific key
 const ARRAY_KEY: Record<string, string> = {
@@ -55,6 +56,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ sec
   const key = ARRAY_KEY[section];
   if (!key) {
     writeData(section, body);
+    revalidatePath('/', 'layout');
     return NextResponse.json(body);
   }
 
@@ -64,6 +66,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ sec
   const newItem = { id: getNextId(data[key] || []), ...body };
   data[key] = [...(data[key] || []), newItem];
   writeData(file, data);
+  revalidatePath('/', 'layout');
   return NextResponse.json(newItem, { status: 201 });
 }
 
@@ -75,5 +78,6 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ sect
 
   // Full replacement for flat objects (about, contact, hero)
   writeData(section, body);
+  revalidatePath('/', 'layout');
   return NextResponse.json(body);
 }
