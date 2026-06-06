@@ -290,11 +290,26 @@ export default function ProjectForm({ initial, mode }: Props) {
 
   return (
     <div style={bf}>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">
-        {mode === 'create' ? pf.createTitle : pf.editTitle}
-      </h1>
+      {/* Sticky save bar */}
+      <div className="sticky top-0 z-20 bg-white border-b border-gray-100 shadow-sm -mx-6 px-6 py-3 mb-6 flex items-center justify-between">
+        <h1 className="text-xl font-bold text-gray-900 truncate">
+          {mode === 'create' ? pf.createTitle : pf.editTitle}
+        </h1>
+        <div className="flex items-center gap-2">
+          <button type="button" onClick={() => router.push('/admin/projects')}
+            className="text-gray-600 text-sm font-semibold px-5 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+            {pf.cancel}
+          </button>
+          <button type="submit" form="project-form" disabled={saving}
+            className="flex items-center gap-2 text-white text-sm font-semibold px-6 py-2 rounded-lg transition-colors disabled:opacity-60"
+            style={{ backgroundColor: saving ? '#6b9bd2' : '#2c7be5' }}>
+            {saving && <div className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />}
+            {saving ? pf.saving : mode === 'create' ? pf.submit : pf.update}
+          </button>
+        </div>
+      </div>
 
-      <form onSubmit={handleSubmit}>
+      <form id="project-form" onSubmit={handleSubmit}>
         {/* Main form card */}
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-8 mb-5">
           <div className="max-w-3xl space-y-5">
