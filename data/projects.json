@@ -13,7 +13,8 @@
       "additionalImages": [],
       "title_bn": "উপকূলীয় বন্যার ঝুঁকির মানচিত্র",
       "location_bn": "কক্সবাজার, বাংলাদেশ",
-      "description_bn": "মাল্টি সোর্স স্যাটেলাইট ডেটা এবং ফিল্ড সার্ভে ব্যবহার করে কক্সবাজার উপকূলরেখার ব্যাপক বন্যার ঝুঁকির ম্যাপিং।"
+      "description_bn": "মাল্টি সোর্স স্যাটেলাইট ডেটা এবং ফিল্ড সার্ভে ব্যবহার করে কক্সবাজার উপকূলরেখার ব্যাপক বন্যার ঝুঁকির ম্যাপিং।",
+      "hidden": true
     },
     {
       "id": 2,
@@ -28,7 +29,8 @@
       "additionalImages": [],
       "title_bn": "",
       "location_bn": "",
-      "description_bn": ""
+      "description_bn": "",
+      "hidden": true
     },
     {
       "id": 4,
@@ -43,7 +45,8 @@
       "additionalImages": [],
       "title_bn": "",
       "location_bn": "",
-      "description_bn": ""
+      "description_bn": "",
+      "hidden": true
     },
     {
       "id": 5,
@@ -58,7 +61,8 @@
       "additionalImages": [],
       "title_bn": "নদী ভাঙন হটস্পট সনাক্তকরণ",
       "location_bn": "বান্দরবান, বাংলাদেশ",
-      "description_bn": "স্যাটেলাইট-ভিত্তিক পরিবর্তন সনাক্তকরণ সাংগু নদী করিডোর বরাবর সক্রিয় ক্ষয়ের হটস্পট চিহ্নিত করতে।"
+      "description_bn": "স্যাটেলাইট-ভিত্তিক পরিবর্তন সনাক্তকরণ সাংগু নদী করিডোর বরাবর সক্রিয় ক্ষয়ের হটস্পট চিহ্নিত করতে।",
+      "hidden": true
     },
     {
       "id": 6,
@@ -70,7 +74,8 @@
       "description": "Design and impact assessment of off-grid solar micro-grid systems for rural communities in haor areas of Sylhet.",
       "image": "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&q=80",
       "galleryImages": [],
-      "additionalImages": []
+      "additionalImages": [],
+      "hidden": true
     },
     {
       "id": 7,
@@ -82,7 +87,8 @@
       "description": "Design and deployment of a real-time air quality sensor network across 12 sites in Dhaka Metropolitan Area.",
       "image": "https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=600&q=80",
       "galleryImages": [],
-      "additionalImages": []
+      "additionalImages": [],
+      "hidden": true
     },
     {
       "id": 8,
@@ -142,7 +148,8 @@
       "description": "Multi-temporal land use and land cover change analysis across Bangladesh using time-series satellite imagery.",
       "image": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&q=80",
       "galleryImages": [],
-      "additionalImages": []
+      "additionalImages": [],
+      "hidden": true
     },
     {
       "id": 13,
@@ -154,7 +161,8 @@
       "description": "Spatial assessment of groundwater salinity intrusion in coastal aquifers of southwest Bangladesh.",
       "image": "https://images.unsplash.com/photo-1559825481-12a05cc00344?w=600&q=80",
       "galleryImages": [],
-      "additionalImages": []
+      "additionalImages": [],
+      "hidden": true
     },
     {
       "id": 15,
@@ -166,7 +174,8 @@
       "description": "Landscape-level mapping of wildlife corridors in the Chittagong Hill Tracts using remote sensing and field data.",
       "image": "https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&q=80",
       "galleryImages": [],
-      "additionalImages": []
+      "additionalImages": [],
+      "hidden": true
     }
   ]
 }
