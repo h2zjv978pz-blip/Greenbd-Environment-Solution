@@ -34,13 +34,9 @@ export default function ProjectsAdmin() {
     setDeleteId(null); load();
   };
 
-  const toggleHidden = async (p: Project) => {
+  const toggleHidden = (p: Project) => {
     setItems(prev => prev.map(item => item.id === p.id ? { ...item, hidden: !item.hidden } : item));
-    await fetch(`/api/content/projects/${p.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...p, hidden: !p.hidden }),
-    });
+    setIsDirty(true);
   };
 
   const saveOrder = async () => {
@@ -97,7 +93,7 @@ export default function ProjectsAdmin() {
               {saving
                 ? <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
                 : saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
-              {saving ? 'Saving…' : saved ? 'Saved!' : 'Save New Order'}
+              {saving ? 'Saving…' : saved ? 'Saved!' : 'Save Changes'}
             </button>
           )}
           <button
@@ -114,7 +110,7 @@ export default function ProjectsAdmin() {
           <div>
             <h6 className="font-semibold text-gray-700 text-sm">{tr.projects.tableTitle}</h6>
             <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1">
-              <GripVertical className="w-3 h-3" /> Drag rows to reorder — click Save to apply
+              <GripVertical className="w-3 h-3" /> Drag to reorder or toggle Hide — click Save Changes to apply
             </p>
           </div>
         </div>
