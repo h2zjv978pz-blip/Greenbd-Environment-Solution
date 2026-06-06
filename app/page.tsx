@@ -87,7 +87,7 @@ export default function Home() {
       <Section id="hero"       visible={show('hero')}      ><Hero        slides={hero.slides} /></Section>
       <Section id="about"      visible={show('about')}     ><About       data={about} /></Section>
       <Section id="services"   visible={show('services')}  ><Services    services={services.services} /></Section>
-      <Section id="projects"   visible={show('projects')}  ><Projects    projects={projects.projects} /></Section>
+      <Section id="projects"   visible={show('projects')}  ><Projects    projects={projects.projects.filter(p => !p.hidden)} /></Section>
       <Section id="stats"      visible={show('stats')}     ><Stats       stats={stats.stats} /></Section>
       <Section id="climateMap" visible={show('climateMap')}><ClimateMapSection /></Section>
       <Section id="research"   visible={show('research')}  ><Research    publications={research.publications} /></Section>

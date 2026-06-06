@@ -19,6 +19,6 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
   const { id } = await params;
   const { projects } = readData<{ projects: Project[] }>('projects');
   const project = projects.find(p => p.id === Number(id));
-  if (!project) notFound();
+  if (!project || project.hidden) notFound();
   return <ProjectDetailClient project={project} />;
 }

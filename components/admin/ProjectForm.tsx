@@ -44,6 +44,7 @@ export interface ProjectData {
   image: string;
   galleryImages: string[];
   additionalImages: string[];
+  hidden?: boolean;
 }
 
 const EMPTY: ProjectData = {

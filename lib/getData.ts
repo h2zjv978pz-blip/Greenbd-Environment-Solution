@@ -29,6 +29,7 @@ export interface Project {
   image: string;
   galleryImages: string[];
   additionalImages: string[];
+  hidden?: boolean;
 }
 export interface Service {
   id: number; icon: string; color: string;

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Pencil, Trash2, ImageIcon, GripVertical, Save, Check } from 'lucide-react';
+import { Plus, Pencil, Trash2, ImageIcon, GripVertical, Save, Check, Eye, EyeOff } from 'lucide-react';
 import Modal from '@/components/admin/Modal';
 import type { Project } from '@/lib/getData';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -32,6 +32,15 @@ export default function ProjectsAdmin() {
   const del = async (id: number) => {
     await fetch(`/api/content/projects/${id}`, { method: 'DELETE' });
     setDeleteId(null); load();
+  };
+
+  const toggleHidden = async (p: Project) => {
+    setItems(prev => prev.map(item => item.id === p.id ? { ...item, hidden: !item.hidden } : item));
+    await fetch(`/api/content/projects/${p.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...p, hidden: !p.hidden }),
+    });
   };
 
   const saveOrder = async () => {
@@ -127,6 +136,7 @@ export default function ProjectsAdmin() {
               {items.map((p, i) => {
                 const isDragging  = dragSrc  === i;
                 const isDropZone  = dragOver === i && dragSrc !== i;
+                const isHidden    = !!p.hidden;
                 return (
                   <tr
                     key={p.id}
@@ -139,7 +149,8 @@ export default function ProjectsAdmin() {
                     className={`border-b transition-all duration-100 select-none
                       ${isDragging  ? 'opacity-30 bg-blue-50/60 scale-[0.99]' : ''}
                       ${isDropZone  ? 'border-t-[3px] border-t-blue-500 bg-blue-50/50' : 'border-gray-50'}
-                      ${!isDragging && !isDropZone ? 'hover:bg-gray-50' : ''}
+                      ${isHidden && !isDragging && !isDropZone ? 'bg-gray-50/80 opacity-60' : ''}
+                      ${!isDragging && !isDropZone && !isHidden ? 'hover:bg-gray-50' : ''}
                     `}
                   >
                     {/* Drag handle */}
@@ -153,6 +164,11 @@ export default function ProjectsAdmin() {
 
                     <td className="px-4 py-3 text-sm font-semibold text-gray-800 max-w-[200px]">
                       <p className="line-clamp-2">{p.title}</p>
+                      {isHidden && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-gray-400 bg-gray-100 rounded px-1.5 py-0.5 mt-0.5">
+                          <EyeOff className="w-2.5 h-2.5" /> Hidden
+                        </span>
+                      )}
                     </td>
 
                     <td className="px-4 py-3">
@@ -186,6 +202,17 @@ export default function ProjectsAdmin() {
                           className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg border font-medium transition-colors"
                           style={{ borderColor: '#2c7be5', color: '#2c7be5' }}>
                           <Pencil className="w-3 h-3" /> {tr.common.edit}
+                        </button>
+                        <button
+                          onClick={() => toggleHidden(p)}
+                          title={isHidden ? 'Show on site' : 'Hide from site'}
+                          className={`flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg border font-medium transition-colors ${
+                            isHidden
+                              ? 'border-green-400 text-green-600 hover:bg-green-50'
+                              : 'border-gray-300 text-gray-500 hover:border-gray-400'
+                          }`}>
+                          {isHidden ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
+                          {isHidden ? 'Show' : 'Hide'}
                         </button>
                         <button onClick={() => setDeleteId(p.id)}
                           className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg text-white font-medium transition-colors"
