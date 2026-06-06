@@ -84,18 +84,18 @@ export default function ProjectsAdmin() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">{tr.projects.pageTitle}</h1>
-          {isDirty && <p className="text-xs text-amber-500 mt-0.5 font-medium">• Unsaved order changes</p>}
+          {isDirty && <p className="text-xs text-amber-500 mt-0.5 font-medium">• Unsaved changes — click Save</p>}
         </div>
         <div className="flex items-center gap-3">
-          {isDirty && (
-            <button onClick={saveOrder} disabled={saving}
-              className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-lg transition-all shadow-sm disabled:opacity-60">
-              {saving
-                ? <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                : saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
-              {saving ? 'Saving…' : saved ? 'Saved!' : 'Save Changes'}
-            </button>
-          )}
+          <button onClick={saveOrder} disabled={saving}
+            className={`flex items-center gap-2 px-5 py-2.5 text-white text-sm font-bold rounded-lg transition-all shadow-sm disabled:opacity-60 ${
+              saved ? 'bg-green-500' : isDirty ? 'bg-emerald-600 hover:bg-emerald-700 ring-2 ring-emerald-300' : 'bg-emerald-600 hover:bg-emerald-700'
+            }`}>
+            {saving
+              ? <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+              : saved ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
+            {saving ? 'Saving…' : saved ? 'Saved!' : 'Save Changes'}
+          </button>
           <button
             onClick={() => router.push('/admin/projects/new')}
             className="flex items-center gap-1.5 text-white text-xs font-semibold px-4 py-2.5 rounded-lg transition-colors"
