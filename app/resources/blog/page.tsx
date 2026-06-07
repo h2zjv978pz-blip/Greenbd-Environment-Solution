@@ -22,8 +22,9 @@ export const metadata = {
 };
 
 import { readData } from '@/lib/data';
+import { getEnvironmentNews, type NewsItem } from '@/lib/envNews';
 import Link from 'next/link';
-import { Calendar, User, Tag, ArrowRight } from 'lucide-react';
+import { Calendar, User, Tag, ArrowRight, Rss } from 'lucide-react';
 
 interface Post {
   id: number; title: string; slug: string; category: string;
@@ -41,9 +42,37 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 export const dynamic = 'force-dynamic';
 
-export default function BlogPage() {
+function NewsFeedCard({ flag, title, items }: { flag: string; title: string; items: NewsItem[] }) {
+  if (items.length === 0) return null;
+  return (
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+      <h2 className="font-heading font-bold text-gray-900 text-lg mb-4 flex items-center gap-2">
+        <span className="text-xl leading-none">{flag}</span> {title}
+      </h2>
+      <ol className="space-y-3.5">
+        {items.map((item, i) => (
+          <li key={item.link} className="flex items-start gap-3">
+            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary-50 text-primary-600 text-xs font-bold flex items-center justify-center mt-0.5">
+              {i + 1}
+            </span>
+            <div className="min-w-0">
+              <a href={item.link} target="_blank" rel="noopener noreferrer"
+                className="text-sm font-medium text-gray-800 hover:text-primary-600 transition-colors leading-snug line-clamp-2">
+                {item.title}
+              </a>
+              {item.source && <p className="text-xs text-gray-400 mt-0.5 truncate">{item.source}</p>}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+export default async function BlogPage() {
   const { posts = [] } = readData<{ posts: Post[] }>('blog');
   const published = posts.filter(p => p.published);
+  const { bangladesh, world } = await getEnvironmentNews();
 
   return (
     <div className="container mx-auto px-4 lg:px-8 py-12">
@@ -56,6 +85,20 @@ export default function BlogPage() {
           written by our team of scientists and field experts.
         </p>
       </div>
+
+      {/* Live environmental news feeds */}
+      {(bangladesh.length > 0 || world.length > 0) && (
+        <div className="mb-16">
+          <div className="mb-6 flex items-center gap-2">
+            <Rss className="w-5 h-5 text-primary-600" />
+            <h2 className="text-2xl font-bold font-heading text-gray-900">Live Environmental News</h2>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            <NewsFeedCard flag="🇧🇩" title="Top 10 — Bangladesh" items={bangladesh} />
+            <NewsFeedCard flag="🌍" title="Top 10 — Around the World" items={world} />
+          </div>
+        </div>
+      )}
 
       {published.length === 0 ? (
         <div className="text-center py-24 text-gray-400">
