@@ -108,7 +108,7 @@ export function GalleryGrid({ images, title }: { images: string[]; title: string
           <button
             key={i}
             onClick={() => setLightbox(i)}
-            className="aspect-video rounded-xl overflow-hidden bg-gray-100 relative group block w-full text-left"
+            className="aspect-[8/5] rounded-xl overflow-hidden bg-gray-100 relative group block w-full text-left"
           >
             <img
               src={img}
