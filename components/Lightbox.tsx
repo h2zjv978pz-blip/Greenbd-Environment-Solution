@@ -96,12 +96,12 @@ export default function Lightbox({ images, initial, onClose }: Props) {
 }
 
 /* ── Clickable gallery grid ─────────────────────────────────────────── */
-export function GalleryGrid({ images, title }: { images: string[]; title: string }) {
+export function GalleryGrid({ images, title, className = 'mt-12' }: { images: string[]; title: string; className?: string }) {
   const [lightbox, setLightbox] = useState<number | null>(null);
   if (images.length === 0) return null;
 
   return (
-    <div className="mt-12">
+    <div className={className}>
       <h2 className="text-xl font-bold text-gray-900 font-heading mb-5">{title}</h2>
       <div className="grid grid-cols-2 gap-3">
         {images.map((img, i) => (

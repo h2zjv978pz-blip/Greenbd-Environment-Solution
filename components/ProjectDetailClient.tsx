@@ -51,10 +51,10 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
       <div className="max-w-5xl mx-auto px-6 md:px-8 py-14">
         <div className="grid lg:grid-cols-3 gap-12">
 
-          {/* Left — description + galleries */}
-          <div className="lg:col-span-2">
+          {/* Left — description + galleries (gallery shows first on mobile) */}
+          <div className="lg:col-span-2 flex flex-col">
             {description && (
-              <div>
+              <div className="order-2 md:order-1">
                 <h2 className="text-xl font-bold text-gray-900 font-heading mb-4">{tr.projectOverview}</h2>
                 <div
                   className="prose prose-gray max-w-none text-gray-600 leading-relaxed text-base"
@@ -62,8 +62,10 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                 />
               </div>
             )}
-            <GalleryGrid images={gallery}    title={tr.gallery} />
-            <GalleryGrid images={additional} title={tr.fieldImages} />
+            <div className="order-1 md:order-2">
+              <GalleryGrid images={gallery}    title={tr.gallery}    className="mt-0 md:mt-12" />
+              <GalleryGrid images={additional} title={tr.fieldImages} />
+            </div>
           </div>
 
           {/* Right — sidebar */}
