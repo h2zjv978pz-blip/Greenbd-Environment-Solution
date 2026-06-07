@@ -48,8 +48,8 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
       </div>
 
       {/* ── Body ──────────────────────────────────────────────────── */}
-      <div className="max-w-5xl mx-auto px-6 md:px-8 py-14">
-        <div className="grid lg:grid-cols-3 gap-12">
+      <div className="max-w-5xl mx-auto px-6 md:px-8 py-8 lg:py-14">
+        <div className="grid lg:grid-cols-3 gap-6 lg:gap-12">
 
           {/* Left — description + galleries (gallery shows first on mobile) */}
           <div className="order-2 lg:order-1 lg:col-span-2 flex flex-col">
