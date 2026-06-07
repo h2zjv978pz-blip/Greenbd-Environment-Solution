@@ -70,61 +70,61 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
 
           {/* Right — sidebar (shown first on mobile, at top of overview) */}
           <div className="order-1 lg:order-2 lg:col-span-1">
-            <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 lg:sticky lg:top-8">
-              <h3 className="font-bold text-gray-900 font-heading text-lg mb-5 pb-4 border-b border-gray-200">
+            <div className="bg-gray-50 rounded-2xl p-4 lg:p-6 border border-gray-100 lg:sticky lg:top-8">
+              <h3 className="font-bold text-gray-900 font-heading text-base lg:text-lg mb-3 pb-3 lg:mb-5 lg:pb-4 border-b border-gray-200">
                 {tr.projectDetails}
               </h3>
 
-              <ul className="space-y-4">
+              <ul className="grid grid-cols-2 gap-x-3 gap-y-3 lg:flex lg:flex-col lg:gap-0 lg:space-y-4">
                 {project.clientName && (
-                  <li className="flex items-start gap-3">
-                    <span className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <User className="w-4 h-4 text-primary-600" />
+                  <li className="flex items-start gap-2 lg:gap-3">
+                    <span className="w-7 h-7 lg:w-8 lg:h-8 rounded-lg bg-primary-50 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <User className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-primary-600" />
                     </span>
-                    <div>
-                      <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">{tr.client}</p>
-                      <p className="text-gray-800 text-sm font-semibold mt-0.5">{project.clientName}</p>
+                    <div className="min-w-0">
+                      <p className="text-[10px] lg:text-xs text-gray-400 font-medium uppercase tracking-wide">{tr.client}</p>
+                      <p className="text-gray-800 text-xs lg:text-sm font-semibold mt-0.5 truncate">{project.clientName}</p>
                     </div>
                   </li>
                 )}
                 {project.location && (
-                  <li className="flex items-start gap-3">
-                    <span className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <MapPin className="w-4 h-4 text-primary-600" />
+                  <li className="flex items-start gap-2 lg:gap-3">
+                    <span className="w-7 h-7 lg:w-8 lg:h-8 rounded-lg bg-primary-50 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <MapPin className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-primary-600" />
                     </span>
-                    <div>
-                      <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">{tr.location}</p>
-                      <p className="text-gray-800 text-sm font-semibold mt-0.5">{location}</p>
+                    <div className="min-w-0">
+                      <p className="text-[10px] lg:text-xs text-gray-400 font-medium uppercase tracking-wide">{tr.location}</p>
+                      <p className="text-gray-800 text-xs lg:text-sm font-semibold mt-0.5 truncate">{location}</p>
                     </div>
                   </li>
                 )}
                 {project.projectTime && (
-                  <li className="flex items-start gap-3">
-                    <span className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Calendar className="w-4 h-4 text-primary-600" />
+                  <li className="flex items-start gap-2 lg:gap-3">
+                    <span className="w-7 h-7 lg:w-8 lg:h-8 rounded-lg bg-primary-50 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Calendar className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-primary-600" />
                     </span>
-                    <div>
-                      <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">{tr.year}</p>
-                      <p className="text-gray-800 text-sm font-semibold mt-0.5">{project.projectTime}</p>
+                    <div className="min-w-0">
+                      <p className="text-[10px] lg:text-xs text-gray-400 font-medium uppercase tracking-wide">{tr.year}</p>
+                      <p className="text-gray-800 text-xs lg:text-sm font-semibold mt-0.5 truncate">{project.projectTime}</p>
                     </div>
                   </li>
                 )}
-                <li className="flex items-start gap-3">
-                  <span className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <Tag className="w-4 h-4 text-primary-600" />
+                <li className="flex items-start gap-2 lg:gap-3">
+                  <span className="w-7 h-7 lg:w-8 lg:h-8 rounded-lg bg-primary-50 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Tag className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-primary-600" />
                   </span>
-                  <div>
-                    <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">{tr.category}</p>
-                    <span className="inline-block mt-1 text-xs font-semibold bg-primary-100 text-primary-700 px-3 py-1 rounded-full">
+                  <div className="min-w-0">
+                    <p className="text-[10px] lg:text-xs text-gray-400 font-medium uppercase tracking-wide">{tr.category}</p>
+                    <span className="inline-block mt-1 text-[10px] lg:text-xs font-semibold bg-primary-100 text-primary-700 px-2.5 py-0.5 lg:px-3 lg:py-1 rounded-full truncate max-w-full">
                       {project.category}
                     </span>
                   </div>
                 </li>
               </ul>
 
-              <div className="mt-6 pt-5 border-t border-gray-200">
+              <div className="mt-4 pt-4 lg:mt-6 lg:pt-5 border-t border-gray-200">
                 <Link href="/#contact"
-                  className="block w-full text-center bg-primary-600 hover:bg-primary-700 text-white font-semibold text-sm py-3 rounded-xl transition-colors">
+                  className="block w-full text-center bg-primary-600 hover:bg-primary-700 text-white font-semibold text-xs lg:text-sm py-2.5 lg:py-3 rounded-xl transition-colors">
                   {tr.inquire}
                 </Link>
               </div>
