@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Menu, X, Leaf, ChevronDown, Newspaper, Scale, Download, Images, Search, ClipboardList, CalendarClock, Handshake, MessageSquare, Video } from 'lucide-react';
+import { Menu, X, Leaf, ChevronDown, Newspaper, Scale, Download, Images, Search, ClipboardList, CalendarClock, Handshake, MessageSquare, Video, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
@@ -47,6 +47,8 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
     { href: '/contact/meeting',      label: 'Book Online Meeting',  icon: CalendarClock, desc: 'Schedule a call with our team', color: 'text-blue-600',    bg: 'bg-blue-100 group-hover:bg-blue-600'    },
     { href: '/contact/partner',      label: 'Partner With Us',      icon: Handshake,     desc: 'Explore collaboration opportunities', color: 'text-purple-600', bg: 'bg-purple-100 group-hover:bg-purple-600' },
     { href: '/#contact',             label: 'General Contact',      icon: MessageSquare, desc: 'Send us a message', color: 'text-gray-600', bg: 'bg-gray-100 group-hover:bg-gray-500' },
+    { href: 'https://www.archcellbd.com/', label: 'Archcell BD', icon: Globe, desc: 'Visit our partner website', color: 'text-teal-600', bg: 'bg-teal-100 group-hover:bg-teal-600' },
+    { href: 'https://mettabd.org/',        label: 'Metta BD',    icon: Globe, desc: 'Visit our partner website', color: 'text-cyan-600', bg: 'bg-cyan-100 group-hover:bg-cyan-600' },
   ];
 
   const resourceLinks = [
@@ -281,6 +283,7 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
                 {contactLinks.map(c => {
                   const Icon = c.icon;
                   const isInternal = c.href.startsWith('/#');
+                  const isExternal = /^https?:\/\//.test(c.href);
                   const handleClick = () => {
                     setContactOpen(false);
                     if (isInternal) {
@@ -289,27 +292,33 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
                       else { document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth' }); }
                     }
                   };
-                  return isInternal ? (
+                  const itemInner = (
+                    <>
+                      <div className={`w-9 h-9 ${c.bg} rounded-xl flex items-center justify-center flex-shrink-0 transition-colors`}>
+                        <Icon className={`w-4 h-4 ${c.color} group-hover:text-white transition-colors`} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-800">{c.label}</p>
+                        <p className="text-xs text-gray-400">{c.desc}</p>
+                      </div>
+                    </>
+                  );
+                  if (isInternal) return (
                     <button key={c.href} onClick={handleClick}
                       className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors group border-b border-gray-50 last:border-0 text-left">
-                      <div className={`w-9 h-9 ${c.bg} rounded-xl flex items-center justify-center flex-shrink-0 transition-colors`}>
-                        <Icon className={`w-4 h-4 ${c.color} group-hover:text-white transition-colors`} />
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-gray-800">{c.label}</p>
-                        <p className="text-xs text-gray-400">{c.desc}</p>
-                      </div>
+                      {itemInner}
                     </button>
-                  ) : (
+                  );
+                  if (isExternal) return (
+                    <a key={c.href} href={c.href} target="_blank" rel="noopener noreferrer" onClick={() => setContactOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors group border-b border-gray-50 last:border-0">
+                      {itemInner}
+                    </a>
+                  );
+                  return (
                     <Link key={c.href} href={c.href} onClick={() => setContactOpen(false)}
                       className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors group border-b border-gray-50 last:border-0">
-                      <div className={`w-9 h-9 ${c.bg} rounded-xl flex items-center justify-center flex-shrink-0 transition-colors`}>
-                        <Icon className={`w-4 h-4 ${c.color} group-hover:text-white transition-colors`} />
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-gray-800">{c.label}</p>
-                        <p className="text-xs text-gray-400">{c.desc}</p>
-                      </div>
+                      {itemInner}
                     </Link>
                   );
                 })}
@@ -433,13 +442,21 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
                 {contactLinks.map(c => {
                   const Icon = c.icon;
                   const isInternal = c.href.startsWith('/#');
-                  return isInternal ? (
+                  const isExternal = /^https?:\/\//.test(c.href);
+                  if (isInternal) return (
                     <button key={c.href}
                       onClick={() => { setMenuOpen(false); const hash = c.href.replace(/^\//, ''); if (window.location.pathname !== '/') { window.location.href = c.href; } else { document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth' }); } }}
                       className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-colors text-left`}>
                       <Icon className={`w-4 h-4 flex-shrink-0 ${c.color}`} />{c.label}
                     </button>
-                  ) : (
+                  );
+                  if (isExternal) return (
+                    <a key={c.href} href={c.href} target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-colors`}>
+                      <Icon className={`w-4 h-4 flex-shrink-0 ${c.color}`} />{c.label}
+                    </a>
+                  );
+                  return (
                     <Link key={c.href} href={c.href} onClick={() => setMenuOpen(false)}
                       className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition-colors`}>
                       <Icon className={`w-4 h-4 flex-shrink-0 ${c.color}`} />{c.label}
