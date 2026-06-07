@@ -52,7 +52,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
         <div className="grid lg:grid-cols-3 gap-12">
 
           {/* Left — description + galleries (gallery shows first on mobile) */}
-          <div className="lg:col-span-2 flex flex-col">
+          <div className="order-2 lg:order-1 lg:col-span-2 flex flex-col">
             {description && (
               <div className="order-2 md:order-1">
                 <h2 className="text-xl font-bold text-gray-900 font-heading mb-4">{tr.projectOverview}</h2>
@@ -68,9 +68,9 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
             </div>
           </div>
 
-          {/* Right — sidebar */}
-          <div className="lg:col-span-1">
-            <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 sticky top-8">
+          {/* Right — sidebar (shown first on mobile, at top of overview) */}
+          <div className="order-1 lg:order-2 lg:col-span-1">
+            <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 lg:sticky lg:top-8">
               <h3 className="font-bold text-gray-900 font-heading text-lg mb-5 pb-4 border-b border-gray-200">
                 {tr.projectDetails}
               </h3>
