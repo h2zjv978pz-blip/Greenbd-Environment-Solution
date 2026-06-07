@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import {
   Bold, Italic, Underline, Strikethrough, List, ListOrdered,
   AlignLeft, AlignCenter, AlignRight, AlignJustify,
-  Undo, Redo, X, ImageIcon, Upload, Loader2, CheckCircle2,
+  Undo, Redo, X, ImageIcon, Upload, Loader2, CheckCircle2, Crop,
 } from 'lucide-react';
 import ImageUpload from './ImageUpload';
 import AutoTranslateButton from './AutoTranslateButton';
@@ -150,6 +150,34 @@ function RichEditor({ value, onChange, banglaFont = false }: { value: string; on
 }
 
 /* ── Gallery editor ─────────────────────────────────────────────────── */
+const RESIZE_WIDTH  = 2000;
+const RESIZE_HEIGHT = 1250;
+
+/* Resize an image file to RESIZE_WIDTH × RESIZE_HEIGHT, cropping to fill (cover). */
+function resizeToCover(file: File): Promise<File> {
+  return new Promise(resolve => {
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) { resolve(file); return; }
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const canvas = document.createElement('canvas');
+      canvas.width = RESIZE_WIDTH; canvas.height = RESIZE_HEIGHT;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) { resolve(file); return; }
+      const scale = Math.max(RESIZE_WIDTH / img.width, RESIZE_HEIGHT / img.height);
+      const sw = RESIZE_WIDTH / scale, sh = RESIZE_HEIGHT / scale;
+      const sx = (img.width - sw) / 2, sy = (img.height - sh) / 2;
+      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, RESIZE_WIDTH, RESIZE_HEIGHT);
+      canvas.toBlob(blob => {
+        resolve(blob ? new File([blob], file.name.replace(/\.\w+$/, '.jpg'), { type: 'image/jpeg' }) : file);
+      }, 'image/jpeg', 0.9);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+    img.src = url;
+  });
+}
+
 function GalleryEditor({ label, hint, images, onChange, dropText, dropHint, uploadedText }: {
   label: string; hint: string; images: string[]; onChange: (imgs: string[]) => void;
   dropText: string; dropHint: string; uploadedText: string;
@@ -160,6 +188,7 @@ function GalleryEditor({ label, hint, images, onChange, dropText, dropHint, uplo
   const [done,      setDone]      = useState(0);
   const [total,     setTotal]     = useState(0);
   const [urlInputs, setUrlInputs] = useState<string[]>([]);
+  const [autoResize, setAutoResize] = useState(true);
 
   const remove = (i: number) => {
     onChange(images.filter((_, j) => j !== i));
@@ -172,7 +201,8 @@ function GalleryEditor({ label, hint, images, onChange, dropText, dropHint, uplo
     setUploading(true); setTotal(valid.length); setDone(0);
     const uploaded: string[] = [];
     for (const file of valid) {
-      const form = new FormData(); form.append('file', file);
+      const toSend = autoResize ? await resizeToCover(file) : file;
+      const form = new FormData(); form.append('file', toSend);
       try { const res = await fetch('/api/upload', { method: 'POST', body: form }); const data = await res.json(); if (data.url) uploaded.push(data.url); } catch {}
       setDone(d => d + 1);
     }
@@ -190,7 +220,15 @@ function GalleryEditor({ label, hint, images, onChange, dropText, dropHint, uplo
     <div>
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-base font-semibold" style={{ color: '#2c7be5' }}>{label}</h3>
-        <span className="text-[11px] text-white px-2 py-0.5 rounded font-medium" style={{ backgroundColor: '#2c7be5' }}>{hint}</span>
+        <div className="flex items-center gap-2">
+          <button type="button" onClick={() => setAutoResize(r => !r)}
+            title={`Automatically resize uploaded images to ${RESIZE_WIDTH} × ${RESIZE_HEIGHT} (crop to fill)`}
+            className={`flex items-center gap-1.5 text-[11px] font-medium px-2 py-0.5 rounded-full border transition-colors ${autoResize ? 'bg-blue-50 border-blue-200 text-blue-600' : 'bg-gray-50 border-gray-200 text-gray-400'}`}>
+            <Crop className="w-3 h-3" />
+            Auto-resize {autoResize ? 'on' : 'off'}
+          </button>
+          <span className="text-[11px] text-white px-2 py-0.5 rounded font-medium" style={{ backgroundColor: '#2c7be5' }}>{hint}</span>
+        </div>
       </div>
       <div onDragOver={e => { e.preventDefault(); setDragging(true); }} onDragLeave={() => setDragging(false)}
         onDrop={(e: DragEvent<HTMLDivElement>) => { e.preventDefault(); setDragging(false); uploadFiles(Array.from(e.dataTransfer.files)); }}
