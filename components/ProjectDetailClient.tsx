@@ -22,34 +22,34 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
   return (
     <div className="min-h-screen bg-white" style={banglaFont}>
       {/* ── Hero ──────────────────────────────────────────────────── */}
-      <div className="relative h-[32vh] min-h-[230px] md:h-[55vh] md:min-h-[380px] bg-gray-900 overflow-hidden">
+      <div className="relative h-[16vh] min-h-[140px] md:h-[55vh] md:min-h-[380px] bg-gray-900 overflow-hidden">
         {project.image && (
           <img src={project.image} alt={title} className="absolute inset-0 w-full h-full object-cover opacity-70" />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/85 via-gray-900/30 to-transparent" />
 
         {/* Back button */}
-        <div className="absolute top-4 left-4 md:top-6 md:left-6 z-10">
+        <div className="absolute top-2.5 left-2.5 md:top-6 md:left-6 z-10">
           <Link href="/#projects"
-            className="inline-flex items-center gap-1.5 md:gap-2 bg-white/10 hover:bg-white/25 backdrop-blur text-white text-xs md:text-sm font-medium px-3 py-1.5 md:px-4 md:py-2 rounded-full transition-colors border border-white/20">
-            <ArrowLeft className="w-3.5 h-3.5 md:w-4 md:h-4" /> {tr.backToProjects}
+            className="inline-flex items-center gap-1.5 md:gap-2 bg-white/10 hover:bg-white/25 backdrop-blur text-white text-[11px] md:text-sm font-medium px-2.5 py-1 md:px-4 md:py-2 rounded-full transition-colors border border-white/20">
+            <ArrowLeft className="w-3 h-3 md:w-4 md:h-4" /> {tr.backToProjects}
           </Link>
         </div>
 
         {/* Title */}
-        <div className="absolute bottom-0 left-0 right-0 px-5 pb-5 md:px-16 md:pb-10 z-10">
-          <span className="inline-block bg-primary-600 text-white text-[10px] md:text-xs font-semibold uppercase tracking-widest px-2.5 py-0.5 md:px-3 md:py-1 rounded-full mb-2 md:mb-3">
+        <div className="absolute bottom-0 left-0 right-0 px-4 pb-2.5 md:px-16 md:pb-10 z-10">
+          <span className="inline-block bg-primary-600 text-white text-[9px] md:text-xs font-semibold uppercase tracking-widest px-2 py-0.5 md:px-3 md:py-1 rounded-full mb-1 md:mb-3">
             {project.category}
           </span>
-          <h1 className="text-xl md:text-5xl font-bold font-heading text-white leading-tight max-w-3xl">
+          <h1 className="text-base md:text-5xl font-bold font-heading text-white leading-tight max-w-3xl">
             {title}
           </h1>
         </div>
       </div>
 
       {/* ── Body ──────────────────────────────────────────────────── */}
-      <div className="max-w-5xl mx-auto px-6 md:px-8 py-8 lg:py-14">
-        <div className="grid lg:grid-cols-3 gap-6 lg:gap-12">
+      <div className="max-w-5xl mx-auto px-6 md:px-8 py-4 lg:py-14">
+        <div className="grid lg:grid-cols-3 gap-4 lg:gap-12">
 
           {/* Left — description + galleries (gallery shows first on mobile) */}
           <div className="order-2 lg:order-1 lg:col-span-2 flex flex-col">
