@@ -120,4 +120,5 @@ export interface SiteSettings {
   logoSizeMobilePx: string;
   showNameMobile: boolean;
   showTaglineMobile: boolean;
+  navOrder?: string[];
 }

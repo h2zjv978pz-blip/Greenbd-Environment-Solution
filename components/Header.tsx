@@ -59,16 +59,21 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
     { href: '/resources/video',     label: 'Videos',               icon: Video,     desc: 'Watch our video library'      },
   ];
 
-  const navLinks = [
-    { label: tr.nav.home,       href: '#home'        },
-    { label: tr.nav.about,      href: '#about'       },
-    { label: tr.nav.services,   href: '#services'    },
-    { label: tr.nav.projects,   href: '#projects'    },
-    { label: tr.nav.research,   href: '#research'    },
-    { label: tr.nav.climateMap, href: '#climate-map' },
-    { label: tr.nav.team,       href: '#team'        },
-    { label: tr.nav.clients,    href: '#clients'     },
-  ];
+  const NAV_ITEMS: Record<string, { label: string; href: string }> = {
+    home:       { label: tr.nav.home,       href: '#home'        },
+    about:      { label: tr.nav.about,      href: '#about'       },
+    services:   { label: tr.nav.services,   href: '#services'    },
+    projects:   { label: tr.nav.projects,   href: '#projects'    },
+    research:   { label: tr.nav.research,   href: '#research'    },
+    climateMap: { label: tr.nav.climateMap, href: '#climate-map' },
+    team:       { label: tr.nav.team,       href: '#team'        },
+    clients:    { label: tr.nav.clients,    href: '#clients'     },
+  };
+  const NAV_DEFAULT_ORDER = ['home', 'about', 'services', 'projects', 'research', 'climateMap', 'team', 'clients'];
+  const navOrder = (settings?.navOrder?.length ? settings.navOrder : NAV_DEFAULT_ORDER)
+    .filter(key => NAV_ITEMS[key]);
+  const orderedKeys = [...navOrder, ...NAV_DEFAULT_ORDER.filter(key => !navOrder.includes(key))];
+  const navLinks = orderedKeys.map(key => NAV_ITEMS[key]);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);

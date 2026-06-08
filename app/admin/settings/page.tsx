@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Save, Leaf, Eye } from 'lucide-react';
+import { Save, Leaf, Eye, GripVertical, Menu } from 'lucide-react';
 import ImageUpload from '@/components/admin/ImageUpload';
 import RichTextEditor from '@/components/admin/RichTextEditor';
 
@@ -14,7 +14,15 @@ interface SiteSettings {
   logoSizeMobilePx: string;
   showNameMobile: boolean;
   showTaglineMobile: boolean;
+  navOrder?: string[];
 }
+
+const NAV_DEFAULT_ORDER = ['home', 'about', 'services', 'projects', 'research', 'climateMap', 'team', 'clients'];
+
+const NAV_LABELS: Record<string, string> = {
+  home: 'Home', about: 'About', services: 'Services', projects: 'Projects',
+  research: 'Research', climateMap: 'Climate Map', team: 'Team', clients: 'Clients',
+};
 
 const DEF: SiteSettings = {
   companyName: 'Green BD', tagline: 'Environmental Solutions',
@@ -22,6 +30,7 @@ const DEF: SiteSettings = {
   nameFont: 'Poppins', nameSizePx: '16', nameBold: true,
   taglineFont: 'Inter', taglineSizePx: '10', logoSizePx: '40',
   logoSizeMobilePx: '40', showNameMobile: true, showTaglineMobile: false,
+  navOrder: NAV_DEFAULT_ORDER,
 };
 
 const FONTS = [
@@ -38,6 +47,8 @@ export default function SettingsAdmin() {
   const [data,   setData]   = useState<SiteSettings>(DEF);
   const [saving, setSaving] = useState(false);
   const [saved,  setSaved]  = useState(false);
+  const [navDragSrc,  setNavDragSrc]  = useState<number | null>(null);
+  const [navDragOver, setNavDragOver] = useState<number | null>(null);
 
   useEffect(() => {
     fetch('/api/content/settings').then(r => r.json()).then(d => setData({ ...DEF, ...d }));
@@ -50,6 +61,35 @@ export default function SettingsAdmin() {
   };
 
   const s = (key: keyof SiteSettings, val: unknown) => setData(d => ({ ...d, [key]: val }));
+
+  // Normalized nav order — keeps any items missing from saved order at the end
+  const navOrder = [
+    ...(data.navOrder || []).filter(k => NAV_LABELS[k]),
+    ...NAV_DEFAULT_ORDER.filter(k => !(data.navOrder || []).includes(k)),
+  ];
+
+  const onNavDragStart = (e: React.DragEvent, idx: number) => {
+    setNavDragSrc(idx);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', String(idx));
+  };
+  const onNavDragOver = (e: React.DragEvent, idx: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (idx !== navDragSrc) setNavDragOver(idx);
+  };
+  const onNavDrop = (e: React.DragEvent, toIdx: number) => {
+    e.preventDefault();
+    const fromIdx = navDragSrc;
+    if (fromIdx === null || fromIdx === toIdx) { setNavDragSrc(null); setNavDragOver(null); return; }
+    const arr = [...navOrder];
+    const [moved] = arr.splice(fromIdx, 1);
+    arr.splice(toIdx, 0, moved);
+    s('navOrder', arr);
+    setNavDragSrc(null);
+    setNavDragOver(null);
+  };
+  const onNavDragEnd = () => { setNavDragSrc(null); setNavDragOver(null); };
 
   const inputCls = 'w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-50';
   const labelCls = 'block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5';
@@ -316,6 +356,45 @@ export default function SettingsAdmin() {
             <ImageUpload value={data.favicon} onChange={url => s('favicon', url)} label="Favicon File" />
           </div>
 
+        </div>
+      </div>
+
+      {/* Navigation Menu Order */}
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-3 mt-5">
+        <h6 className="font-semibold text-gray-700 text-sm border-b border-gray-100 pb-3 flex items-center gap-2">
+          <Menu className="w-4 h-4" /> Navigation Menu Order
+        </h6>
+        <p className="text-xs text-gray-400 -mt-1 flex items-center gap-1">
+          <GripVertical className="w-3 h-3" /> Drag items to set the order they appear in the site's main menu — click Save Changes to apply.
+        </p>
+
+        <div className="space-y-1.5 max-w-md">
+          {navOrder.map((key, i) => {
+            const isDragging = navDragSrc  === i;
+            const isDropZone = navDragOver === i && navDragSrc !== i;
+            return (
+              <div
+                key={key}
+                draggable
+                onDragStart={e => onNavDragStart(e, i)}
+                onDragOver={e => onNavDragOver(e, i)}
+                onDragLeave={() => setNavDragOver(null)}
+                onDrop={e => onNavDrop(e, i)}
+                onDragEnd={onNavDragEnd}
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg border select-none transition-all duration-100
+                  ${isDragging ? 'opacity-30 bg-blue-50/60 scale-[0.99] border-gray-100' : ''}
+                  ${isDropZone ? 'border-t-[3px] border-t-blue-500 bg-blue-50/50 border-x-gray-100 border-b-gray-100' : ''}
+                  ${!isDragging && !isDropZone ? 'border-gray-100 hover:bg-gray-50' : ''}
+                `}
+              >
+                <span className="cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-500 transition-colors">
+                  <GripVertical className="w-4 h-4" />
+                </span>
+                <span className="text-xs text-gray-400 tabular-nums w-4">{i + 1}</span>
+                <span className="text-sm font-medium text-gray-700">{NAV_LABELS[key] || key}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
