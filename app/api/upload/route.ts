@@ -3,6 +3,7 @@ import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 import { verifyToken } from '@/lib/auth';
 import { cookies } from 'next/headers';
+import { uploadDir, uploadUrl } from '@/lib/uploadStorage';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml', 'application/pdf'];
 const MAX_SIZE = 20 * 1024 * 1024; // 20 MB (PDFs can be large)
@@ -24,12 +25,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'File is too large (max 20 MB)' }, { status: 400 });
 
   const buffer = Buffer.from(await file.arrayBuffer());
-  const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+  const uploadsDir = uploadDir('uploads');
   await mkdir(uploadsDir, { recursive: true });
 
   const ext = path.extname(file.name).toLowerCase() || '.jpg';
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}${ext}`;
   await writeFile(path.join(uploadsDir, filename), buffer);
 
-  return NextResponse.json({ url: `/uploads/${filename}` });
+  return NextResponse.json({ url: uploadUrl('uploads', filename) });
 }

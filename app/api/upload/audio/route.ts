@@ -3,6 +3,7 @@ import { writeFile, mkdir } from 'fs/promises';
 import path from 'path';
 import { verifyToken } from '@/lib/auth';
 import { cookies } from 'next/headers';
+import { uploadDir, uploadUrl } from '@/lib/uploadStorage';
 
 export async function POST(req: NextRequest) {
   const jar = await cookies();
@@ -14,7 +15,7 @@ export async function POST(req: NextRequest) {
   const file = formData.get('file') as File | null;
   if (!file) return NextResponse.json({ error: 'No file' }, { status: 400 });
 
-  const audioDir = path.join(process.cwd(), 'public', 'audio');
+  const audioDir = uploadDir('audio');
   await mkdir(audioDir, { recursive: true });
 
   // Sanitise filename and prefix with timestamp to avoid collisions
@@ -24,5 +25,5 @@ export async function POST(req: NextRequest) {
 
   await writeFile(dest, Buffer.from(await file.arrayBuffer()));
 
-  return NextResponse.json({ url: `/audio/${stored}`, name: file.name });
+  return NextResponse.json({ url: uploadUrl('audio', stored), name: file.name });
 }
