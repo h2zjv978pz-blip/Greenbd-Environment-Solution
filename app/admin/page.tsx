@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { FolderOpen, Wrench, Users, BookOpen, Building2, Presentation, BarChart3, Phone, Info, ArrowRight } from 'lucide-react';
+import { FolderOpen, Wrench, Users, BookOpen, Building2, Presentation, BarChart3, Phone, Info, ArrowRight, Eye, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import MobileViewSettings from '@/components/admin/MobileViewSettings';
 import TitleSizeControl from '@/components/admin/TitleSizeControl';
@@ -21,6 +21,7 @@ export default function AdminDashboard() {
   const banglaFont = lang === 'bn' ? { fontFamily: "'Hind Siliguri', sans-serif" } : {};
 
   const [counts, setCounts] = useState({ projects: 0, services: 0, team: 0, research: 0 });
+  const [visits, setVisits] = useState({ today: 0, total: 0 });
 
   useEffect(() => {
     Promise.all([
@@ -36,9 +37,15 @@ export default function AdminDashboard() {
         research: (r.publications ?? []).length,
       });
     }).catch(() => {});
+
+    fetch('/api/visits').then(r => r.json()).then((v) => {
+      setVisits({ today: v.today ?? 0, total: v.total ?? 0 });
+    }).catch(() => {});
   }, []);
 
   const stats = [
+    { label: tr.dashboard.visitorsToday, value: visits.today,    icon: Eye,        color: '#39afd1' },
+    { label: tr.dashboard.visitorsTotal, value: visits.total,    icon: TrendingUp, color: '#727cf5' },
     { label: tr.dashboard.projects,     value: counts.projects,  icon: FolderOpen, color: '#2c7be5' },
     { label: tr.dashboard.services,     value: counts.services,  icon: Wrench,     color: '#00d97e' },
     { label: tr.dashboard.teamMembers,  value: counts.team,      icon: Users,      color: '#e63757' },

@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import Providers      from './providers';
-import AmbientPlayer  from '@/components/AmbientPlayer';
-import SplashScreen   from '@/components/SplashScreen';
-import WhatsAppButton from '@/components/WhatsAppButton';
+import Providers       from './providers';
+import AmbientPlayer   from '@/components/AmbientPlayer';
+import SplashScreen    from '@/components/SplashScreen';
+import WhatsAppButton  from '@/components/WhatsAppButton';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
+import VisitTracker    from '@/components/VisitTracker';
 import { getContact } from '@/lib/getData';
 
 const SITE_URL = 'https://greenbd23.com';
@@ -198,6 +200,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       })}} />
       </head>
       <body className="antialiased">
+        <GoogleAnalytics />
+        <VisitTracker />
         <SplashScreen />
         <Providers>{children}</Providers>
         {contact.whatsapp && <WhatsAppButton number={contact.whatsapp} />}
