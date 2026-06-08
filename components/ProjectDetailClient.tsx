@@ -49,7 +49,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
 
       {/* ── Body ──────────────────────────────────────────────────── */}
       <div className="max-w-5xl mx-auto px-6 md:px-8 py-4 lg:py-14">
-        <div className="grid lg:grid-cols-3 gap-4 lg:gap-12">
+        <div className="grid lg:grid-cols-3 gap-2 lg:gap-12">
 
           {/* Left — description + galleries (gallery shows first on mobile) */}
           <div className="order-2 lg:order-1 lg:col-span-2 flex flex-col">
@@ -121,13 +121,6 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                   </div>
                 </li>
               </ul>
-
-              <div className="mt-4 pt-4 lg:mt-6 lg:pt-5 border-t border-gray-200">
-                <Link href="/#contact"
-                  className="block w-full text-center bg-primary-600 hover:bg-primary-700 text-white font-semibold text-xs lg:text-sm py-2.5 lg:py-3 rounded-xl transition-colors">
-                  {tr.inquire}
-                </Link>
-              </div>
             </div>
           </div>
 
