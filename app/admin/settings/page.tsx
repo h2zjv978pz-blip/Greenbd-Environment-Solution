@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Save, Leaf, Eye, GripVertical, Menu } from 'lucide-react';
+import { Save, Leaf, Eye, GripVertical, Menu, Smartphone } from 'lucide-react';
 import ImageUpload from '@/components/admin/ImageUpload';
 import RichTextEditor from '@/components/admin/RichTextEditor';
 
@@ -15,6 +15,7 @@ interface SiteSettings {
   showNameMobile: boolean;
   showTaglineMobile: boolean;
   navOrder?: string[];
+  navOrderMobile?: string[];
 }
 
 const NAV_DEFAULT_ORDER = ['home', 'about', 'services', 'projects', 'research', 'climateMap', 'team', 'clients'];
@@ -30,7 +31,7 @@ const DEF: SiteSettings = {
   nameFont: 'Poppins', nameSizePx: '16', nameBold: true,
   taglineFont: 'Inter', taglineSizePx: '10', logoSizePx: '40',
   logoSizeMobilePx: '40', showNameMobile: true, showTaglineMobile: false,
-  navOrder: NAV_DEFAULT_ORDER,
+  navOrder: NAV_DEFAULT_ORDER, navOrderMobile: [],
 };
 
 const FONTS = [
@@ -49,6 +50,8 @@ export default function SettingsAdmin() {
   const [saved,  setSaved]  = useState(false);
   const [navDragSrc,  setNavDragSrc]  = useState<number | null>(null);
   const [navDragOver, setNavDragOver] = useState<number | null>(null);
+  const [mobNavDragSrc,  setMobNavDragSrc]  = useState<number | null>(null);
+  const [mobNavDragOver, setMobNavDragOver] = useState<number | null>(null);
 
   useEffect(() => {
     fetch('/api/content/settings').then(r => r.json()).then(d => setData({ ...DEF, ...d }));
@@ -62,34 +65,49 @@ export default function SettingsAdmin() {
 
   const s = (key: keyof SiteSettings, val: unknown) => setData(d => ({ ...d, [key]: val }));
 
-  // Normalized nav order — keeps any items missing from saved order at the end
-  const navOrder = [
-    ...(data.navOrder || []).filter(k => NAV_LABELS[k]),
-    ...NAV_DEFAULT_ORDER.filter(k => !(data.navOrder || []).includes(k)),
+  // Normalized order — keeps any items missing from a saved order at the end
+  const normalizeOrder = (order?: string[]) => [
+    ...(order || []).filter(k => NAV_LABELS[k]),
+    ...NAV_DEFAULT_ORDER.filter(k => !(order || []).includes(k)),
   ];
+  const navOrder = normalizeOrder(data.navOrder);
 
-  const onNavDragStart = (e: React.DragEvent, idx: number) => {
-    setNavDragSrc(idx);
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', String(idx));
-  };
-  const onNavDragOver = (e: React.DragEvent, idx: number) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-    if (idx !== navDragSrc) setNavDragOver(idx);
-  };
-  const onNavDrop = (e: React.DragEvent, toIdx: number) => {
-    e.preventDefault();
-    const fromIdx = navDragSrc;
-    if (fromIdx === null || fromIdx === toIdx) { setNavDragSrc(null); setNavDragOver(null); return; }
-    const arr = [...navOrder];
-    const [moved] = arr.splice(fromIdx, 1);
-    arr.splice(toIdx, 0, moved);
-    s('navOrder', arr);
-    setNavDragSrc(null);
-    setNavDragOver(null);
-  };
-  const onNavDragEnd = () => { setNavDragSrc(null); setNavDragOver(null); };
+  const useCustomMobileOrder = !!(data.navOrderMobile && data.navOrderMobile.length > 0);
+  const mobileNavOrder = useCustomMobileOrder ? normalizeOrder(data.navOrderMobile) : navOrder;
+  const toggleCustomMobileOrder = () => s('navOrderMobile', useCustomMobileOrder ? [] : [...navOrder]);
+
+  // Shared drag-and-drop wiring for both the desktop and mobile order lists
+  const makeNavDnD = (
+    order: string[],
+    onChange: (arr: string[]) => void,
+    dragSrc: number | null, setDragSrc: (i: number | null) => void,
+    setDragOver: (i: number | null) => void,
+  ) => ({
+    onDragStart: (e: React.DragEvent, idx: number) => {
+      setDragSrc(idx);
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', String(idx));
+    },
+    onDragOver: (e: React.DragEvent, idx: number) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      if (idx !== dragSrc) setDragOver(idx);
+    },
+    onDrop: (e: React.DragEvent, toIdx: number) => {
+      e.preventDefault();
+      if (dragSrc === null || dragSrc === toIdx) { setDragSrc(null); setDragOver(null); return; }
+      const arr = [...order];
+      const [moved] = arr.splice(dragSrc, 1);
+      arr.splice(toIdx, 0, moved);
+      onChange(arr);
+      setDragSrc(null);
+      setDragOver(null);
+    },
+    onDragEnd: () => { setDragSrc(null); setDragOver(null); },
+  });
+
+  const navDnD    = makeNavDnD(navOrder,       arr => s('navOrder', arr),       navDragSrc,    setNavDragSrc,    setNavDragOver);
+  const mobNavDnD = makeNavDnD(mobileNavOrder, arr => s('navOrderMobile', arr), mobNavDragSrc, setMobNavDragSrc, setMobNavDragOver);
 
   const inputCls = 'w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-50';
   const labelCls = 'block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5';
@@ -383,11 +401,11 @@ export default function SettingsAdmin() {
               <div
                 key={key}
                 draggable
-                onDragStart={e => onNavDragStart(e, i)}
-                onDragOver={e => onNavDragOver(e, i)}
+                onDragStart={e => navDnD.onDragStart(e, i)}
+                onDragOver={e => navDnD.onDragOver(e, i)}
                 onDragLeave={() => setNavDragOver(null)}
-                onDrop={e => onNavDrop(e, i)}
-                onDragEnd={onNavDragEnd}
+                onDrop={e => navDnD.onDrop(e, i)}
+                onDragEnd={navDnD.onDragEnd}
                 className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg border select-none transition-all duration-100
                   ${isDragging ? 'opacity-30 bg-blue-50/60 scale-[0.99] border-gray-100' : ''}
                   ${isDropZone ? 'border-t-[3px] border-t-blue-500 bg-blue-50/50 border-x-gray-100 border-b-gray-100' : ''}
@@ -403,6 +421,50 @@ export default function SettingsAdmin() {
             );
           })}
         </div>
+
+        <label className="flex items-center gap-2.5 pt-2 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={useCustomMobileOrder}
+            onChange={toggleCustomMobileOrder}
+            className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-2 focus:ring-primary-100"
+          />
+          <span className="text-sm text-gray-600 flex items-center gap-1.5">
+            <Smartphone className="w-3.5 h-3.5 text-gray-400" /> Use a different menu order on mobile devices
+          </span>
+        </label>
+
+        {useCustomMobileOrder && (
+          <div className="space-y-1.5 max-w-md pt-1">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide pl-0.5">Mobile Menu Order</p>
+            {mobileNavOrder.map((key, i) => {
+              const isDragging = mobNavDragSrc  === i;
+              const isDropZone = mobNavDragOver === i && mobNavDragSrc !== i;
+              return (
+                <div
+                  key={key}
+                  draggable
+                  onDragStart={e => mobNavDnD.onDragStart(e, i)}
+                  onDragOver={e => mobNavDnD.onDragOver(e, i)}
+                  onDragLeave={() => setMobNavDragOver(null)}
+                  onDrop={e => mobNavDnD.onDrop(e, i)}
+                  onDragEnd={mobNavDnD.onDragEnd}
+                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg border select-none transition-all duration-100
+                    ${isDragging ? 'opacity-30 bg-blue-50/60 scale-[0.99] border-gray-100' : ''}
+                    ${isDropZone ? 'border-t-[3px] border-t-blue-500 bg-blue-50/50 border-x-gray-100 border-b-gray-100' : ''}
+                    ${!isDragging && !isDropZone ? 'border-gray-100 hover:bg-gray-50' : ''}
+                  `}
+                >
+                  <span className="cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-500 transition-colors">
+                    <GripVertical className="w-4 h-4" />
+                  </span>
+                  <span className="text-xs text-gray-400 tabular-nums w-4">{i + 1}</span>
+                  <span className="text-sm font-medium text-gray-700">{NAV_LABELS[key] || key}</span>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

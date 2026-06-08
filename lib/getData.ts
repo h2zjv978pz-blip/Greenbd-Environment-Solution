@@ -121,4 +121,5 @@ export interface SiteSettings {
   showNameMobile: boolean;
   showTaglineMobile: boolean;
   navOrder?: string[];
+  navOrderMobile?: string[];
 }

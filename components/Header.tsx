@@ -70,10 +70,13 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
     clients:    { label: tr.nav.clients,    href: '#clients'     },
   };
   const NAV_DEFAULT_ORDER = ['home', 'about', 'services', 'projects', 'research', 'climateMap', 'team', 'clients'];
-  const navOrder = (settings?.navOrder?.length ? settings.navOrder : NAV_DEFAULT_ORDER)
-    .filter(key => NAV_ITEMS[key]);
-  const orderedKeys = [...navOrder, ...NAV_DEFAULT_ORDER.filter(key => !navOrder.includes(key))];
-  const navLinks = orderedKeys.map(key => NAV_ITEMS[key]);
+  const buildNavLinks = (order?: string[]) => {
+    const filtered = (order?.length ? order : NAV_DEFAULT_ORDER).filter(key => NAV_ITEMS[key]);
+    const orderedKeys = [...filtered, ...NAV_DEFAULT_ORDER.filter(key => !filtered.includes(key))];
+    return orderedKeys.map(key => NAV_ITEMS[key]);
+  };
+  const navLinks = buildNavLinks(settings?.navOrder);
+  const mobileNavLinks = buildNavLinks(settings?.navOrderMobile?.length ? settings.navOrderMobile : settings?.navOrder);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -397,7 +400,7 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
       {menuOpen && (
         <div className="lg:hidden bg-white border-t border-gray-100 shadow-xl" style={banglaFont}>
           <nav className="flex flex-col px-4 py-4 gap-1">
-            {navLinks.map((link) => (
+            {mobileNavLinks.map((link) => (
               <button
                 key={link.href}
                 onClick={() => handleNav(link.href)}
