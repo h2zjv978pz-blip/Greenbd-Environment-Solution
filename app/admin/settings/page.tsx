@@ -361,11 +361,18 @@ export default function SettingsAdmin() {
 
       {/* Navigation Menu Order */}
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-3 mt-5">
-        <h6 className="font-semibold text-gray-700 text-sm border-b border-gray-100 pb-3 flex items-center gap-2">
-          <Menu className="w-4 h-4" /> Navigation Menu Order
-        </h6>
+        <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+          <h6 className="font-semibold text-gray-700 text-sm flex items-center gap-2">
+            <Menu className="w-4 h-4" /> Navigation Menu Order
+          </h6>
+          <button onClick={save} disabled={saving}
+            className="flex items-center gap-2 text-white text-xs font-semibold px-4 py-2 rounded-lg disabled:opacity-60 transition-colors"
+            style={{ backgroundColor: saved ? '#00d97e' : '#2c7be5' }}>
+            <Save className="w-3.5 h-3.5" />{saved ? 'Saved!' : saving ? 'Saving…' : 'Save Changes'}
+          </button>
+        </div>
         <p className="text-xs text-gray-400 -mt-1 flex items-center gap-1">
-          <GripVertical className="w-3 h-3" /> Drag items to set the order they appear in the site's main menu — click Save Changes to apply.
+          <GripVertical className="w-3 h-3" /> Drag items to set the order they appear in the site's main menu, then click Save Changes.
         </p>
 
         <div className="space-y-1.5 max-w-md">
