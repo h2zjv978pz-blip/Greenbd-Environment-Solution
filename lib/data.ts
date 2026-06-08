@@ -1,13 +1,22 @@
 import fs from 'fs';
 import path from 'path';
+import { resolveProjectRoot } from './projectRoot';
 
 // Try multiple candidate locations for the data directory.
 // On some platforms process.cwd() is the project root; on others the server
 // binary runs from a different directory. Walking candidates ensures we find
 // the data/ folder wherever the platform puts it.
+//
+// The real project root is checked FIRST (and preferred) over process.cwd(),
+// because process.cwd() on the standalone server often resolves inside
+// .next/standalone — a build artifact directory that gets wiped on every
+// `next build`. Writing there meant every admin edit (settings, projects,
+// etc.) reverted back to the last git-committed values after each redeploy.
 function resolveDataDir(): string {
+  const root = resolveProjectRoot();
   const candidates = [
-    path.join(process.cwd(), 'data'),                           // standard: project root
+    path.join(root, 'data'),                                    // real project root — survives rebuilds
+    path.join(process.cwd(), 'data'),                           // standard: process cwd
     path.join(process.cwd(), '..', 'data'),                     // one level up
     path.join(__dirname, '..', 'data'),                         // relative to compiled file
     path.join(__dirname, '..', '..', 'data'),

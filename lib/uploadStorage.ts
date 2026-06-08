@@ -1,4 +1,5 @@
 import path from 'path';
+import { resolveProjectRoot } from './projectRoot';
 
 // ── Why this file exists ────────────────────────────────────────────────────
 // This app builds with `output: 'standalone'`. Next.js regenerates the entire
@@ -14,16 +15,6 @@ import path from 'path';
 // through an API route that reads from disk on each request — instead of
 // relying on the standalone server's bundled `public/` snapshot, which never
 // sees files written after the build completed.
-
-function resolveProjectRoot(): string {
-  let dir = process.cwd();
-  while (dir.split(path.sep).includes('.next')) {
-    const parent = path.dirname(dir);
-    if (parent === dir) break;
-    dir = parent;
-  }
-  return dir;
-}
 
 const customRoot = process.env.UPLOADS_DIR?.trim();
 
