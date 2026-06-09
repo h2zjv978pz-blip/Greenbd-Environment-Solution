@@ -2,29 +2,58 @@ import fs from 'fs';
 import path from 'path';
 import { resolveProjectRoot } from './projectRoot';
 
-// ── Why DATA_DIR exists ───────────────────────────────────────────────────────
-// All data/*.json files are tracked in git. Every `git pull` during a
-// Hostinger redeploy overwrites them with the last-committed versions,
-// wiping every admin edit made since then (new projects, updated settings, etc.).
+// ── Persistent data storage strategy ─────────────────────────────────────────
 //
-// Setting DATA_DIR to an absolute path OUTSIDE the repo (e.g.
-// /home/u123456789/greenbd_data) keeps production data completely isolated from
-// git. On first access of any file, we auto-seed from the bundled defaults in
-// data/ so no manual copying is needed.
+// Problem: data/*.json are tracked in git. Every `git pull` during a Hostinger
+// redeploy overwrites them with the last-committed versions, wiping every admin
+// edit (new projects, settings, pictures, etc.).
 //
-// Without DATA_DIR the behaviour is unchanged (backwards-compatible): data is
-// read from and written to <project-root>/data/, which survives `next build`
-// restarts but IS wiped by a full git-pull redeploy.
+// Auto-fix (no server configuration needed):
+//   In production the app writes data to a folder ONE LEVEL ABOVE the git repo.
+//   That parent directory is never touched by `git pull` or a full re-clone, so
+//   all admin edits survive every future deployment automatically.
+//
+//   Layout on Hostinger:
+//     /home/user/domains/greenbd23.com/          ← parent, git never touches this
+//       greenbd_data/                            ← ✅ persistent production data
+//       public_nodejs/  (git repo)               ← ❌ wiped on git pull
+//
+// The git-tracked data/*.json files remain as seed defaults. On first start
+// after a fresh deploy, any missing file is auto-copied from there, so the site
+// always comes up with valid content even on a brand new server.
+//
+// Override: set DATA_DIR=/absolute/path in your server environment variables to
+// point to any custom location instead.
 
 const customDataDir = process.env.DATA_DIR?.trim();
 
+// Seed source: the git-tracked data/ inside the project root. On every fresh
+// git pull these are reset to defaults, which is exactly what we want for
+// seeding new environments — production data lives elsewhere (see below).
+function seedDataDir(): string {
+  return path.join(resolveProjectRoot(), 'data');
+}
+
+// In production, place data one level above the repo root so it is unreachable
+// by git operations. Falls back to null in dev (NODE_ENV !== 'production') so
+// local development continues to use the project's own data/ directory as before.
+function resolveProductionDataDir(): string | null {
+  if (process.env.NODE_ENV !== 'production') return null;
+  const root = resolveProjectRoot();
+  const parent = path.dirname(root);
+  if (parent === root) return null; // at filesystem root, bail
+  return path.join(parent, 'greenbd_data');
+}
+
 function resolveDataDir(): string {
-  // Custom persistent directory — highest priority, survives ALL redeploys.
+  // 1. Explicit env override — highest priority.
   if (customDataDir) return path.resolve(customDataDir);
 
-  // Walk candidates to find an existing data/ directory. The real project root
-  // is checked first because process.cwd() on the standalone server often
-  // resolves inside .next/standalone — a build artifact wiped by `next build`.
+  // 2. Production auto-persistence — above the repo, git-proof.
+  const prodDir = resolveProductionDataDir();
+  if (prodDir) return prodDir;
+
+  // 3. Development / fallback — walk candidates to find an existing data/ dir.
   const root = resolveProjectRoot();
   const candidates = [
     path.join(root, 'data'),
@@ -35,39 +64,30 @@ function resolveDataDir(): string {
     path.join(__dirname, '..', '..', '..', 'data'),
     '/app/data',
   ];
-
   for (const dir of candidates) {
     try {
       if (fs.existsSync(dir) && fs.statSync(dir).isDirectory()) return dir;
     } catch { /* continue */ }
   }
-
   return path.join(process.cwd(), 'data');
 }
 
 const DATA_DIR = resolveDataDir();
 
-// Seed directory: where bundled default JSON files live (inside the git repo).
-// Used to bootstrap DATA_DIR on first run.
-function seedDir(): string {
-  const root = resolveProjectRoot();
-  return path.join(root, 'data');
-}
-
-// Auto-seed: if DATA_DIR is external and the file doesn't exist there yet,
-// copy the bundled default. Safe on concurrent access — worst case two requests
-// race to copy the same seed; both writes are idempotent.
+// Auto-seed: copy the bundled default into DATA_DIR if the file is missing.
+// Runs only when DATA_DIR differs from the seed source (i.e. in production).
 function ensureSeeded(file: string, filePath: string): void {
-  if (!customDataDir) return;            // only needed for external DATA_DIR
-  if (fs.existsSync(filePath)) return;   // already present
+  const seed = seedDataDir();
+  if (DATA_DIR === seed) return;          // dev mode — same dir, nothing to seed
+  if (fs.existsSync(filePath)) return;    // already present
   try {
     fs.mkdirSync(path.dirname(filePath), { recursive: true });
-    const seed = path.join(seedDir(), `${file}.json`);
-    if (fs.existsSync(seed)) {
-      fs.copyFileSync(seed, filePath);
-      console.log(`[data] seeded ${file}.json → ${filePath}`);
+    const seedFile = path.join(seed, `${file}.json`);
+    if (fs.existsSync(seedFile)) {
+      fs.copyFileSync(seedFile, filePath);
+      console.log(`[data] first-run seed: ${file}.json → ${filePath}`);
     }
-  } catch { /* best effort — readData will return {} and warn below */ }
+  } catch { /* best effort */ }
 }
 
 export function readData<T>(file: string): T {
