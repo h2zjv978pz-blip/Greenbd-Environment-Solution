@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import {
   Bold, Italic, Underline, Strikethrough, List, ListOrdered,
   AlignLeft, AlignCenter, AlignRight, AlignJustify,
-  Undo, Redo, X, ImageIcon, Upload, Loader2, CheckCircle2,
+  Undo, Redo, X, ImageIcon, Upload, Loader2, CheckCircle2, GripVertical,
 } from 'lucide-react';
 import ImageUpload from './ImageUpload';
 import AutoTranslateButton from './AutoTranslateButton';
@@ -155,11 +155,13 @@ function GalleryEditor({ label, hint, images, onChange, dropText, dropHint, uplo
   dropText: string; dropHint: string; uploadedText: string;
 }) {
   const fileRef   = useRef<HTMLInputElement>(null);
-  const [dragging,  setDragging]  = useState(false);
+  const [dropZoneDragging, setDropZoneDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [done,      setDone]      = useState(0);
   const [total,     setTotal]     = useState(0);
   const [urlInputs, setUrlInputs] = useState<string[]>([]);
+  const [reorderSrc,  setReorderSrc]  = useState<number | null>(null);
+  const [reorderOver, setReorderOver] = useState<number | null>(null);
 
   const remove = (i: number) => {
     onChange(images.filter((_, j) => j !== i));
@@ -186,16 +188,45 @@ function GalleryEditor({ label, hint, images, onChange, dropText, dropHint, uplo
     const updated = [...images]; updated[i] = url; onChange(updated);
   };
 
+  // Reorder drag handlers — only fires when dragging starts from the grip handle
+  const onReorderStart = (e: React.DragEvent, i: number) => {
+    setReorderSrc(i);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', String(i));
+  };
+  const onReorderOver = (e: React.DragEvent, i: number) => {
+    if (reorderSrc === null) return; // not a reorder drag
+    e.preventDefault(); e.stopPropagation();
+    e.dataTransfer.dropEffect = 'move';
+    if (i !== reorderSrc) setReorderOver(i);
+  };
+  const onReorderDrop = (e: React.DragEvent, toIdx: number) => {
+    if (reorderSrc === null) return;
+    e.preventDefault(); e.stopPropagation();
+    if (reorderSrc !== toIdx) {
+      const arr = [...images];
+      const [el] = arr.splice(reorderSrc, 1);
+      arr.splice(toIdx, 0, el);
+      onChange(arr);
+    }
+    setReorderSrc(null); setReorderOver(null);
+  };
+  const onReorderEnd = () => { setReorderSrc(null); setReorderOver(null); };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-base font-semibold" style={{ color: '#2c7be5' }}>{label}</h3>
         <span className="text-[11px] text-white px-2 py-0.5 rounded font-medium" style={{ backgroundColor: '#2c7be5' }}>{hint}</span>
       </div>
-      <div onDragOver={e => { e.preventDefault(); setDragging(true); }} onDragLeave={() => setDragging(false)}
-        onDrop={(e: DragEvent<HTMLDivElement>) => { e.preventDefault(); setDragging(false); uploadFiles(Array.from(e.dataTransfer.files)); }}
+
+      {/* Drop zone — file upload only */}
+      <div
+        onDragOver={e => { if (reorderSrc !== null) return; e.preventDefault(); setDropZoneDragging(true); }}
+        onDragLeave={() => setDropZoneDragging(false)}
+        onDrop={(e: DragEvent<HTMLDivElement>) => { if (reorderSrc !== null) return; e.preventDefault(); setDropZoneDragging(false); uploadFiles(Array.from(e.dataTransfer.files)); }}
         onClick={() => !uploading && fileRef.current?.click()}
-        className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all mb-4 select-none ${dragging ? 'border-blue-400 bg-blue-50' : 'border-gray-200 hover:border-blue-400 hover:bg-gray-50'} ${uploading ? 'pointer-events-none opacity-70' : ''}`}>
+        className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all mb-4 select-none ${dropZoneDragging ? 'border-blue-400 bg-blue-50' : 'border-gray-200 hover:border-blue-400 hover:bg-gray-50'} ${uploading ? 'pointer-events-none opacity-70' : ''}`}>
         {uploading ? (
           <div className="flex flex-col items-center gap-2">
             <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
@@ -216,34 +247,75 @@ function GalleryEditor({ label, hint, images, onChange, dropText, dropHint, uplo
       </div>
       <input ref={fileRef} type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml" className="hidden"
         onChange={e => { if (e.target.files) uploadFiles(Array.from(e.target.files)); e.target.value = ''; }} />
+
+      {/* Image grid with reorder */}
       {images.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
-          {images.map((img, i) => (
-            <div key={i} className="relative group rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
-              {img ? <img src={img} alt={`Image ${i+1}`} className="w-full aspect-video object-cover" />
-                   : <div className="w-full aspect-video flex items-center justify-center bg-gray-100"><ImageIcon className="w-6 h-6 text-gray-300" /></div>}
-              {img && (
-                <div className="absolute bottom-1.5 left-1.5 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
-                  <CheckCircle2 className="w-2.5 h-2.5 text-green-400" />
-                  {img.startsWith('/uploads/') ? uploadedText : 'URL'}
-                </div>
-              )}
-              <button type="button" onClick={() => remove(i)}
-                className="absolute top-1.5 right-1.5 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow">
-                <X className="w-3 h-3" />
-              </button>
-              {!img && (
-                <div className="p-2">
-                  <div className="flex gap-1">
-                    <input value={urlInputs[i] ?? ''} onChange={e => { const u = [...urlInputs]; u[i] = e.target.value; setUrlInputs(u); }}
-                      placeholder="Paste image URL" className="flex-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400" />
-                    <button type="button" onClick={() => applyUrl(i)} className="text-xs text-white px-2 py-1 rounded font-semibold" style={{ backgroundColor: '#2c7be5' }}>OK</button>
+        <>
+          {images.length > 1 && (
+            <p className="text-[11px] text-gray-400 mb-2 flex items-center gap-1">
+              <GripVertical className="w-3 h-3" /> Drag the grip handle to reorder
+            </p>
+          )}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+            {images.map((img, i) => {
+              const isDragging = reorderSrc === i;
+              const isOver     = reorderOver === i && reorderSrc !== null && reorderSrc !== i;
+              return (
+                <div
+                  key={i}
+                  onDragOver={e => onReorderOver(e, i)}
+                  onDrop={e => onReorderDrop(e, i)}
+                  onDragEnd={onReorderEnd}
+                  className={`relative group rounded-xl overflow-hidden border bg-gray-50 transition-all ${
+                    isDragging ? 'opacity-40 scale-95 border-blue-300' :
+                    isOver     ? 'border-blue-400 shadow-lg scale-[1.02]' :
+                    'border-gray-200'
+                  }`}
+                >
+                  {/* Grip handle — initiates reorder drag */}
+                  {img && (
+                    <div
+                      draggable
+                      onDragStart={e => onReorderStart(e, i)}
+                      className="absolute top-1.5 left-1.5 z-10 w-6 h-6 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity"
+                      title="Drag to reorder"
+                    >
+                      <GripVertical className="w-3 h-3" />
+                    </div>
+                  )}
+
+                  {/* Order badge */}
+                  <div className="absolute top-1.5 right-8 z-10 bg-black/50 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                    #{i + 1}
                   </div>
+
+                  {img ? <img src={img} alt={`Image ${i+1}`} className="w-full aspect-video object-cover" />
+                       : <div className="w-full aspect-video flex items-center justify-center bg-gray-100"><ImageIcon className="w-6 h-6 text-gray-300" /></div>}
+
+                  {img && (
+                    <div className="absolute bottom-1.5 left-1.5 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
+                      <CheckCircle2 className="w-2.5 h-2.5 text-green-400" />
+                      {img.startsWith('/api/uploads/') ? uploadedText : 'URL'}
+                    </div>
+                  )}
+                  <button type="button" onClick={() => remove(i)}
+                    className="absolute top-1.5 right-1.5 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow">
+                    <X className="w-3 h-3" />
+                  </button>
+                  {!img && (
+                    <div className="p-2">
+                      <div className="flex gap-1">
+                        <input value={urlInputs[i] ?? ''} onChange={e => { const u = [...urlInputs]; u[i] = e.target.value; setUrlInputs(u); }}
+                          placeholder="Paste image URL" className="flex-1 border border-gray-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400" />
+                        <button type="button" onClick={() => applyUrl(i)} className="text-xs text-white px-2 py-1 rounded font-semibold" style={{ backgroundColor: '#2c7be5' }}>OK</button>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
+              );
+            })}
+          </div>
+        </>
       )}
       {images.length > 0 && <p className="text-xs text-gray-400 mb-2">{images.length} image{images.length !== 1 ? 's' : ''} added</p>}
     </div>
