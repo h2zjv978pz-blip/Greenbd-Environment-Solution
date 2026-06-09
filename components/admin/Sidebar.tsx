@@ -5,7 +5,7 @@ import { useState } from 'react';
 import {
   LayoutDashboard, Presentation, FolderOpen, Wrench,
   Info, Users, Building2, BookOpen, Phone, BarChart3, Settings, LogOut, Leaf, Languages,
-  Newspaper, Scale, Download, Images, ChevronDown, Map, Play, LayoutGrid, Music2,
+  Newspaper, Scale, Download, Images, ChevronDown, Map, Play, LayoutGrid, Music2, Navigation,
 } from 'lucide-react';
 import { SidebarClock } from '@/components/admin/ClockWidget';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -32,6 +32,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
     { href: '/admin/research',     label: tr.sidebar.research,     icon: BookOpen },
     { href: '/admin/climate-map', label: 'Climate Map',           icon: Map      },
     { href: '/admin/contact',     label: tr.sidebar.contactInfo,  icon: Phone    },
+    { href: '/admin/menus',    label: 'Menu Order',            icon: Navigation      },
     { href: '/admin/ambient',  label: 'Ambient Music',         icon: Music2          },
     { href: '/admin/settings', label: tr.sidebar.siteSettings, icon: Settings        },
   ];
