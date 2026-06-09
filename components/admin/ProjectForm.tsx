@@ -44,7 +44,7 @@ export interface ProjectData {
   image: string;
   galleryImages: string[];
   additionalImages: string[];
-  annotatedImages?: { url: string; caption: string }[];
+  annotatedImages?: { url: string; caption: string; position?: number }[];
   hidden?: boolean;
 }
 
@@ -424,21 +424,23 @@ function GalleryEditor({ label, hint, images, onChange, dropText, dropHint, uplo
 }
 
 /* ── Annotated images editor ─────────────────────────────────────────── */
+type AnnotatedItem = { url: string; caption: string; position?: number };
+
 function AnnotatedImagesEditor({
   items, onChange,
 }: {
-  items: { url: string; caption: string }[];
-  onChange: (v: { url: string; caption: string }[]) => void;
+  items: AnnotatedItem[];
+  onChange: (v: AnnotatedItem[]) => void;
 }) {
   const fileRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [uploading, setUploading] = useState<number | null>(null);
   const [dragSrc,   setDragSrc]   = useState<number | null>(null);
   const [dragOver,  setDragOver]  = useState<number | null>(null);
 
-  const add    = () => onChange([...items, { url: '', caption: '' }]);
+  const add    = () => onChange([...items, { url: '', caption: '', position: undefined }]);
   const remove = (i: number) => onChange(items.filter((_, j) => j !== i));
-  const upd    = (i: number, key: 'url' | 'caption', val: string) =>
-    onChange(items.map((it, j) => j === i ? { ...it, [key]: val } : it));
+  const upd    = (i: number, patch: Partial<AnnotatedItem>) =>
+    onChange(items.map((it, j) => j === i ? { ...it, ...patch } : it));
 
   const uploadFile = async (i: number, file: File) => {
     if (!file.type.startsWith('image/')) return;
@@ -447,7 +449,7 @@ function AnnotatedImagesEditor({
       const fd = new FormData(); fd.append('file', file);
       const res  = await fetch('/api/upload', { method: 'POST', body: fd });
       const data = await res.json();
-      if (data.url) upd(i, 'url', data.url);
+      if (data.url) upd(i, { url: data.url });
     } finally { setUploading(null); }
   };
 
@@ -462,9 +464,9 @@ function AnnotatedImagesEditor({
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-base font-semibold" style={{ color: '#2c7be5' }}>Annotated Images</h3>
+        <h3 className="text-base font-semibold" style={{ color: '#2c7be5' }}>Overview Paragraph Images</h3>
         <div className="flex items-center gap-2">
-          <span className="text-[11px] text-white px-2 py-0.5 rounded font-medium" style={{ backgroundColor: '#2c7be5' }}>Image + Caption</span>
+          <span className="text-[11px] text-white px-2 py-0.5 rounded font-medium" style={{ backgroundColor: '#2c7be5' }}>Image + Caption + Position</span>
           <button type="button" onClick={add}
             className="flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-lg text-white"
             style={{ backgroundColor: '#00d97e' }}>
@@ -473,9 +475,13 @@ function AnnotatedImagesEditor({
         </div>
       </div>
 
+      <p className="text-[11px] text-gray-400 mb-3">
+        Upload images that will appear inline within the Project Overview text. Set "Insert after paragraph" to control placement — the image appears right after that paragraph on the public page.
+      </p>
+
       {items.length === 0 && (
         <p className="text-xs text-gray-400 text-center py-6 border-2 border-dashed border-gray-200 rounded-xl">
-          No annotated images yet — click "Add Image" to start
+          No overview images yet — click "Add Image" to insert images between paragraphs
         </p>
       )}
 
@@ -514,12 +520,24 @@ function AnnotatedImagesEditor({
                   onChange={e => { const f = e.target.files?.[0]; if (f) uploadFile(i, f); e.target.value = ''; }} />
               </div>
 
-              {/* URL + Caption */}
+              {/* URL + Caption + Position */}
               <div className="flex-1 space-y-1.5 min-w-0">
-                <input value={item.url} onChange={e => upd(i, 'url', e.target.value)} placeholder="Image URL…"
+                <input value={item.url} onChange={e => upd(i, { url: e.target.value })} placeholder="Image URL…"
                   className="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-blue-400" />
-                <input value={item.caption} onChange={e => upd(i, 'caption', e.target.value)} placeholder="Caption / annotation label…"
+                <input value={item.caption} onChange={e => upd(i, { caption: e.target.value })} placeholder="Caption / annotation text…"
                   className="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-blue-400 font-medium" />
+                <div className="flex items-center gap-2">
+                  <label className="text-[10px] text-gray-400 font-medium flex-shrink-0">Insert after paragraph:</label>
+                  <select
+                    value={item.position ?? ''}
+                    onChange={e => upd(i, { position: e.target.value ? Number(e.target.value) : undefined })}
+                    className="flex-1 border border-gray-200 rounded-lg px-2 py-1 text-xs focus:outline-none focus:border-blue-400 bg-white">
+                    <option value="">End of overview (default)</option>
+                    {[1,2,3,4,5,6,7,8].map(n => (
+                      <option key={n} value={n}>Paragraph {n}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               {/* Remove */}

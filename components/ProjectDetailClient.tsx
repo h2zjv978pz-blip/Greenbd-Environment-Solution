@@ -1,52 +1,65 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { Fragment } from 'react';
 import { ArrowLeft, MapPin, Calendar, User, Tag } from 'lucide-react';
 import { GalleryGrid } from '@/components/Lightbox';
 import type { Project } from '@/lib/getData';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import t from '@/lib/i18n/translations';
 
-/* ── Tabbed annotated images ───────────────────────────────────────── */
-function AnnotatedImages({ items }: { items: { url: string; caption: string }[] }) {
-  const [active, setActive] = useState(0);
-  const valid = items.filter(it => it.url);
-  if (valid.length === 0) return null;
+type AnnotatedItem = { url: string; caption: string; position?: number };
+
+/* ── Single annotated image card ────────────────────────────────────── */
+function OverviewImage({ url, caption }: AnnotatedItem) {
+  return (
+    <figure className="my-6 rounded-2xl overflow-hidden border border-gray-100 shadow-sm not-prose">
+      <img src={url} alt={caption} className="w-full h-auto block" />
+      {caption && (
+        <figcaption className="px-4 py-2.5 text-sm text-center text-gray-500 bg-gray-50 border-t border-gray-100 font-medium">
+          {caption}
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+/* ── Description with images interleaved at paragraph positions ─────── */
+function DescriptionWithImages({ html, images }: { html: string; images: AnnotatedItem[] }) {
+  const valid = images.filter(it => it.url);
+
+  if (valid.length === 0) {
+    return (
+      <div className="prose prose-gray max-w-none text-gray-600 leading-relaxed text-base"
+        dangerouslySetInnerHTML={{ __html: html }} />
+    );
+  }
+
+  // Split the HTML after each </p> close tag
+  const parts = html.split('</p>').map((s, i, arr) =>
+    i < arr.length - 1 ? s + '</p>' : s
+  ).filter(s => s.trim());
+
+  // Group images by paragraph position (1-indexed); 0/undefined = after all paragraphs
+  const byPos: Record<number, AnnotatedItem[]> = {};
+  valid.forEach(img => {
+    const pos = (img.position && img.position > 0) ? img.position : parts.length + 1;
+    byPos[pos] = [...(byPos[pos] ?? []), img];
+  });
 
   return (
-    <div className="mt-10">
-      {/* Tab strip */}
-      <div className="flex gap-2 overflow-x-auto pb-1 mb-4" style={{ scrollbarWidth: 'none' }}>
-        {valid.map((it, i) => (
-          <button
-            key={i}
-            onClick={() => setActive(i)}
-            className={`flex-shrink-0 text-xs font-semibold px-4 py-2 rounded-full border transition-all ${
-              i === active
-                ? 'bg-primary-600 text-white border-primary-600 shadow-sm'
-                : 'bg-white text-gray-600 border-gray-200 hover:border-primary-300 hover:text-primary-600'
-            }`}
-          >
-            {it.caption || `Image ${i + 1}`}
-          </button>
-        ))}
-      </div>
-
-      {/* Active image */}
-      <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm bg-white">
-        <img
-          key={active}
-          src={valid[active].url}
-          alt={valid[active].caption}
-          className="w-full h-auto object-contain"
-        />
-        {valid[active].caption && (
-          <p className="text-center text-sm text-gray-500 font-medium py-3 border-t border-gray-50">
-            {valid[active].caption}
-          </p>
-        )}
-      </div>
+    <div className="prose prose-gray max-w-none text-gray-600 leading-relaxed text-base">
+      {parts.map((part, idx) => (
+        <Fragment key={idx}>
+          <div dangerouslySetInnerHTML={{ __html: part }} />
+          {(byPos[idx + 1] ?? []).map((img, j) => <OverviewImage key={j} {...img} />)}
+        </Fragment>
+      ))}
+      {/* Images with no valid position or position beyond paragraph count */}
+      {Object.entries(byPos)
+        .filter(([pos]) => Number(pos) > parts.length)
+        .flatMap(([, imgs]) => imgs)
+        .map((img, j) => <OverviewImage key={j} {...img} />)}
     </div>
   );
 }
@@ -102,18 +115,14 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
       <div className="max-w-5xl mx-auto px-6 md:px-8 py-4 lg:py-14">
         <div className="grid lg:grid-cols-3 gap-2 lg:gap-12">
 
-          {/* Left — description + annotated images */}
+          {/* Left — description with inline annotated images */}
           <div className="order-2 lg:order-1 lg:col-span-2">
             {description && (
               <div>
                 <h2 className="text-xl font-bold text-gray-900 font-heading mb-4">{tr.projectOverview}</h2>
-                <div
-                  className="prose prose-gray max-w-none text-gray-600 leading-relaxed text-base"
-                  dangerouslySetInnerHTML={{ __html: description }}
-                />
+                <DescriptionWithImages html={description} images={annotated} />
               </div>
             )}
-            {annotated.length > 0 && <AnnotatedImages items={annotated} />}
           </div>
 
           {/* Right — sidebar (shown first on mobile, at top of overview) */}
