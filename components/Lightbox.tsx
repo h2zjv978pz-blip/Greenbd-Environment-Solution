@@ -101,13 +101,13 @@ export function GalleryGrid({ images, title, className = 'mt-12' }: { images: st
       <h2 className="text-xl font-bold text-gray-900 font-heading mb-4">{title}</h2>
 
       {/* ── Main image ── */}
-      <div className="relative w-full overflow-hidden rounded-xl bg-gray-100 select-none"
-        style={{ aspectRatio: '16/9' }}>
+      <div className="relative w-full overflow-hidden rounded-xl bg-gray-50 select-none flex items-center justify-center"
+        style={{ minHeight: 220, maxHeight: '70vh' }}>
         <img
           key={active}
           src={images[active]}
           alt={`${title} ${active + 1}`}
-          className="w-full h-full object-cover"
+          className="w-full h-auto max-h-[70vh] object-contain"
         />
 
         {/* Counter badge */}
