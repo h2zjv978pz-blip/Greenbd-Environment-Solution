@@ -44,18 +44,26 @@ export default function Lightbox({ images, initial, onClose }: LightboxProps) {
         </div>
       )}
       {images.length > 1 && (
-        <button onClick={e => { e.stopPropagation(); setCur(c => Math.max(0, c - 1)); }} disabled={cur === 0}
-          className="absolute left-4 w-11 h-11 rounded-full bg-white/10 hover:bg-white/25 disabled:opacity-20 flex items-center justify-center text-white transition-colors">
-          <ChevronLeft className="w-6 h-6" />
+        <button
+          onClick={e => { e.stopPropagation(); setCur(c => Math.max(0, c - 1)); }}
+          disabled={cur === 0}
+          className="absolute left-3 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-12 h-12 rounded-full disabled:opacity-25 transition-all active:scale-95"
+          style={{ background: 'rgba(255,255,255,0.18)', backdropFilter: 'blur(6px)', border: '2px solid rgba(255,255,255,0.35)' }}
+        >
+          <ChevronLeft className="w-7 h-7 text-white drop-shadow" />
         </button>
       )}
       <img src={images[cur]} alt={`Image ${cur + 1}`}
         className="max-w-[90vw] max-h-[88vh] object-contain rounded-xl shadow-2xl"
         onClick={e => e.stopPropagation()} />
       {images.length > 1 && (
-        <button onClick={e => { e.stopPropagation(); setCur(c => Math.min(images.length - 1, c + 1)); }} disabled={cur === images.length - 1}
-          className="absolute right-4 w-11 h-11 rounded-full bg-white/10 hover:bg-white/25 disabled:opacity-20 flex items-center justify-center text-white transition-colors">
-          <ChevronRight className="w-6 h-6" />
+        <button
+          onClick={e => { e.stopPropagation(); setCur(c => Math.min(images.length - 1, c + 1)); }}
+          disabled={cur === images.length - 1}
+          className="absolute right-3 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-12 h-12 rounded-full disabled:opacity-25 transition-all active:scale-95"
+          style={{ background: 'rgba(255,255,255,0.18)', backdropFilter: 'blur(6px)', border: '2px solid rgba(255,255,255,0.35)' }}
+        >
+          <ChevronRight className="w-7 h-7 text-white drop-shadow" />
         </button>
       )}
       {images.length > 1 && (
