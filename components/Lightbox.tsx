@@ -70,11 +70,19 @@ export default function Lightbox({ images, initial, onClose }: LightboxProps) {
   );
 }
 
+const SLIDE_INTERVAL = 4000; // ms per slide
+
 /* ── Slideshow gallery with thumbnail strip ───────────────────────────── */
 export function GalleryGrid({ images, title, className = 'mt-12' }: { images: string[]; title: string; className?: string }) {
   const [active,   setActive]   = useState(0);
   const [lightbox, setLightbox] = useState<number | null>(null);
-  const thumbRef = useRef<HTMLDivElement>(null);
+  const [paused,   setPaused]   = useState(false);
+  const [progress, setProgress] = useState(0);
+  const thumbRef    = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const progRef     = useRef<ReturnType<typeof setInterval> | null>(null);
+  const activeRef   = useRef(active);
+  activeRef.current = active;
 
   if (images.length === 0) return null;
 
@@ -92,17 +100,47 @@ export function GalleryGrid({ images, title, className = 'mt-12' }: { images: st
     else if (thumbRight > stripRight) strip.scrollLeft = thumbRight - strip.clientWidth + 8;
   };
 
-  const go = (i: number) => { setActive(i); scrollThumbIntoView(i); };
-  const prev = () => go(Math.max(0, active - 1));
-  const next = () => go(Math.min(images.length - 1, active + 1));
+  const go = (i: number) => { setActive(i); scrollThumbIntoView(i); setProgress(0); };
+  const prev = () => go((activeRef.current - 1 + images.length) % images.length);
+  const next = () => go((activeRef.current + 1) % images.length);
+
+  // Auto-advance
+  useEffect(() => {
+    if (images.length < 2) return;
+    const startTimers = () => {
+      intervalRef.current = setInterval(() => {
+        setActive(a => (a + 1) % images.length);
+        setProgress(0);
+        setTimeout(() => scrollThumbIntoView((activeRef.current + 1) % images.length), 0);
+      }, SLIDE_INTERVAL);
+      const tick = 50;
+      progRef.current = setInterval(() => {
+        setProgress(p => Math.min(100, p + (tick / SLIDE_INTERVAL) * 100));
+      }, tick);
+    };
+    const stopTimers = () => {
+      if (intervalRef.current)  clearInterval(intervalRef.current);
+      if (progRef.current)      clearInterval(progRef.current);
+    };
+    if (!paused && lightbox === null) { setProgress(0); startTimers(); }
+    else stopTimers();
+    return stopTimers;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paused, lightbox, images.length]);
 
   return (
     <div className={className}>
       <h2 className="text-xl font-bold text-gray-900 font-heading mb-4">{title}</h2>
 
       {/* ── Main image ── */}
-      <div className="relative w-full overflow-hidden rounded-xl bg-gray-50 select-none flex items-center justify-center"
-        style={{ minHeight: 220, maxHeight: '70vh' }}>
+      <div
+        className="relative w-full overflow-hidden rounded-xl bg-gray-50 select-none flex items-center justify-center"
+        style={{ minHeight: 220, maxHeight: '70vh' }}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onTouchStart={() => setPaused(true)}
+        onTouchEnd={() => setPaused(false)}
+      >
         <img
           key={active}
           src={images[active]}
@@ -128,18 +166,28 @@ export function GalleryGrid({ images, title, className = 'mt-12' }: { images: st
 
         {/* Prev arrow */}
         {images.length > 1 && (
-          <button onClick={prev} disabled={active === 0}
-            className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 hover:bg-black/70 disabled:opacity-20 text-white rounded-full flex items-center justify-center transition-colors">
+          <button onClick={prev}
+            className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors">
             <ChevronLeft className="w-5 h-5" />
           </button>
         )}
 
         {/* Next arrow */}
         {images.length > 1 && (
-          <button onClick={next} disabled={active === images.length - 1}
-            className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 hover:bg-black/70 disabled:opacity-20 text-white rounded-full flex items-center justify-center transition-colors">
+          <button onClick={next}
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors">
             <ChevronRight className="w-5 h-5" />
           </button>
+        )}
+
+        {/* Auto-slide progress bar */}
+        {images.length > 1 && (
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/20 rounded-b-xl overflow-hidden">
+            <div
+              className="h-full bg-primary-500 transition-none"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
         )}
       </div>
 
