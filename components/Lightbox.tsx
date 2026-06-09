@@ -34,7 +34,7 @@ export default function Lightbox({ images, initial, onClose }: LightboxProps) {
 
   return (
     <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center" onClick={handleClose}>
-      <button onClick={handleClose}
+      <button onClick={e => { e.stopPropagation(); handleClose(); }}
         className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white transition-colors">
         <X className="w-5 h-5" />
       </button>
