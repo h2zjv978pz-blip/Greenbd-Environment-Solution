@@ -4,6 +4,10 @@ const nextConfig = {
   // postbuild.js copies data/ and public/ into .next/standalone/ automatically
   output: 'standalone',
 
+  // ── Performance & security ────────────────────────────────────────────────
+  poweredByHeader: false,   // remove X-Powered-By: Next.js header
+  compress: true,           // enable Gzip / Brotli on all responses
+
   // ── Include data/ in every serverless function bundle ──────────────────────
   // Moved from experimental in Next.js 15.5
   outputFileTracingIncludes: {
@@ -37,9 +41,35 @@ const nextConfig = {
     ];
   },
 
-  // ── API CORS headers ───────────────────────────────────────────────────────
+  // ── Headers: caching, security, CORS ─────────────────────────────────────
   async headers() {
     return [
+      // ── Static Next.js bundles — content-hashed, cache 1 year ────────────
+      {
+        source: '/_next/static/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+      },
+      // ── Uploaded images/audio served via /api/uploads ─────────────────────
+      {
+        source: '/api/uploads/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=604800, must-revalidate' }],
+      },
+      // ── Public static files ───────────────────────────────────────────────
+      {
+        source: '/:path*.(ico|png|jpg|jpeg|webp|svg|woff2|woff)',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=86400, must-revalidate' }],
+      },
+      // ── Security headers (help Core Web Vitals & SEO trust signals) ───────
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'X-Content-Type-Options',  value: 'nosniff' },
+          { key: 'X-Frame-Options',         value: 'SAMEORIGIN' },
+          { key: 'Referrer-Policy',         value: 'strict-origin-when-cross-origin' },
+          { key: 'Permissions-Policy',      value: 'camera=(), microphone=(), geolocation=(self)' },
+        ],
+      },
+      // ── API CORS ──────────────────────────────────────────────────────────
       {
         source: '/api/:path*',
         headers: [

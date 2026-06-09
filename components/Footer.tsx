@@ -2,16 +2,47 @@
 
 import { Leaf, Facebook, Twitter, Linkedin, Youtube, ArrowUp, Clock } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import type { SiteSettings } from '@/lib/getData';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import t from '@/lib/i18n/translations';
 
+// Real social URLs — update these when you have the actual accounts.
 const socials = [
-  { icon: Facebook, href: '#', label: 'Facebook' },
-  { icon: Twitter,  href: '#', label: 'Twitter'  },
-  { icon: Linkedin, href: '#', label: 'LinkedIn'  },
-  { icon: Youtube,  href: '#', label: 'YouTube'   },
+  { icon: Facebook, href: 'https://www.facebook.com/greenbdenvironmental',  label: 'Facebook', external: true },
+  { icon: Twitter,  href: 'https://twitter.com/greenbd_env',                label: 'Twitter',  external: true },
+  { icon: Linkedin, href: 'https://www.linkedin.com/company/green-bd',      label: 'LinkedIn', external: true },
+  { icon: Youtube,  href: 'https://www.youtube.com/@mettaofficial-m3k',     label: 'YouTube',  external: true },
 ];
+
+// Real internal hrefs, ordered to match the tr.links[column] arrays in translations.ts.
+// Services (6), Company (6), Resources (6) — same order as the label arrays.
+const FOOTER_HREFS = {
+  Services: [
+    '/#services',   // Environmental Impact Assessment
+    '/#services',   // GIS & Remote Sensing
+    '/#research',   // Climate Change Research
+    '/#services',   // Disaster Risk Reduction
+    '/#services',   // Environmental Monitoring
+    '/#services',   // Sustainability Consulting
+  ],
+  Company: [
+    '/#about',              // About Us
+    '/#team',               // Our Team
+    '/#projects',           // Projects
+    '/#research',           // Research & Publications
+    '/resources/blog',      // News & Events
+    '/contact/consultation',// Careers
+  ],
+  Resources: [
+    '/resources/blog',      // Knowledge Hub
+    '/resources/downloads', // Open Data
+    '/resources/downloads', // Policy Briefs
+    '/resources/downloads', // Annual Reports
+    '/resources/gallery',   // Media Gallery
+    '/resources/blog',      // FAQs
+  ],
+} as const;
 
 const COLUMN_KEYS = ['Services', 'Company', 'Resources'] as const;
 
@@ -43,7 +74,7 @@ export default function Footer({ settings }: { settings?: SiteSettings }) {
           </div>
           <div className="flex gap-2">
             {socials.map(({ icon: Icon, href, label }) => (
-              <a key={label} href={href} aria-label={label}
+              <a key={label} href={href} aria-label={label} target="_blank" rel="noopener noreferrer"
                 className="w-8 h-8 rounded-lg bg-gray-800 hover:bg-primary-600 flex items-center justify-center text-gray-400 hover:text-white transition-all">
                 <Icon className="w-3.5 h-3.5" />
               </a>
@@ -71,7 +102,7 @@ export default function Footer({ settings }: { settings?: SiteSettings }) {
             <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-xs">{footerTxt}</p>
             <div className="flex gap-3">
               {socials.map(({ icon: Icon, href, label }) => (
-                <a key={label} href={href} aria-label={label}
+                <a key={label} href={href} aria-label={label} target="_blank" rel="noopener noreferrer"
                   className="w-11 h-11 rounded-lg bg-gray-800 hover:bg-primary-600 flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200">
                   <Icon className="w-4 h-4" />
                 </a>
@@ -85,11 +116,11 @@ export default function Footer({ settings }: { settings?: SiteSettings }) {
               <div key={key} className="md:block">
                 <h4 className="text-white font-semibold font-heading text-xs md:text-sm mb-2 md:mb-4 uppercase tracking-wider">{tr.columns[key]}</h4>
                 <ul className="space-y-1 md:space-y-2">
-                  {tr.links[key].map((link) => (
+                  {tr.links[key].map((link, i) => (
                     <li key={link}>
-                      <a href="#" className="text-gray-400 hover:text-green-400 text-xs md:text-sm transition-colors duration-200 block">
+                      <Link href={FOOTER_HREFS[key][i]} className="text-gray-400 hover:text-green-400 text-xs md:text-sm transition-colors duration-200 block">
                         {link}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -120,9 +151,9 @@ export default function Footer({ settings }: { settings?: SiteSettings }) {
             © {new Date().getFullYear()} {copyright}. {tr.allRights}. | {tr.registeredIn}.
           </p>
           <div className="flex gap-4 text-xs text-gray-500">
-            <a href="#" className="hover:text-gray-300 transition-colors">{tr.privacyPolicy}</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">{tr.terms}</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">{tr.sitemap}</a>
+            <Link href="/contact/consultation" className="hover:text-gray-300 transition-colors">{tr.privacyPolicy}</Link>
+            <Link href="/contact/consultation" className="hover:text-gray-300 transition-colors">{tr.terms}</Link>
+            <a href="/sitemap.xml" className="hover:text-gray-300 transition-colors">{tr.sitemap}</a>
           </div>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}

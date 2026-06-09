@@ -24,7 +24,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
       {/* ── Hero ──────────────────────────────────────────────────── */}
       <div className="relative h-[16vh] min-h-[140px] md:h-[55vh] md:min-h-[380px] bg-gray-900 overflow-hidden">
         {project.image && (
-          <img src={project.image} alt={title} className="absolute inset-0 w-full h-full object-cover opacity-70" />
+          <img src={project.image} alt={title} loading="eager" decoding="async" fetchPriority="high" className="absolute inset-0 w-full h-full object-cover opacity-70" />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/85 via-gray-900/30 to-transparent" />
 

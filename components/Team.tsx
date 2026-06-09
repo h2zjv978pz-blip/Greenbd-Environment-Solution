@@ -28,7 +28,7 @@ export default function Team({ members }: { members: TeamMember[] }) {
               <div key={member.id} className="card overflow-hidden group">
                 <div className="relative overflow-hidden bg-gray-100">
                   {member.image ? (
-                    <img src={member.image} alt={name} className="w-full h-48 sm:h-64 object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                    <img src={member.image} alt={name} loading="lazy" decoding="async" className="w-full h-48 sm:h-64 object-cover object-top group-hover:scale-105 transition-transform duration-500" />
                   ) : (
                     <div className="w-full h-64 bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
                       <span className="text-5xl font-bold text-primary-400 select-none">{name.charAt(0)}</span>

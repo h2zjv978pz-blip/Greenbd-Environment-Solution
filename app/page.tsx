@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import {
   getHero, getProjects, getServices, getAbout,
   getStats, getTeam, getClients, getResearch, getContact, getSettings,
@@ -17,6 +18,20 @@ import ContactCTA     from '@/components/ContactCTA';
 import Footer         from '@/components/Footer';
 
 export const dynamic = 'force-dynamic';
+
+const SITE = 'https://greenbd23.com';
+
+export const metadata: Metadata = {
+  title: 'Green BD Environmental Solutions | EIA, Climate & GIS Consultancy Bangladesh',
+  description: 'Leading environmental consultancy in Dhaka, Bangladesh. Expert Environmental Impact Assessment (EIA), GIS & Remote Sensing, Climate Change Consultancy, Disaster Risk Reduction, and Sustainability Consulting since 2009. Request a free consultation today.',
+  alternates: { canonical: SITE + '/' },
+  openGraph: {
+    title: 'Green BD Environmental Solutions | EIA, Climate & GIS Consultancy Bangladesh',
+    description: 'Expert EIA, GIS & Remote Sensing, Climate Change Consultancy, and Disaster Risk Reduction services across Bangladesh since 2009.',
+    url: SITE + '/',
+    type: 'website',
+  },
+};
 
 interface MobileSettings {
   sections?:   Record<string, boolean>;
@@ -79,10 +94,39 @@ export default function Home() {
   .text-center { text-align: var(--m-align) !important; }
 }`;
 
+  const faqSchema = {
+    '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: [
+      { '@type': 'Question', name: 'What environmental consulting services does Green BD offer in Bangladesh?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Green BD Environmental Solutions provides Environmental Impact Assessment (EIA), GIS & Remote Sensing, Climate Change Research, Disaster Risk Reduction, Environmental Monitoring, and Sustainability Consulting across Bangladesh.' } },
+      { '@type': 'Question', name: 'How do I get an EIA (Environmental Impact Assessment) done in Bangladesh?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Contact Green BD Environmental Solutions in Dhaka. With 15+ years of experience we conduct EIAs for government, industrial, and infrastructure projects nationwide. Book a free consultation online at greenbd23.com.' } },
+      { '@type': 'Question', name: 'Where is Green BD Environmental Solutions located?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Green BD is headquartered in Dhaka, Bangladesh and delivers projects across the whole country, with deep expertise in climate-sensitive regions including coastal, haor, and riverine areas.' } },
+      { '@type': 'Question', name: 'Does Green BD provide GIS mapping and remote sensing services?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Yes. We provide GIS mapping, satellite image analysis, remote sensing, flood vulnerability mapping, land-use mapping, and river erosion monitoring throughout Bangladesh.' } },
+      { '@type': 'Question', name: 'What climate change adaptation services are available in Bangladesh?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Green BD offers Climate Change Adaptation and Mitigation planning, disaster risk reduction, sea-level rise analysis, vulnerability assessments, and climate resilience planning for organisations and communities across Bangladesh.' } },
+    ],
+  };
+
+  const serviceListSchema = services.services.length > 0 ? {
+    '@context': 'https://schema.org', '@type': 'ItemList',
+    name: 'Environmental Consulting Services — Green BD Bangladesh',
+    itemListElement: services.services.map((svc, i) => ({
+      '@type': 'ListItem', position: i + 1,
+      item: { '@type': 'Service', name: svc.title, description: svc.desc,
+        provider: { '@type': 'Organization', name: 'Green BD Environmental Solutions', url: SITE } },
+    })),
+  } : null;
+
   return (
     <main>
       {/* Mobile typography/spacing CSS variables */}
       <style dangerouslySetInnerHTML={{ __html: mobileCSS }} />
+      {/* ── Rich-snippet schemas (FAQ + Service list) ── */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      {serviceListSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceListSchema) }} />}
       <Header settings={settings} />
       <Section id="hero"       visible={show('hero')}      ><Hero        slides={hero.slides} /></Section>
       <Section id="about"      visible={show('about')}     ><About       data={about} /></Section>

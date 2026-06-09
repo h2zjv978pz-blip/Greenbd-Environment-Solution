@@ -27,7 +27,7 @@ export default function About({ data }: { data: AboutData }) {
           <div className="grid lg:grid-cols-2 gap-0 lg:gap-16 items-center">
             <div className="relative order-2 lg:order-1 mt-8 sm:mt-10 lg:mt-0 hidden md:block">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                {data.image && <img src={data.image} alt="Green BD team at work" className="w-full h-56 sm:h-80 lg:h-[480px] object-cover" />}
+                {data.image && <img src={data.image} alt="Green BD environmental consultants at work in Bangladesh" loading="lazy" decoding="async" className="w-full h-56 sm:h-80 lg:h-[480px] object-cover" />}
                 <div className="absolute inset-0 bg-gradient-to-tr from-primary-900/30 to-transparent" />
               </div>
               {/* Badges — inset on mobile, outside on lg */}
@@ -242,7 +242,7 @@ export default function About({ data }: { data: AboutData }) {
                   rel="noopener noreferrer"
                   className="group flex flex-col items-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-green-400/40 rounded-2xl p-4 transition-all duration-300">
                   {cert.logo ? (
-                    <img src={cert.logo} alt={cert.name} className="h-10 w-auto object-contain filter brightness-0 invert opacity-70 group-hover:opacity-100 transition-opacity" />
+                    <img src={cert.logo} alt={cert.name} loading="lazy" decoding="async" className="h-10 w-auto object-contain filter brightness-0 invert opacity-70 group-hover:opacity-100 transition-opacity" />
                   ) : (
                     <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center group-hover:bg-green-500/20 transition-colors">
                       <Award className="w-6 h-6 text-green-400" />
