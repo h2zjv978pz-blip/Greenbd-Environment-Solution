@@ -129,12 +129,12 @@ export default function Home() {
       {serviceListSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceListSchema) }} />}
       <Header settings={settings} />
       <Section id="hero"       visible={show('hero')}      ><Hero        slides={hero.slides} /></Section>
-      <Section id="about"      visible={show('about')}     ><About       data={about} /></Section>
-      <Section id="services"   visible={show('services')}  ><Services    services={services.services} /></Section>
       <Section id="projects"   visible={show('projects')}  ><Projects    projects={projects.projects.filter(p => !p.hidden)} /></Section>
-      <Section id="stats"      visible={show('stats')}     ><Stats       stats={stats.stats} /></Section>
-      <Section id="climateMap" visible={show('climateMap')}><ClimateMapSection /></Section>
+      <Section id="services"   visible={show('services')}  ><Services    services={services.services} /></Section>
       <Section id="research"   visible={show('research')}  ><Research    publications={research.publications} /></Section>
+      <Section id="climateMap" visible={show('climateMap')}><ClimateMapSection /></Section>
+      <Section id="about"      visible={show('about')}     ><About       data={about} /></Section>
+      <Section id="stats"      visible={show('stats')}     ><Stats       stats={stats.stats} /></Section>
       <Section id="team"       visible={show('team')}      ><Team        members={team.members} /></Section>
       <Section id="clients"    visible={show('clients')}   ><Clients     clients={clients.clients} testimonials={clients.testimonials} /></Section>
       <Section id="contact"    visible={show('contact')}   ><ContactCTA  contact={contact} /></Section>
