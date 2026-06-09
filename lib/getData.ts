@@ -29,6 +29,7 @@ export interface Project {
   image: string;
   galleryImages: string[];
   additionalImages: string[];
+  annotatedImages?: { url: string; caption: string }[];
   hidden?: boolean;
 }
 export interface Service {

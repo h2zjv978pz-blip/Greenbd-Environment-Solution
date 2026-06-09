@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import {
   Bold, Italic, Underline, Strikethrough, List, ListOrdered,
   AlignLeft, AlignCenter, AlignRight, AlignJustify,
-  Undo, Redo, X, ImageIcon, Upload, Loader2, CheckCircle2, GripVertical,
+  Undo, Redo, X, ImageIcon, Upload, Loader2, CheckCircle2, GripVertical, Plus,
 } from 'lucide-react';
 import ImageUpload from './ImageUpload';
 import AutoTranslateButton from './AutoTranslateButton';
@@ -44,12 +44,14 @@ export interface ProjectData {
   image: string;
   galleryImages: string[];
   additionalImages: string[];
+  annotatedImages?: { url: string; caption: string }[];
   hidden?: boolean;
 }
 
 const EMPTY: ProjectData = {
   title: '', title_bn: '', category: 'Climate', clientName: '', location: '', location_bn: '',
   projectTime: '', description: '', description_bn: '', image: '', galleryImages: [], additionalImages: [],
+  annotatedImages: [],
 };
 
 interface Props { initial?: Partial<ProjectData>; mode: 'create' | 'edit'; }
@@ -421,6 +423,118 @@ function GalleryEditor({ label, hint, images, onChange, dropText, dropHint, uplo
   );
 }
 
+/* ── Annotated images editor ─────────────────────────────────────────── */
+function AnnotatedImagesEditor({
+  items, onChange,
+}: {
+  items: { url: string; caption: string }[];
+  onChange: (v: { url: string; caption: string }[]) => void;
+}) {
+  const fileRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const [uploading, setUploading] = useState<number | null>(null);
+  const [dragSrc,   setDragSrc]   = useState<number | null>(null);
+  const [dragOver,  setDragOver]  = useState<number | null>(null);
+
+  const add    = () => onChange([...items, { url: '', caption: '' }]);
+  const remove = (i: number) => onChange(items.filter((_, j) => j !== i));
+  const upd    = (i: number, key: 'url' | 'caption', val: string) =>
+    onChange(items.map((it, j) => j === i ? { ...it, [key]: val } : it));
+
+  const uploadFile = async (i: number, file: File) => {
+    if (!file.type.startsWith('image/')) return;
+    setUploading(i);
+    try {
+      const fd = new FormData(); fd.append('file', file);
+      const res  = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.url) upd(i, 'url', data.url);
+    } finally { setUploading(null); }
+  };
+
+  const onDrop = (toIdx: number) => {
+    if (dragSrc === null || dragSrc === toIdx) { setDragSrc(null); setDragOver(null); return; }
+    const arr = [...items];
+    const [el] = arr.splice(dragSrc, 1);
+    arr.splice(toIdx, 0, el);
+    onChange(arr); setDragSrc(null); setDragOver(null);
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-base font-semibold" style={{ color: '#2c7be5' }}>Annotated Images</h3>
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] text-white px-2 py-0.5 rounded font-medium" style={{ backgroundColor: '#2c7be5' }}>Image + Caption</span>
+          <button type="button" onClick={add}
+            className="flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-lg text-white"
+            style={{ backgroundColor: '#00d97e' }}>
+            <Plus className="w-3.5 h-3.5" /> Add Image
+          </button>
+        </div>
+      </div>
+
+      {items.length === 0 && (
+        <p className="text-xs text-gray-400 text-center py-6 border-2 border-dashed border-gray-200 rounded-xl">
+          No annotated images yet — click "Add Image" to start
+        </p>
+      )}
+
+      <div className="space-y-3">
+        {items.map((item, i) => {
+          const isDragging = dragSrc === i;
+          const isOver     = dragOver === i && dragSrc !== null && dragSrc !== i;
+          return (
+            <div key={i}
+              onDragOver={e => { e.preventDefault(); if (i !== dragSrc) setDragOver(i); }}
+              onDrop={e => { e.preventDefault(); onDrop(i); }}
+              onDragEnd={() => { setDragSrc(null); setDragOver(null); }}
+              className={`flex gap-3 p-3 rounded-xl border bg-white transition-all ${
+                isDragging ? 'opacity-40 scale-95 border-blue-300' :
+                isOver     ? 'border-blue-400 shadow-md' : 'border-gray-100'
+              }`}
+            >
+              {/* Grip */}
+              <div draggable onDragStart={e => { setDragSrc(i); e.dataTransfer.effectAllowed = 'move'; }}
+                className="flex-shrink-0 cursor-grab active:cursor-grabbing text-gray-300 hover:text-gray-500 pt-2">
+                <GripVertical className="w-4 h-4" />
+              </div>
+
+              {/* Image preview + upload */}
+              <div className="flex-shrink-0">
+                {item.url
+                  ? <img src={item.url} alt={item.caption} className="w-20 h-14 object-cover rounded-lg border border-gray-200" />
+                  : <div className="w-20 h-14 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center bg-gray-50"><ImageIcon className="w-5 h-5 text-gray-300" /></div>
+                }
+                <button type="button" onClick={() => fileRefs.current[i]?.click()}
+                  disabled={uploading === i}
+                  className="mt-1 w-20 text-center text-[10px] font-semibold text-blue-600 hover:underline">
+                  {uploading === i ? 'Uploading…' : 'Upload'}
+                </button>
+                <input ref={el => { fileRefs.current[i] = el; }} type="file" accept="image/*" className="hidden"
+                  onChange={e => { const f = e.target.files?.[0]; if (f) uploadFile(i, f); e.target.value = ''; }} />
+              </div>
+
+              {/* URL + Caption */}
+              <div className="flex-1 space-y-1.5 min-w-0">
+                <input value={item.url} onChange={e => upd(i, 'url', e.target.value)} placeholder="Image URL…"
+                  className="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-blue-400" />
+                <input value={item.caption} onChange={e => upd(i, 'caption', e.target.value)} placeholder="Caption / annotation label…"
+                  className="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-blue-400 font-medium" />
+              </div>
+
+              {/* Remove */}
+              <button type="button" onClick={() => remove(i)}
+                className="flex-shrink-0 p-1.5 text-red-400 hover:bg-red-50 rounded-lg transition-colors self-start">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 /* ── Main form ───────────────────────────────────────────────────────── */
 export default function ProjectForm({ initial, mode }: Props) {
   const router = useRouter();
@@ -581,11 +695,21 @@ export default function ProjectForm({ initial, mode }: Props) {
         </div>
 
         {/* Additional Images card */}
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-8 mb-8">
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-8 mb-5">
           <div className="max-w-3xl">
             <GalleryEditor label={pf.additionalImages} hint="Size: 2000 × 1250"
               images={form.additionalImages} onChange={imgs => set('additionalImages', imgs)}
               dropText={pf.dropImages} dropHint={pf.dropHint} uploadedText={pf.uploaded} />
+          </div>
+        </div>
+
+        {/* Annotated Images card */}
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-8 mb-8">
+          <div className="max-w-3xl">
+            <AnnotatedImagesEditor
+              items={form.annotatedImages ?? []}
+              onChange={imgs => set('annotatedImages', imgs)}
+            />
           </div>
         </div>
 
