@@ -47,14 +47,22 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
         </div>
       </div>
 
+      {/* ── Gallery — full-width, right below hero ────────────────── */}
+      {(gallery.length > 0 || additional.length > 0) && (
+        <div className="max-w-5xl mx-auto px-6 md:px-8 pt-6 pb-0">
+          <GalleryGrid images={gallery}    title={tr.gallery}    className="mt-0" />
+          <GalleryGrid images={additional} title={tr.fieldImages} />
+        </div>
+      )}
+
       {/* ── Body ──────────────────────────────────────────────────── */}
       <div className="max-w-5xl mx-auto px-6 md:px-8 py-4 lg:py-14">
         <div className="grid lg:grid-cols-3 gap-2 lg:gap-12">
 
-          {/* Left — description + galleries (gallery shows first on mobile) */}
-          <div className="order-2 lg:order-1 lg:col-span-2 flex flex-col">
+          {/* Left — description */}
+          <div className="order-2 lg:order-1 lg:col-span-2">
             {description && (
-              <div className="order-2 md:order-1">
+              <div>
                 <h2 className="text-xl font-bold text-gray-900 font-heading mb-4">{tr.projectOverview}</h2>
                 <div
                   className="prose prose-gray max-w-none text-gray-600 leading-relaxed text-base"
@@ -62,10 +70,6 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                 />
               </div>
             )}
-            <div className="order-1 md:order-2">
-              <GalleryGrid images={gallery}    title={tr.gallery}    className="mt-0 md:mt-12" />
-              <GalleryGrid images={additional} title={tr.fieldImages} />
-            </div>
           </div>
 
           {/* Right — sidebar (shown first on mobile, at top of overview) */}
