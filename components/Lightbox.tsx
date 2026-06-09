@@ -10,19 +10,31 @@ export default function Lightbox({ images, initial, onClose }: LightboxProps) {
   const [cur, setCur] = useState(initial);
 
   useEffect(() => {
+    // Push a history entry so the back button closes the lightbox, not the page
+    history.pushState({ lightbox: true }, '');
+
+    const onPop = () => onClose();   // back button → close
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape')      onClose();
-      if (e.key === 'ArrowLeft')   setCur(c => Math.max(0, c - 1));
-      if (e.key === 'ArrowRight')  setCur(c => Math.min(images.length - 1, c + 1));
+      if (e.key === 'Escape')     { history.back(); }   // triggers onPop → onClose
+      if (e.key === 'ArrowLeft')  setCur(c => Math.max(0, c - 1));
+      if (e.key === 'ArrowRight') setCur(c => Math.min(images.length - 1, c + 1));
     };
+    window.addEventListener('popstate', onPop);
     window.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';
-    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
+    return () => {
+      window.removeEventListener('popstate', onPop);
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
   }, [onClose, images.length]);
 
+  // X button / backdrop click: pop the history entry we pushed, then close
+  const handleClose = () => { history.back(); };
+
   return (
-    <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center" onClick={onClose}>
-      <button onClick={onClose}
+    <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center" onClick={handleClose}>
+      <button onClick={handleClose}
         className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white transition-colors">
         <X className="w-5 h-5" />
       </button>
