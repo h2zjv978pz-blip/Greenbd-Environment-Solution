@@ -56,10 +56,18 @@ interface Props { initial?: Partial<ProjectData>; mode: 'create' | 'edit'; }
 
 /* ── Rich-text toolbar ─────────────────────────────────────────────── */
 function RichEditor({ value, onChange, banglaFont = false }: { value: string; onChange: (v: string) => void; banglaFont?: boolean }) {
-  const ref     = useRef<HTMLDivElement>(null);
-  const lastVal = useRef('');
+  const ref        = useRef<HTMLDivElement>(null);
+  const lastVal    = useRef('');
+  const savedRange = useRef<Range | null>(null);
+  const imgFileRef = useRef<HTMLInputElement>(null);
 
-  // Sync DOM only when value changes externally (initial load, auto-translate, key reset)
+  const [showImg,    setShowImg]    = useState(false);
+  const [imgUrl,     setImgUrl]     = useState('');
+  const [imgCaption, setImgCaption] = useState('');
+  const [imgAlign,   setImgAlign]   = useState<'left'|'center'|'right'>('center');
+  const [imgWidth,   setImgWidth]   = useState('100%');
+  const [imgUploading, setImgUploading] = useState(false);
+
   useEffect(() => {
     if (!ref.current) return;
     if (value !== lastVal.current) {
@@ -74,7 +82,6 @@ function RichEditor({ value, onChange, banglaFont = false }: { value: string; on
     onChange(ref.current.innerHTML);
   };
 
-  // Enable CSS-based styling and default paragraph separator on first edit
   const prepare = () => {
     try {
       document.execCommand('styleWithCSS',            false, 'true');
@@ -105,11 +112,51 @@ function RichEditor({ value, onChange, banglaFont = false }: { value: string; on
     );
   };
 
+  // Save cursor position before opening the image panel
+  const openImgPanel = () => {
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount > 0) savedRange.current = sel.getRangeAt(0).cloneRange();
+    setShowImg(v => !v);
+  };
+
+  // Restore cursor and insert <figure> with image + optional caption
+  const insertImage = () => {
+    if (!imgUrl.trim()) return;
+    const marginMap = { left: '0 1rem 1rem 0', center: '1rem auto', right: '0 0 1rem 1rem' };
+    const floatMap  = { left: 'left', center: 'none', right: 'right' };
+    const html = `<figure style="display:block;margin:${marginMap[imgAlign]};float:${floatMap[imgAlign]};width:${imgWidth};max-width:100%;clear:${imgAlign==='center'?'both':'none'}">` +
+      `<img src="${imgUrl}" alt="${imgCaption}" style="width:100%;height:auto;border-radius:6px;display:block;" />` +
+      (imgCaption ? `<figcaption style="text-align:center;font-size:0.8em;color:#6b7280;margin-top:4px;">${imgCaption}</figcaption>` : '') +
+      `</figure>`;
+
+    ref.current?.focus();
+    const sel = window.getSelection();
+    if (savedRange.current) {
+      sel?.removeAllRanges();
+      sel?.addRange(savedRange.current);
+    }
+    document.execCommand('insertHTML', false, html);
+    emit();
+    // Reset panel
+    setImgUrl(''); setImgCaption(''); setImgAlign('center'); setImgWidth('100%'); setShowImg(false);
+  };
+
+  const uploadImgFile = async (file: File) => {
+    if (!file.type.startsWith('image/')) return;
+    setImgUploading(true);
+    try {
+      const fd = new FormData(); fd.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.url) setImgUrl(data.url);
+    } finally { setImgUploading(false); }
+  };
+
   const SEP = <div className="w-px h-5 bg-gray-200 mx-0.5 flex-shrink-0" />;
 
   return (
     <div className={`border rounded-lg overflow-hidden transition-all focus-within:ring-2 ${banglaFont ? 'border-blue-200 focus-within:border-blue-400 focus-within:ring-blue-50' : 'border-gray-200 focus-within:border-blue-400 focus-within:ring-blue-50'}`}>
-      {/* ── Toolbar ────────────────────────────────────────────────────── */}
+      {/* ── Toolbar ── */}
       <div className="flex items-center gap-0.5 px-2 py-1.5 bg-gray-50 border-b border-gray-200 flex-wrap">
         {tb(<Bold          className="w-3.5 h-3.5" />, 'bold',              'Bold')}
         {tb(<Italic        className="w-3.5 h-3.5" />, 'italic',            'Italic')}
@@ -132,9 +179,61 @@ function RichEditor({ value, onChange, banglaFont = false }: { value: string; on
           <option value="">Size</option>
           {[1,2,3,4,5,6,7].map(n => <option key={n} value={n}>{['8pt','10pt','12pt','14pt','18pt','24pt','36pt'][n-1]}</option>)}
         </select>
+        {SEP}
+        {/* Insert Image */}
+        <button type="button" title="Insert inline image" onMouseDown={e => { e.preventDefault(); openImgPanel(); }}
+          className={`w-7 h-7 flex items-center justify-center rounded transition-colors flex-shrink-0 ${showImg ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-200'}`}>
+          <ImageIcon className="w-3.5 h-3.5" />
+        </button>
       </div>
 
-      {/* ── Editable area ──────────────────────────────────────────────── */}
+      {/* ── Inline image insert panel ── */}
+      {showImg && (
+        <div className="bg-blue-50 border-b border-blue-100 px-3 py-3 space-y-2">
+          <p className="text-xs font-semibold text-blue-600 mb-1">Insert Image at cursor</p>
+          <div className="flex gap-2">
+            <button type="button" onClick={() => imgFileRef.current?.click()} disabled={imgUploading}
+              className="flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded border border-blue-200 bg-white text-blue-600 hover:bg-blue-50 disabled:opacity-50 flex-shrink-0">
+              <Upload className="w-3 h-3" />
+              {imgUploading ? 'Uploading…' : 'Upload'}
+            </button>
+            <input value={imgUrl} onChange={e => setImgUrl(e.target.value)} placeholder="or paste image URL…"
+              className="flex-1 border border-blue-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400 bg-white" />
+          </div>
+          {imgUrl && <img src={imgUrl} alt="preview" className="h-16 rounded border border-blue-100 object-contain bg-white" />}
+          <input value={imgCaption} onChange={e => setImgCaption(e.target.value)} placeholder="Caption (optional)"
+            className="w-full border border-blue-200 rounded px-2 py-1 text-xs focus:outline-none focus:border-blue-400 bg-white" />
+          <div className="flex gap-2 items-center flex-wrap">
+            <div className="flex gap-1">
+              {(['left','center','right'] as const).map(a => (
+                <button key={a} type="button" onClick={() => setImgAlign(a)}
+                  className={`text-[10px] px-2 py-1 rounded border font-semibold transition-colors ${imgAlign===a ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-600 border-gray-200 hover:border-blue-300'}`}>
+                  {a.charAt(0).toUpperCase()+a.slice(1)}
+                </button>
+              ))}
+            </div>
+            <select value={imgWidth} onChange={e => setImgWidth(e.target.value)}
+              className="text-xs border border-blue-200 rounded px-2 py-1 bg-white focus:outline-none">
+              <option value="100%">Full width</option>
+              <option value="75%">75%</option>
+              <option value="50%">Half width</option>
+              <option value="33%">One third</option>
+              <option value="25%">Quarter</option>
+            </select>
+            <button type="button" onClick={insertImage} disabled={!imgUrl.trim()}
+              className="ml-auto text-xs font-semibold px-4 py-1.5 rounded text-white disabled:opacity-40"
+              style={{ backgroundColor: '#2c7be5' }}>
+              Insert
+            </button>
+            <button type="button" onClick={() => setShowImg(false)}
+              className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1.5">Cancel</button>
+          </div>
+          <input ref={imgFileRef} type="file" accept="image/*" className="hidden"
+            onChange={e => { const f = e.target.files?.[0]; if (f) uploadImgFile(f); e.target.value = ''; }} />
+        </div>
+      )}
+
+      {/* ── Editable area ── */}
       <div
         ref={ref}
         contentEditable
