@@ -54,8 +54,10 @@ export default function Lightbox({ images, initial, onClose }: LightboxProps) {
         </button>
       )}
       <img src={images[cur]} alt={`Image ${cur + 1}`}
-        className="max-w-[90vw] max-h-[88vh] object-contain rounded-xl shadow-2xl"
-        onClick={e => e.stopPropagation()} />
+        className="max-w-[90vw] max-h-[88vh] object-contain rounded-xl shadow-2xl select-none"
+        onClick={e => e.stopPropagation()}
+        onContextMenu={e => e.preventDefault()}
+        draggable={false} />
       {images.length > 1 && (
         <button
           onClick={e => { e.stopPropagation(); setCur(c => Math.min(images.length - 1, c + 1)); }}
@@ -153,7 +155,9 @@ export function GalleryGrid({ images, title, className = 'mt-12' }: { images: st
           key={active}
           src={images[active]}
           alt={`${title} ${active + 1}`}
-          className="w-full h-auto max-h-[70vh] object-contain"
+          className="w-full h-auto max-h-[70vh] object-contain select-none"
+          onContextMenu={e => e.preventDefault()}
+          draggable={false}
         />
 
         {/* Counter badge */}
@@ -217,7 +221,8 @@ export function GalleryGrid({ images, title, className = 'mt-12' }: { images: st
               }`}
               style={{ width: 80, height: 54 }}
             >
-              <img src={img} alt={`Thumbnail ${i + 1}`} className="w-full h-full object-cover" />
+              <img src={img} alt={`Thumbnail ${i + 1}`} className="w-full h-full object-cover select-none"
+                onContextMenu={e => e.preventDefault()} draggable={false} />
             </button>
           ))}
         </div>

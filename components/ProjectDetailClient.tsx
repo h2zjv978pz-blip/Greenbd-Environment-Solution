@@ -17,7 +17,8 @@ function OverviewImage({ url, caption }: AnnotatedItem) {
   return (
     <figure className="my-6 rounded-2xl overflow-hidden border border-gray-100 shadow-sm not-prose">
       <div className="relative group cursor-zoom-in" onClick={() => setOpen(true)}>
-        <img src={url} alt={caption} className="w-full h-auto block" />
+        <img src={url} alt={caption} className="w-full h-auto block select-none"
+          onContextMenu={e => e.preventDefault()} draggable={false} />
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
         <button
           onClick={e => { e.stopPropagation(); setOpen(true); }}
@@ -94,7 +95,8 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
       {/* ── Hero ──────────────────────────────────────────────────── */}
       <div className="relative h-[16vh] min-h-[140px] md:h-[55vh] md:min-h-[380px] bg-gray-900 overflow-hidden">
         {project.image && (
-          <img src={project.image} alt={title} loading="eager" decoding="async" fetchPriority="high" className="absolute inset-0 w-full h-full object-cover opacity-70" />
+          <img src={project.image} alt={title} loading="eager" decoding="async" fetchPriority="high" className="absolute inset-0 w-full h-full object-cover opacity-70 select-none"
+            onContextMenu={e => e.preventDefault()} draggable={false} />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/85 via-gray-900/30 to-transparent" />
 
