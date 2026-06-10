@@ -18,7 +18,6 @@ function OverviewImage({ url, caption }: AnnotatedItem) {
     <figure className="my-6 rounded-2xl overflow-hidden border border-gray-100 shadow-sm not-prose">
       <div className="relative group cursor-zoom-in" onClick={() => setOpen(true)}>
         <img src={url} alt={caption} className="w-full h-auto block select-none"
-          style={{ imageRendering: '-webkit-optimize-contrast' } as React.CSSProperties}
           onContextMenu={e => e.preventDefault()} draggable={false} />
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
         <button

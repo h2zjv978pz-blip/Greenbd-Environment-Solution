@@ -81,8 +81,7 @@ function ZoomableImage({ src, alt }: { src: string; alt: string }) {
         style={{
           transform: `translate(${pos.x}px, ${pos.y}px) scale(${scale})`,
           transition: scale === 1 ? 'transform 0.2s ease-out' : 'none',
-          imageRendering: '-webkit-optimize-contrast',
-        } as React.CSSProperties}
+        }}
         onContextMenu={e => e.preventDefault()}
         draggable={false} />
     </div>
@@ -243,7 +242,6 @@ export function GalleryGrid({ images, title, className = 'mt-12' }: { images: st
           src={images[active]}
           alt={`${title} ${active + 1}`}
           className="w-full h-auto max-h-[70vh] object-contain select-none"
-          style={{ imageRendering: '-webkit-optimize-contrast' } as React.CSSProperties}
           onContextMenu={e => e.preventDefault()}
           draggable={false}
         />
