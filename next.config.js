@@ -49,6 +49,12 @@ const nextConfig = {
         source: '/_next/static/:path*',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
+      // ── Admin dashboard — never cache (CDN caching here can serve stale
+      //    or raw RSC payloads instead of the rendered HTML page) ─────────
+      {
+        source: '/admin/:path*',
+        headers: [{ key: 'Cache-Control', value: 'no-store, no-cache, must-revalidate' }],
+      },
       // ── Uploaded images/audio served via /api/uploads ─────────────────────
       {
         source: '/api/uploads/:path*',
