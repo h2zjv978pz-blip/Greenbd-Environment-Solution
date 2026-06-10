@@ -3,6 +3,92 @@
 import { useEffect, useRef, useState } from 'react';
 import { X, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 
+/* ── Pinch-to-zoom / double-tap-to-zoom / pan image ──────────────────── */
+function ZoomableImage({ src, alt }: { src: string; alt: string }) {
+  const [scale, setScale] = useState(1);
+  const [pos, setPos]     = useState({ x: 0, y: 0 });
+  const touchState = useRef<{ dist?: number; x?: number; y?: number; lastTap?: number }>({});
+
+  const clamp = (s: number) => Math.min(4, Math.max(1, s));
+
+  const toggleZoom = (clientX?: number, clientY?: number, rect?: DOMRect) => {
+    setScale(s => {
+      if (s > 1) { setPos({ x: 0, y: 0 }); return 1; }
+      if (rect && clientX !== undefined && clientY !== undefined) {
+        const offsetX = (rect.width / 2 - (clientX - rect.left)) * 1.5;
+        const offsetY = (rect.height / 2 - (clientY - rect.top)) * 1.5;
+        setPos({ x: offsetX, y: offsetY });
+      }
+      return 2.5;
+    });
+  };
+
+  const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches.length === 2) {
+      const [a, b] = [e.touches[0], e.touches[1]];
+      touchState.current.dist = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+    } else if (e.touches.length === 1) {
+      const now = Date.now();
+      if (touchState.current.lastTap && now - touchState.current.lastTap < 300) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        toggleZoom(e.touches[0].clientX, e.touches[0].clientY, rect);
+      }
+      touchState.current.lastTap = now;
+      touchState.current.x = e.touches[0].clientX;
+      touchState.current.y = e.touches[0].clientY;
+    }
+  };
+
+  const onTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches.length === 2) {
+      const [a, b] = [e.touches[0], e.touches[1]];
+      const dist = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+      if (touchState.current.dist) {
+        const ratio = dist / touchState.current.dist;
+        setScale(s => clamp(s * ratio));
+      }
+      touchState.current.dist = dist;
+    } else if (e.touches.length === 1 && scale > 1) {
+      const x = e.touches[0].clientX;
+      const y = e.touches[0].clientY;
+      if (touchState.current.x !== undefined && touchState.current.y !== undefined) {
+        const dx = x - touchState.current.x;
+        const dy = y - touchState.current.y;
+        setPos(p => ({ x: p.x + dx, y: p.y + dy }));
+      }
+      touchState.current.x = x;
+      touchState.current.y = y;
+    }
+  };
+
+  const onTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    touchState.current.dist = undefined;
+    if (e.touches.length === 0 && scale < 1.05) { setScale(1); setPos({ x: 0, y: 0 }); }
+  };
+
+  return (
+    <div
+      className="max-w-[96vw] max-h-[94vh] flex items-center justify-center overflow-hidden"
+      style={{ touchAction: scale > 1 ? 'none' : 'pan-y' }}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+      onClick={e => e.stopPropagation()}
+      onDoubleClick={e => toggleZoom(e.clientX, e.clientY, e.currentTarget.getBoundingClientRect())}
+    >
+      <img src={src} alt={alt}
+        className="max-w-[96vw] max-h-[94vh] object-contain rounded-xl shadow-2xl select-none"
+        style={{
+          transform: `translate(${pos.x}px, ${pos.y}px) scale(${scale})`,
+          transition: scale === 1 ? 'transform 0.2s ease-out' : 'none',
+          imageRendering: '-webkit-optimize-contrast',
+        } as React.CSSProperties}
+        onContextMenu={e => e.preventDefault()}
+        draggable={false} />
+    </div>
+  );
+}
+
 /* ── Fullscreen lightbox ──────────────────────────────────────────────── */
 interface LightboxProps { images: string[]; initial: number; onClose: () => void; }
 
@@ -53,12 +139,12 @@ export default function Lightbox({ images, initial, onClose }: LightboxProps) {
           <ChevronLeft className="w-7 h-7 text-white drop-shadow" />
         </button>
       )}
-      <img src={images[cur]} alt={`Image ${cur + 1}`}
-        className="max-w-[96vw] max-h-[94vh] object-contain rounded-xl shadow-2xl select-none"
-        style={{ imageRendering: '-webkit-optimize-contrast' } as React.CSSProperties}
-        onClick={e => e.stopPropagation()}
-        onContextMenu={e => e.preventDefault()}
-        draggable={false} />
+      <ZoomableImage key={cur} src={images[cur]} alt={`Image ${cur + 1}`} />
+      {images.length === 1 && (
+        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 text-white/50 text-[11px] font-medium pointer-events-none">
+          Pinch or double-tap to zoom
+        </div>
+      )}
       {images.length > 1 && (
         <button
           onClick={e => { e.stopPropagation(); setCur(c => Math.min(images.length - 1, c + 1)); }}
