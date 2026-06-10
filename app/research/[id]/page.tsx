@@ -62,10 +62,11 @@ export default async function ResearchDetailPage({ params }: { params: Promise<{
     headline: pub.title,
     abstract: pub.abstract,
     keywords: (pub.tags || []).join(', '),
+    about: [...(pub.tags || []), 'Bangladesh'],
     datePublished: pub.year ? `${pub.year}-01-01` : undefined,
     isPartOf: pub.journal ? { '@type': 'Periodical', name: pub.journal } : undefined,
     author: { '@type': 'Organization', name: 'Green BD Environmental Solutions', url: SITE },
-    publisher: { '@type': 'Organization', name: 'Green BD Environmental Solutions', url: SITE },
+    publisher: { '@id': `${SITE}/#organization` },
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
     url,
   };
