@@ -16,13 +16,13 @@ export const metadata: Metadata = {
 
   // ── Title template ────────────────────────────────────────────────────────
   title: {
-    default: `Green BD Environmental Solutions | greenbd23 | Climate & EIA Consultancy Bangladesh`,
+    default: `Environmental Consultancy in Bangladesh | EIA, GIS & Climate — Green BD`,
     template: `%s | Green BD Environmental Solutions | greenbd23`,
   },
 
   // ── Description ───────────────────────────────────────────────────────────
   description:
-    'Green BD Environmental Solutions (greenbd23.com) — leading environmental consultant in Dhaka, Bangladesh. Specialising in Environmental Impact Assessment (EIA), Environmental Management Plans, Climate Change Consultancy, GIS & Remote Sensing, Disaster Risk Reduction, Flood Vulnerability Mapping, River Erosion Monitoring, and Sustainability Consulting across Bangladesh.',
+    'Green BD Environmental Solutions is a Dhaka-based environmental consultancy offering Environmental Impact Assessment (EIA), GIS & remote sensing, climate resilience planning, and disaster risk reduction across all 64 districts of Bangladesh.',
 
   // ── Keywords ──────────────────────────────────────────────────────────────
   keywords: [
@@ -70,19 +70,20 @@ export const metadata: Metadata = {
   // ── Open Graph ────────────────────────────────────────────────────────────
   openGraph: {
     type:        'website',
-    locale:      'en_BD',
+    locale:      'en_US',
+    alternateLocale: 'bn_BD',
     url:         SITE_URL,
     siteName:    SITE_NAME,
-    title:       `${SITE_NAME} | Climate & Environmental Consultancy`,
-    description: 'Leading environmental consultancy in Bangladesh — EIA, GIS, Climate Change, Disaster Risk Reduction & Sustainability.',
+    title:       'Environmental Consultancy in Bangladesh | EIA, GIS & Climate',
+    description: 'EIA studies, GIS mapping, climate resilience and disaster risk reduction consultancy in Dhaka, Bangladesh.',
     // images provided by app/opengraph-image.tsx (auto-generated 1200×630)
   },
 
   // ── Twitter / X ───────────────────────────────────────────────────────────
   twitter: {
     card:        'summary_large_image',
-    title:       `${SITE_NAME} | Environmental Consultancy Bangladesh`,
-    description: 'EIA, GIS, Climate Change & Sustainability Consulting across Bangladesh.',
+    title:       'Environmental Consultancy in Bangladesh — Green BD',
+    description: 'EIA, GIS & remote sensing, climate resilience consultancy in Dhaka.',
     // images provided by app/opengraph-image.tsx
   },
 
