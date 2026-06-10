@@ -707,7 +707,7 @@ export default function ProjectForm({ initial, mode }: Props) {
         {/* Gallery Images card */}
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-8 mb-5">
           <div className="max-w-3xl">
-            <GalleryEditor label={pf.galleryImages} hint="Size: 2000 × 1250"
+            <GalleryEditor label={pf.galleryImages} hint="Size: 3000 × 1875"
               images={form.galleryImages} onChange={imgs => set('galleryImages', imgs)}
               dropText={pf.dropImages} dropHint={pf.dropHint} uploadedText={pf.uploaded} />
           </div>
@@ -716,7 +716,7 @@ export default function ProjectForm({ initial, mode }: Props) {
         {/* Additional Images card */}
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-8 mb-5">
           <div className="max-w-3xl">
-            <GalleryEditor label={pf.additionalImages} hint="Size: 2000 × 1250"
+            <GalleryEditor label={pf.additionalImages} hint="Size: 3000 × 1875"
               images={form.additionalImages} onChange={imgs => set('additionalImages', imgs)}
               dropText={pf.dropImages} dropHint={pf.dropHint} uploadedText={pf.uploaded} />
             <p className="text-xs text-gray-400 mt-2">{pf.additionalImagesHint}</p>
@@ -726,6 +726,11 @@ export default function ProjectForm({ initial, mode }: Props) {
         {/* Annotated Images card */}
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-8 mb-8">
           <div className="max-w-3xl">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-[11px] text-white px-2 py-0.5 rounded font-medium" style={{ backgroundColor: '#2c7be5' }}>
+                Recommended size: 3000 × 1875 (or higher for dense diagrams/maps)
+              </span>
+            </div>
             <AnnotatedImagesEditor
               items={form.annotatedImages ?? []}
               onChange={imgs => set('annotatedImages', imgs)}
