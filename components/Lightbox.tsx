@@ -54,7 +54,8 @@ export default function Lightbox({ images, initial, onClose }: LightboxProps) {
         </button>
       )}
       <img src={images[cur]} alt={`Image ${cur + 1}`}
-        className="max-w-[90vw] max-h-[88vh] object-contain rounded-xl shadow-2xl select-none"
+        className="max-w-[96vw] max-h-[94vh] object-contain rounded-xl shadow-2xl select-none"
+        style={{ imageRendering: '-webkit-optimize-contrast' } as React.CSSProperties}
         onClick={e => e.stopPropagation()}
         onContextMenu={e => e.preventDefault()}
         draggable={false} />
@@ -156,6 +157,7 @@ export function GalleryGrid({ images, title, className = 'mt-12' }: { images: st
           src={images[active]}
           alt={`${title} ${active + 1}`}
           className="w-full h-auto max-h-[70vh] object-contain select-none"
+          style={{ imageRendering: '-webkit-optimize-contrast' } as React.CSSProperties}
           onContextMenu={e => e.preventDefault()}
           draggable={false}
         />
