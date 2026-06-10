@@ -142,7 +142,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             "image": `${SITE_URL}/og-image.png`,
             "description": "Leading environmental consultancy in Bangladesh specialising in Environmental Impact Assessment (EIA), Climate Change Adaptation, GIS & Remote Sensing, Disaster Risk Reduction, and Sustainability Consulting.",
             "telephone": "+8801711034941",
-            "email": "info@greenbd-env.com",
+            "email": "info@greenbd23.com",
             "address": {
               "@type": "PostalAddress",
               "streetAddress": "House 12, Road 5, Dhanmondi",
@@ -150,7 +150,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "postalCode": "1209",
               "addressCountry": "BD"
             },
-            "geo": { "@type": "GeoCoordinates", "latitude": 23.8103, "longitude": 90.4125 },
+            "geo": { "@type": "GeoCoordinates", "latitude": 23.7465, "longitude": 90.3760 },
             "areaServed": { "@type": "Country", "name": "Bangladesh" },
             "priceRange": "$$",
             "knowsAbout": [
