@@ -88,6 +88,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
   const description = (lang === 'bn' && project.description_bn) ? project.description_bn : project.description;
 
   const gallery    = (project.galleryImages    ?? []).filter(Boolean);
+  const additional = (project.additionalImages ?? []).filter(Boolean);
   const annotated  = (project.annotatedImages  ?? []).filter(it => it.url);
   const inlineImages = annotated.filter(it => it.position !== -1);
   const bottomImages = annotated.filter(it => it.position === -1);
@@ -217,6 +218,13 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
         {bottomImages.length > 0 && (
           <div className="mt-4 lg:mt-8">
             {bottomImages.map((img, j) => <OverviewImage key={j} {...img} />)}
+          </div>
+        )}
+
+        {/* ── Additional images gallery at page bottom ──────────────── */}
+        {additional.length > 0 && (
+          <div className="mt-8 lg:mt-12">
+            <GalleryGrid images={additional} title={tr.fieldImages} className="mt-0" />
           </div>
         )}
       </div>

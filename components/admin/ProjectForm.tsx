@@ -713,6 +713,16 @@ export default function ProjectForm({ initial, mode }: Props) {
           </div>
         </div>
 
+        {/* Additional Images card */}
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-8 mb-5">
+          <div className="max-w-3xl">
+            <GalleryEditor label={pf.additionalImages} hint="Size: 2000 × 1250"
+              images={form.additionalImages} onChange={imgs => set('additionalImages', imgs)}
+              dropText={pf.dropImages} dropHint={pf.dropHint} uploadedText={pf.uploaded} />
+            <p className="text-xs text-gray-400 mt-2">{pf.additionalImagesHint}</p>
+          </div>
+        </div>
+
         {/* Annotated Images card */}
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-8 mb-8">
           <div className="max-w-3xl">
