@@ -31,6 +31,7 @@ const t = {
       subtitle: 'What We Provide',
       title:    'Our Core Services',
       desc:     "Integrated environmental services designed to address Bangladesh's unique ecological challenges — from satellite-driven analysis to community-level action.",
+      learnMore: 'Learn more',
     },
 
     // ── Projects ─────────────────────────────────────────────────
@@ -209,6 +210,7 @@ const t = {
       subtitle: 'আমরা কী প্রদান করি',
       title:    'আমাদের মূল সেবাসমূহ',
       desc:     'স্যাটেলাইট-চালিত বিশ্লেষণ থেকে সমুদায়-স্তরের কার্যক্রম পর্যন্ত — বাংলাদেশের অনন্য পরিবেশগত চ্যালেঞ্জ মোকাবেলায় সমন্বিত পরিবেশ সেবা।',
+      learnMore: 'আরও জানুন',
     },
 
     // ── Projects ─────────────────────────────────────────────────

@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { readData } from '@/lib/data';
+import { SERVICE_PAGES } from '@/lib/servicesContent';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,6 +18,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: BASE,                         lastModified: now, changeFrequency: 'weekly',  priority: 1.0 },
     { url: `${BASE}/#about`,             lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${BASE}/#services`,          lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    ...SERVICE_PAGES.map(s => ({
+      url: `${BASE}/services/${s.slug}`,
+      lastModified: now,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    })),
     { url: `${BASE}/#projects`,          lastModified: now, changeFrequency: 'weekly',  priority: 0.8 },
     { url: `${BASE}/#research`,          lastModified: now, changeFrequency: 'weekly',  priority: 0.7 },
     { url: `${BASE}/#climate-map`,       lastModified: now, changeFrequency: 'monthly', priority: 0.7 },

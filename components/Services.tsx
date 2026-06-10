@@ -1,11 +1,16 @@
 'use client';
 
+import Link from 'next/link';
 import * as Icons from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import type { Service } from '@/lib/getData';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import t from '@/lib/i18n/translations';
+import { SERVICE_PAGES } from '@/lib/servicesContent';
 
 type IconName = keyof typeof Icons;
+
+const SLUG_BY_SERVICE_ID = new Map(SERVICE_PAGES.map(s => [s.serviceId, s.slug]));
 
 export default function Services({ services }: { services: Service[] }) {
   const { lang } = useLanguage();
@@ -29,10 +34,11 @@ export default function Services({ services }: { services: Service[] }) {
             const Icon = (Icons[svc.icon as IconName] ?? Icons.Leaf) as React.ElementType;
             const title = (lang === 'bn' && svc.title_bn) ? svc.title_bn : svc.title;
             const desc  = (lang === 'bn' && svc.desc_bn)  ? svc.desc_bn  : svc.desc;
-            return (
-              <div key={svc.id} className="bg-white rounded-xl border border-gray-100 shadow-sm group
+            const slug  = SLUG_BY_SERVICE_ID.get(svc.id);
+            const card = (
+              <div className="bg-white rounded-xl border border-gray-100 shadow-sm group
                 hover:-translate-y-1 transition-transform duration-300
-                p-2 sm:p-5 lg:p-6
+                p-2 sm:p-5 lg:p-6 h-full
                 flex flex-col items-center sm:items-start gap-1 sm:gap-0 text-center sm:text-left">
 
                 {/* Icon */}
@@ -47,8 +53,19 @@ export default function Services({ services }: { services: Service[] }) {
 
                 {/* Description + accent — desktop only */}
                 <div className="hidden sm:block text-gray-500 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: desc }} />
-                <div className="hidden sm:block mt-4 w-6 h-0.5 bg-primary-300 group-hover:w-12 group-hover:bg-primary-600 transition-all duration-300" />
+                {slug ? (
+                  <div className="hidden sm:flex items-center gap-1.5 mt-4 text-primary-600 text-sm font-semibold group-hover:gap-2.5 transition-all">
+                    {tr.learnMore ?? 'Learn more'} <ArrowRight className="w-3.5 h-3.5" />
+                  </div>
+                ) : (
+                  <div className="hidden sm:block mt-4 w-6 h-0.5 bg-primary-300 group-hover:w-12 group-hover:bg-primary-600 transition-all duration-300" />
+                )}
               </div>
+            );
+            return slug ? (
+              <Link key={svc.id} href={`/services/${slug}`} className="block h-full">{card}</Link>
+            ) : (
+              <div key={svc.id} className="h-full">{card}</div>
             );
           })}
         </div>
