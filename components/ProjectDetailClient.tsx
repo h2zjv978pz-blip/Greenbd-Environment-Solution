@@ -79,7 +79,7 @@ function DescriptionWithImages({ html, images }: { html: string; images: Annotat
 }
 
 export default function ProjectDetailClient({ project }: { project: Project }) {
-  const { lang } = useLanguage();
+  const { lang, toggleLang } = useLanguage();
   const tr = t[lang].projectDetail;
   const banglaFont = lang === 'bn' ? { fontFamily: "'Hind Siliguri', sans-serif" } : {};
 
@@ -106,6 +106,15 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
             className="inline-flex items-center gap-1.5 md:gap-2 bg-white/10 hover:bg-white/25 backdrop-blur text-white text-[11px] md:text-sm font-medium px-2.5 py-1 md:px-4 md:py-2 rounded-full transition-colors border border-white/20">
             <ArrowLeft className="w-3 h-3 md:w-4 md:h-4" /> {tr.backToProjects}
           </Link>
+        </div>
+
+        {/* Language toggle */}
+        <div className="absolute top-2.5 right-2.5 md:top-6 md:right-6 z-10">
+          <button onClick={toggleLang}
+            title={lang === 'en' ? 'Switch to Bangla' : 'Switch to English'}
+            className="inline-flex items-center gap-1 bg-white/10 hover:bg-white/25 backdrop-blur text-white text-[11px] md:text-sm font-semibold px-2.5 py-1 md:px-4 md:py-2 rounded-full transition-colors border border-white/20">
+            {lang === 'en' ? 'বাংলা' : 'EN'}
+          </button>
         </div>
 
         {/* Title */}
