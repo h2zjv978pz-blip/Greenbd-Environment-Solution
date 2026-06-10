@@ -1,6 +1,6 @@
 'use client';
 
-import { Leaf, Facebook, Twitter, Linkedin, Youtube, ArrowUp, Clock } from 'lucide-react';
+import { Leaf, Facebook, Twitter, Linkedin, ArrowUp, Clock } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import type { SiteSettings } from '@/lib/getData';
@@ -12,7 +12,6 @@ const socials = [
   { icon: Facebook, href: 'https://www.facebook.com/greenbdenvironmental',  label: 'Facebook', external: true },
   { icon: Twitter,  href: 'https://twitter.com/greenbd_env',                label: 'Twitter',  external: true },
   { icon: Linkedin, href: 'https://www.linkedin.com/company/green-bd',      label: 'LinkedIn', external: true },
-  { icon: Youtube,  href: 'https://www.youtube.com/@mettaofficial-m3k',     label: 'YouTube',  external: true },
 ];
 
 // Real internal hrefs, ordered to match the tr.links[column] arrays in translations.ts.
