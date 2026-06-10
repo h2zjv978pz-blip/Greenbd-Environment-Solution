@@ -89,6 +89,8 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
 
   const gallery    = (project.galleryImages    ?? []).filter(Boolean);
   const annotated  = (project.annotatedImages  ?? []).filter(it => it.url);
+  const inlineImages = annotated.filter(it => it.position !== -1);
+  const bottomImages = annotated.filter(it => it.position === -1);
 
   return (
     <div className="min-h-screen bg-white" style={banglaFont}>
@@ -144,7 +146,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
             {description && (
               <div>
                 <h2 className="text-xl font-bold text-gray-900 font-heading mb-4">{tr.projectOverview}</h2>
-                <DescriptionWithImages html={description} images={annotated} />
+                <DescriptionWithImages html={description} images={inlineImages} />
               </div>
             )}
           </div>
@@ -210,6 +212,13 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
           </div>
 
         </div>
+
+        {/* ── Additional images at page bottom ─────────────────────── */}
+        {bottomImages.length > 0 && (
+          <div className="mt-4 lg:mt-8">
+            {bottomImages.map((img, j) => <OverviewImage key={j} {...img} />)}
+          </div>
+        )}
       </div>
     </div>
   );

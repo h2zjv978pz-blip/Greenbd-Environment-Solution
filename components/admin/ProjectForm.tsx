@@ -536,6 +536,7 @@ function AnnotatedImagesEditor({
                     {Array.from({ length: 20 }, (_, idx) => idx + 1).map(n => (
                       <option key={n} value={n}>Paragraph {n}</option>
                     ))}
+                    <option value="-1">End of page (bottom)</option>
                   </select>
                 </div>
               </div>
