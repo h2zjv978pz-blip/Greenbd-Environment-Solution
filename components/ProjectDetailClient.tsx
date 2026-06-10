@@ -1,9 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { Fragment } from 'react';
-import { ArrowLeft, MapPin, Calendar, User, Tag } from 'lucide-react';
-import { GalleryGrid } from '@/components/Lightbox';
+import { Fragment, useState } from 'react';
+import { ArrowLeft, MapPin, Calendar, User, Tag, Maximize2 } from 'lucide-react';
+import Lightbox, { GalleryGrid } from '@/components/Lightbox';
+import ShareButtons from '@/components/ShareButtons';
 import type { Project } from '@/lib/getData';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 import t from '@/lib/i18n/translations';
@@ -12,14 +13,26 @@ type AnnotatedItem = { url: string; caption: string; position?: number };
 
 /* ── Single annotated image card ────────────────────────────────────── */
 function OverviewImage({ url, caption }: AnnotatedItem) {
+  const [open, setOpen] = useState(false);
   return (
     <figure className="my-6 rounded-2xl overflow-hidden border border-gray-100 shadow-sm not-prose">
-      <img src={url} alt={caption} className="w-full h-auto block" />
+      <div className="relative group cursor-zoom-in" onClick={() => setOpen(true)}>
+        <img src={url} alt={caption} className="w-full h-auto block" />
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+        <button
+          onClick={e => { e.stopPropagation(); setOpen(true); }}
+          className="absolute top-3 right-3 w-8 h-8 bg-black/50 hover:bg-black/70 text-white rounded-lg flex items-center justify-center transition-colors opacity-0 group-hover:opacity-100"
+          title="View fullscreen"
+        >
+          <Maximize2 className="w-4 h-4" />
+        </button>
+      </div>
       {caption && (
         <figcaption className="px-4 py-2.5 text-sm text-center text-gray-500 bg-gray-50 border-t border-gray-100 font-medium">
           {caption}
         </figcaption>
       )}
+      {open && <Lightbox images={[url]} initial={0} onClose={() => setOpen(false)} />}
     </figure>
   );
 }
@@ -178,6 +191,10 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                   </div>
                 </li>
               </ul>
+
+              <div className="mt-4 pt-4 lg:mt-5 lg:pt-5 border-t border-gray-200">
+                <ShareButtons title={title} label={tr.share} copiedLabel={tr.linkCopied} />
+              </div>
             </div>
           </div>
 

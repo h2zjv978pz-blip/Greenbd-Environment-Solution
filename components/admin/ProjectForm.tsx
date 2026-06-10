@@ -533,7 +533,7 @@ function AnnotatedImagesEditor({
                     onChange={e => upd(i, { position: e.target.value ? Number(e.target.value) : undefined })}
                     className="flex-1 border border-gray-200 rounded-lg px-2 py-1 text-xs focus:outline-none focus:border-blue-400 bg-white">
                     <option value="">End of overview (default)</option>
-                    {[1,2,3,4,5,6,7,8].map(n => (
+                    {Array.from({ length: 20 }, (_, idx) => idx + 1).map(n => (
                       <option key={n} value={n}>Paragraph {n}</option>
                     ))}
                   </select>

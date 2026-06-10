@@ -173,6 +173,8 @@ const t = {
       inquire:         'Inquire About This Project',
       gallery:         'Gallery',
       fieldImages:     'Field Images',
+      share:           'Share This Project',
+      linkCopied:      'Link copied!',
     },
   },
 
@@ -287,6 +289,8 @@ const t = {
       inquire:         'এই প্রকল্প সম্পর্কে জিজ্ঞেস করুন',
       gallery:         'গ্যালারি',
       fieldImages:     'ফিল্ড ইমেজ',
+      share:           'এই প্রকল্পটি শেয়ার করুন',
+      linkCopied:      'লিংক কপি হয়েছে!',
     },
 
     // ── Research ─────────────────────────────────────────────────
