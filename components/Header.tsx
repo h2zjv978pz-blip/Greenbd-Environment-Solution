@@ -39,6 +39,7 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
   const [mobileRes,     setMobileRes]     = useState(false);
   const [mobileContact, setMobileContact] = useState(false);
   const [searchOpen,    setSearchOpen]    = useState(false);
+  const [climateActive, setClimateActive] = useState(false);
   const resRef     = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
 
@@ -89,6 +90,28 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
     const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Auto-hide the site header while the fullscreen Climate Map section is in
+  // view — it has its own internal top bar, so the fixed nav would otherwise
+  // sit on top of it.
+  useEffect(() => {
+    const target = document.getElementById('climate-map');
+    if (!target) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        const active = entry.intersectionRatio > 0.3;
+        setClimateActive(active);
+        if (active) {
+          setMenuOpen(false);
+          setResourcesOpen(false);
+          setContactOpen(false);
+        }
+      },
+      { threshold: [0, 0.3, 0.6, 1] }
+    );
+    obs.observe(target);
+    return () => obs.disconnect();
   }, []);
 
   // Live time + date (updates every second)
@@ -158,7 +181,7 @@ export default function Header({ settings }: { settings?: SiteSettings }) {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled ? 'bg-white shadow-lg py-3' : 'bg-transparent py-5'
-      }`}
+      } ${climateActive ? '-translate-y-full opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'}`}
       style={banglaFont}
     >
       <div className="container mx-auto px-4 lg:px-8 flex items-center justify-between">

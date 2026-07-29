@@ -282,7 +282,7 @@ export default function BangladeshClimateMap({ compact = false, height = '100vh'
 
   // ── Compact mode ──────────────────────────────────────────────────────────
   if (compact) return (
-    <div className="relative rounded-2xl overflow-hidden border border-gray-200 shadow-lg" style={{ height: 340 }}>
+    <div className="relative rounded-2xl overflow-hidden border border-gray-200 shadow-lg" style={{ height: 340, isolation: 'isolate' }}>
       <div ref={mapRef} className="w-full h-full" />
     </div>
   );
@@ -579,7 +579,7 @@ export default function BangladeshClimateMap({ compact = false, height = '100vh'
         </aside>
 
         {/* ── Map ──────────────────────────────────────────────────────── */}
-        <div style={{ position:'relative', background:'#e0f2fe', height:'100%', minHeight:0 }}>
+        <div style={{ position:'relative', background:'#e0f2fe', height:'100%', minHeight:0, isolation:'isolate' }}>
           <div ref={mapRef} style={{ width:'100%', height:'100%' }} />
           {/* Overlay hint */}
           <div style={{ position:'absolute', top:14, left:14, zIndex:500,
